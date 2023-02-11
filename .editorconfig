@@ -1,0 +1,14 @@
+root = true
+
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+[*{.cpp, .c, .h, .hpp, .inl, .cxx, .cc}]
+indent_size = 4
+indent_style = tab
+
+
+
+
+
