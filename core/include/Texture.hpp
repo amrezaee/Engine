@@ -2,7 +2,7 @@
 
 #include <Common.hpp>
 
-#include <Image.hpp>
+#include <Color.hpp>
 #include <Vector2.hpp>
 
 enum class WrapMode

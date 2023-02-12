@@ -23,8 +23,7 @@ public:
 
 	void SetPointSize(float size) override;
 
-	void DrawIndexed(const VertexArrayPtr& va, U32 index_count) override;
-	void DrawLine(const VertexArrayPtr& va, U32 vertex_count) override;
+	void DrawIndexed(const VertexArrayPtr& va, U32 index_count = 0) override;
 
 private:
 	I32 BlendFuncMap(BlendFunc func);

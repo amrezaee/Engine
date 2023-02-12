@@ -127,14 +127,9 @@ void RenderDeviceGL::SetPointSize(float size)
 
 void RenderDeviceGL::DrawIndexed(const VertexArrayPtr& va, U32 index_count)
 {
+	U32 count = index_count ? index_count : va->GetIndexBuffer()->GetCount();
 	va->Bind();
-	glDrawElements(GL_TRIANGLES, index_count, GL_UNSIGNED_INT, 0);
-}
-
-void RenderDeviceGL::DrawLine(const VertexArrayPtr& va, U32 vertex_count)
-{
-	va->Bind();
-	glDrawArrays(GL_LINES, 0, vertex_count);
+	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
 }
 
 I32 RenderDeviceGL::BlendFuncMap(BlendFunc func)

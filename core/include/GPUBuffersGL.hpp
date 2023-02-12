@@ -5,7 +5,7 @@
 class VertexBufferGL final: public VertexBuffer
 {
 public:
-	VertexBufferGL(std::initializer_list<Vertex> layout, U32 count);
+	VertexBufferGL(std::initializer_list<Vertex> layout, U32 count, U32 stride);
 	~VertexBufferGL();
 
 	const std::vector<Vertex>& GetLayout() const override;
@@ -19,7 +19,7 @@ private:
 	U32                 mID {0};
 	std::vector<Vertex> mLayout;
 	U32                 mCount;
-	U32                 mStride {0};
+	U32                 mStride;
 };
 
 class IndexBufferGL final: public IndexBuffer
@@ -46,6 +46,10 @@ public:
 	void AttachIndexBuffer(const IndexBufferPtr& ib) override;
 	void AttachVertexBuffer(const VertexBufferPtr& vb) override;
 
+	U32             GetVertexBufferCount() const override;
+	VertexBufferPtr GetVertexBuffer(U32 i) const override;
+	IndexBufferPtr  GetIndexBuffer() const override;
+
 	void Bind() const override;
 	void Unbind() const override;
 
@@ -53,5 +57,8 @@ private:
 	U32 VertexTypeMap(VertexType type);
 
 private:
-	U32 mID {0};
+	U32                          mID {0};
+	IndexBufferPtr               mIB;
+	std::vector<VertexBufferPtr> mVBList;
+	U32                          mVBIndex {0};
 };

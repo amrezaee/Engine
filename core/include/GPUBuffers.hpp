@@ -55,7 +55,8 @@ class VertexBuffer
 public:
 	virtual ~VertexBuffer() = default;
 
-	static VertexBufferPtr Create(std::initializer_list<Vertex> layout, U32 count);
+	static VertexBufferPtr Create(std::initializer_list<Vertex> layout, U32 count,
+	                              U32 stride);
 
 	virtual const std::vector<Vertex>& GetLayout() const         = 0;
 	virtual void SetLayout(std::initializer_list<Vertex> layout) = 0;
@@ -86,6 +87,10 @@ public:
 
 	virtual void AttachIndexBuffer(const IndexBufferPtr& ib)   = 0;
 	virtual void AttachVertexBuffer(const VertexBufferPtr& vb) = 0;
+
+	virtual U32             GetVertexBufferCount() const = 0;
+	virtual VertexBufferPtr GetVertexBuffer(U32 i) const = 0;
+	virtual IndexBufferPtr  GetIndexBuffer() const       = 0;
 
 	virtual void Bind() const   = 0;
 	virtual void Unbind() const = 0;

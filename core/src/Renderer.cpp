@@ -42,7 +42,7 @@ void Renderer::Initialize()
 	                                {VertexType::Float2},
 	                                {VertexType::UByte4, true},
 	                                {VertexType::Float}},
-	                               mMaxVertices);
+	                               mMaxVertices, sizeof(QuadVertex));
 
 	mQuadVA = VertexArray::Create();
 	mQuadVA->AttachIndexBuffer(mIB);
@@ -55,7 +55,7 @@ void Renderer::Initialize()
 	                                  {VertexType::UByte4, true},
 	                                  {VertexType::Float},
 	                                  {VertexType::Float}},
-	                                 mMaxVertices);
+	                                 mMaxVertices, sizeof(CircleVertex));
 
 	mCircleVA = VertexArray::Create();
 	mCircleVA->AttachIndexBuffer(mIB);

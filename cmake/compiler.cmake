@@ -21,7 +21,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message(STATUS "Compiler: MSVC")
 
 else()
-    message(FATAL "Unknown Compiler.")
+    message(FATAL_ERROR "Unknown Compiler.")
 
 endif()
 

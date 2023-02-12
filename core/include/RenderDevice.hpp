@@ -82,8 +82,7 @@ public:
 
 	virtual void SetPointSize(float size) = 0;
 
-	virtual void DrawIndexed(const VertexArrayPtr& va, U32 index_count) = 0;
-	virtual void DrawLine(const VertexArrayPtr& va, U32 vertex_count)   = 0;
+	virtual void DrawIndexed(const VertexArrayPtr& va, U32 index_count = 0) = 0;
 
 private:
 	static RenderAPI sAPI;

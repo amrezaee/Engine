@@ -7,7 +7,6 @@
 #include <Common.hpp>
 #include <Delegate.hpp>
 #include <EntryPoint.hpp>
-#include <Image.hpp>
 #include <Logger.hpp>
 #include <MathFunctions.hpp>
 #include <Renderer.hpp>

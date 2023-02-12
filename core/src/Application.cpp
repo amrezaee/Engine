@@ -13,7 +13,7 @@ Application::~Application()
 
 void Application::Run()
 {
-	if(!mWorkingDir.empty())
+	if(!mWorkingDir.empty() && fs::exists(mWorkingDir))
 		fs::current_path(mWorkingDir);
 
 	mRenderDevice = RenderDevice::Create();

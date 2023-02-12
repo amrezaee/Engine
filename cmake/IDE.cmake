@@ -1,0 +1,12 @@
+file(GLOB ENGINE_CORE_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/core/include/*.hpp")
+file(GLOB ENGINE_CORE_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/core/src/*.cpp")
+
+file(GLOB ENGINE_SANDBOX_HEADERS "${CMAKE_CURRENT_SOURCE_DIR}/sandbox/*.hpp")
+file(GLOB ENGINE_SANDBOX_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/sandbox/*.cpp")
+
+file(GLOB ENGINE_SHADER_SOURCES  "${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.glsl")
+
+source_group(core/include FILES ${ENGINE_CORE_HEADERS})
+source_group(core/src     FILES ${ENGINE_CORE_SOURCES})
+source_group(sandbox      FILES ${ENGINE_SANDBOX_HEADERS} ${ENGINE_SANDBOX_SOURCES})
+source_group(shaders      FILES ${ENGINE_SHADER_SOURCES})

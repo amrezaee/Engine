@@ -1,20 +1,19 @@
 #include <GPUBuffersGL.hpp>
 
 #include <Assert.hpp>
+#include <Logger.hpp>
 
 #include <glad/gl.h>
 
-VertexBufferGL::VertexBufferGL(std::initializer_list<Vertex> layout, U32 count)
-        : mLayout(layout), mCount(count)
+VertexBufferGL::VertexBufferGL(std::initializer_list<Vertex> layout, U32 count,
+                               U32 stride)
+        : mLayout(layout), mCount(count), mStride(stride)
 {
 	U32 offset {0};
-	U32 size {0};
 	for(auto& e : mLayout)
 	{
 		e.offset = offset;
-		size     = VertexTypeSize(e.type);
-		offset += size;
-		mStride += size;
+		offset += VertexTypeSize(e.type);
 	}
 	glCreateBuffers(1, &mID);
 	glNamedBufferStorage(mID, count * mStride, nullptr, GL_DYNAMIC_STORAGE_BIT);
@@ -95,24 +94,99 @@ VertexArrayGL::~VertexArrayGL()
 
 void VertexArrayGL::AttachIndexBuffer(const IndexBufferPtr& ib)
 {
+	mIB = ib;
 	glVertexArrayElementBuffer(mID, ib->GetID());
 }
 
 void VertexArrayGL::AttachVertexBuffer(const VertexBufferPtr& vb)
 {
-	glVertexArrayVertexBuffer(mID, 0, vb->GetID(), 0, vb->GetStride());
+	glVertexArrayVertexBuffer(mID, mVBIndex, vb->GetID(), 0, vb->GetStride());
 
 	auto layout  = vb->GetLayout();
 	U32  attribs = U32(layout.size());
 
 	for(U32 i = 0; i < attribs; ++i)
 	{
+		VertexType type   = layout[i].type;
+		U32        offset = layout[i].offset;
+
 		glEnableVertexArrayAttrib(mID, i);
-		glVertexArrayAttribFormat(mID, i, VertexTypeCount(layout[i].type),
-		                          VertexTypeMap(layout[i].type),
-		                          layout[i].normalize ? GL_TRUE : GL_FALSE,
-		                          layout[i].offset);
-		glVertexArrayAttribBinding(mID, i, 0);
+		glVertexArrayAttribBinding(mID, i, mVBIndex);
+
+		if(layout[i].normalize)
+		{
+			glVertexArrayAttribFormat(mID, i, VertexTypeCount(type),
+			                          VertexTypeMap(type), GL_TRUE, offset);
+			continue;
+		}
+
+		switch(type)
+		{
+		case VertexType::Float:
+		case VertexType::Float2:
+		case VertexType::Float3:
+		case VertexType::Float4:
+		{
+			glVertexArrayAttribFormat(mID, i, VertexTypeCount(type),
+			                          VertexTypeMap(type), GL_FALSE, offset);
+		}
+		break;
+
+		case VertexType::Byte:
+		case VertexType::Byte2:
+		case VertexType::Byte3:
+		case VertexType::Byte4:
+		case VertexType::UByte:
+		case VertexType::UByte2:
+		case VertexType::UByte3:
+		case VertexType::UByte4:
+		case VertexType::Bool:
+		case VertexType::UInt:
+		case VertexType::UInt2:
+		case VertexType::UInt3:
+		case VertexType::UInt4:
+		case VertexType::Int:
+		case VertexType::Int2:
+		case VertexType::Int3:
+		case VertexType::Int4:
+		{
+			glVertexArrayAttribIFormat(mID, i, VertexTypeCount(type),
+			                           VertexTypeMap(type), offset);
+		}
+		break;
+
+		default: ERROR("Unknown vertex type");
+		}
+	}
+
+	mVBList.push_back(vb);
+	++mVBIndex;
+}
+
+U32 VertexArrayGL::GetVertexBufferCount() const
+{
+	return U32(mVBList.size());
+}
+
+VertexBufferPtr VertexArrayGL::GetVertexBuffer(U32 i) const
+{
+	if(mVBList.size() != 0)
+		return mVBList[mVBList.size() - 1 - i];
+	else
+	{
+		WARN("No vertex buffer attached");
+		return nullptr;
+	}
+}
+
+IndexBufferPtr VertexArrayGL::GetIndexBuffer() const
+{
+	if(mIB)
+		return mIB;
+	else
+	{
+		WARN("No index buffer attached");
+		return nullptr;
 	}
 }
 
@@ -132,30 +206,30 @@ U32 VertexArrayGL::VertexTypeMap(VertexType type)
 	{
 	case VertexType::Bool: return GL_BOOL;
 
-	case VertexType::UInt4:
-	case VertexType::UInt3:
+	case VertexType::UInt:
 	case VertexType::UInt2:
-	case VertexType::UInt: return GL_UNSIGNED_INT;
+	case VertexType::UInt3:
+	case VertexType::UInt4: return GL_UNSIGNED_INT;
 
-	case VertexType::Int4:
-	case VertexType::Int3:
+	case VertexType::Int:
 	case VertexType::Int2:
-	case VertexType::Int: return GL_INT;
+	case VertexType::Int3:
+	case VertexType::Int4: return GL_INT;
 
-	case VertexType::Float4:
-	case VertexType::Float3:
+	case VertexType::Float:
 	case VertexType::Float2:
-	case VertexType::Float: return GL_FLOAT;
+	case VertexType::Float3:
+	case VertexType::Float4: return GL_FLOAT;
 
-	case VertexType::UByte4:
-	case VertexType::UByte3:
+	case VertexType::UByte:
 	case VertexType::UByte2:
-	case VertexType::UByte: return GL_UNSIGNED_BYTE;
+	case VertexType::UByte3:
+	case VertexType::UByte4: return GL_UNSIGNED_BYTE;
 
-	case VertexType::Byte4:
-	case VertexType::Byte3:
+	case VertexType::Byte:
 	case VertexType::Byte2:
-	case VertexType::Byte: return GL_BYTE;
+	case VertexType::Byte3:
+	case VertexType::Byte4: return GL_BYTE;
 
 	default: return 0;
 	}

@@ -5,7 +5,7 @@
 class Sandbox final: public Application
 {
 public:
-	Sandbox(): Application("Sandbox", "D:/Amir/Sources/Projects/practice/") {}
+	Sandbox(): Application("Sandbox", "D:/Amir/Sources/Projects/Engine/") {}
 
 	void Initialize() override
 	{
