@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.20.0)
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-include(cmake/IDE.cmake) # TODO: it's not working, fix it.
-
 project(Engine VERSION 0.0.0)
 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 include(cmake/Compiler.cmake)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -33,6 +31,7 @@ else()
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()
 
+add_subdirectory(deps)
 add_subdirectory(core)
 
 if(ENGINE_BUILD_SANDBOX)
