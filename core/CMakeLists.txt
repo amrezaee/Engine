@@ -48,7 +48,9 @@ set(CORE_SOURCES "src/Application.cpp"
 				 "src/WindowGLFW.cpp"
 )
 
-add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS})
+file(GLOB SHADER_SOURCES "../shaders/*.glsl")
+
+add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS} ${SHADER_SOURCES})
 
 target_include_directories(core PUBLIC "include/")
 
@@ -65,12 +67,12 @@ if(GCC_CLI)
 	target_compile_options(core PRIVATE
 									-Wall -Weffc++ -Wctor-dtor-privacy -Woverloaded-virtual
 									-fno-gnu-keywords
-									-fno-exceptions -fno-rtti
+									-fno-exceptions #-fno-rtti
 )
 
 elseif(MSVC_CLI)
 	target_compile_options(core PRIVATE
-									/GR-
+									#/GR-
 									/options:strict /permissive- /W4 /nologo /Zc:__cplusplus /MP
 )
 
@@ -82,5 +84,6 @@ elseif(MSVC_CLI)
 
 endif()
 
-source_group("core/headers" FILES ${CORE_HEADERS})
-source_group("core/sources" FILES ${CORE_SOURCES})
+source_group("include" FILES ${CORE_HEADERS})
+source_group("src"     FILES ${CORE_SOURCES})
+source_group("shader"  FILES ${SHADER_SOURCES})
