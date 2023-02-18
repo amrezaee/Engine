@@ -7,7 +7,7 @@ static std::shared_ptr<spdlog::logger> logger;
 
 void Logger::Init()
 {
-	std::vector<spdlog::sink_ptr> sinks;
+	Vector<spdlog::sink_ptr> sinks;
 	sinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
 	sinks.emplace_back(
 	        std::make_shared<spdlog::sinks::basic_file_sink_mt>("log.txt", true));
@@ -15,13 +15,13 @@ void Logger::Init()
 	sinks[0]->set_pattern("[%t] [%T] [%n] %^[%=8l] | %v%$");
 	sinks[1]->set_pattern("[%t] [%T] [%n] [%=8l] | %v");
 
-	logger = std::make_shared<spdlog::logger>("Engine", begin(sinks), end(sinks));
+	logger = MakeSptr<spdlog::logger>("Engine", begin(sinks), end(sinks));
 	spdlog::register_logger(logger);
 	logger->set_level(spdlog::level::trace);
 	logger->flush_on(spdlog::level::trace);
 }
 
-std::shared_ptr<spdlog::logger>& Logger::GetLogger()
+Sptr<spdlog::logger>& Logger::GetLogger()
 {
 	return logger;
 }

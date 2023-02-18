@@ -32,12 +32,12 @@ public:
 	U32 GetID() const override;
 
 private:
-	GLuint   mID;
+	U32      mID;
 	U32      mWidth;
 	U32      mHeight;
 	bool     mFiltered;
 	WrapMode mWrapMode;
 	Color    mBorder;
-	GLenum   mDataFormat;
-	GLenum   mInternalFormat;
+	U32      mDataFormat;
+	U32      mInternalFormat;
 };

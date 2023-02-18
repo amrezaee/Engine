@@ -31,6 +31,6 @@ private:
 	GLenum ShaderTypeMap(ShaderType type);
 
 private:
-	GLuint                            mProgramID;
-	std::unordered_map<String, GLint> mUniformLocations;
+	U32                    mProgramID;
+	HashMap<String, GLint> mUniformLocations;
 };

@@ -76,6 +76,12 @@ constexpr Uptr<T> MakeUptr(Args&&... args)
 	return std::make_unique<T>(std::forward<Args>(args)...);
 }
 
+template<typename T>
+using Vector = std::vector<T>;
+
+template<typename T1, typename T2>
+using HashMap = std::unordered_map<T1, T2>;
+
 using String      = std::string;
 using StringArray = std::vector<std::string>;
 using Path        = std::filesystem::path;

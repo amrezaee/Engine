@@ -36,9 +36,9 @@ private:
 	Transform mView;
 	Transform mViewProjection;
 
-	Vec2  mPosition {0, 0};
-	float mAngle {0};
-	float mZoom {1};
-	Vec2  mCenterOffset {0};
-	Vec2  mOffset {0};
+	Vec2  Position {0.0f};
+	float mAngle {0.0f};
+	float mZoom {1.0f};
+	Vec2  mCenterOffset {0.0f};
+	Vec2  mOffset {0.0f};
 };

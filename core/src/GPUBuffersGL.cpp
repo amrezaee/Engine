@@ -12,8 +12,8 @@ VertexBufferGL::VertexBufferGL(std::initializer_list<Vertex> layout, U32 count,
 	U32 offset {0};
 	for(auto& e : mLayout)
 	{
-		e.offset = offset;
-		offset += VertexTypeSize(e.type);
+		e.Offset = offset;
+		offset += VertexTypeSize(e.Type);
 	}
 	glCreateBuffers(1, &mID);
 	glNamedBufferStorage(mID, count * mStride, nullptr, GL_DYNAMIC_STORAGE_BIT);
@@ -107,13 +107,13 @@ void VertexArrayGL::AttachVertexBuffer(const VertexBufferPtr& vb)
 
 	for(U32 i = 0; i < attribs; ++i)
 	{
-		VertexType type   = layout[i].type;
-		U32        offset = layout[i].offset;
+		VertexType type   = layout[i].Type;
+		U32        offset = layout[i].Offset;
 
 		glEnableVertexArrayAttrib(mID, i);
 		glVertexArrayAttribBinding(mID, i, mVBIndex);
 
-		if(layout[i].normalize)
+		if(layout[i].Normalize)
 		{
 			glVertexArrayAttribFormat(mID, i, VertexTypeCount(type),
 			                          VertexTypeMap(type), GL_TRUE, offset);

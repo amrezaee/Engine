@@ -6,7 +6,7 @@
 
 RenderAPI RenderDevice::sAPI = RenderAPI::GL;
 
-Uptr<RenderDevice> RenderDevice::Create()
+RenderDevicePtr RenderDevice::Create()
 {
 	switch(sAPI)
 	{
@@ -14,4 +14,14 @@ Uptr<RenderDevice> RenderDevice::Create()
 	}
 	ASSERT(false, "Render API not supported");
 	return nullptr;
+}
+
+RenderAPI RenderDevice::GetAPI()
+{
+	return sAPI;
+}
+
+const RenderDeviceInfo& RenderDevice::GetInfo() const
+{
+	return mInfo;
 }

@@ -5,6 +5,9 @@
 #include <Signal.hpp>
 #include <Vector2.hpp>
 
+class Window;
+using WindowPtr = Uptr<Window>;
+
 enum class WindowMode
 {
 	Windowed,      // Windowed
@@ -27,28 +30,20 @@ public:
 	               WindowMode mode = WindowMode::Windowed,
 	               VSyncMode vsync = VSyncMode::Immediate, U32 msaa = 1,
 	               bool srgb = false, bool resizable = true, bool borderless = false,
-	               bool focused = false, bool hidden = false)
-	        : mTitle(title), mResolution(resolution), mPosition(position),
-	          mWindowMode(mode), mVSyncMode(vsync), mMSAA(msaa), mSRGB(srgb),
-	          mResizable(resizable), mBorderless(borderless), mFocused(focused),
-	          mHidden(hidden)
+	               bool focused = false, bool hidden = false);
 
-	{
-	}
-
-	String     mTitle {"app"};
-	Vec2ui     mResolution {640, 480};
-	Vec2ui     mPosition;
-	WindowMode mWindowMode {WindowMode::Windowed};
-	VSyncMode  mVSyncMode {VSyncMode::Immediate};
-	U32        mMSAA {1};
-	bool       mSRGB {false};
-	bool       mResizable {true};
-	bool       mBorderless {false};
-	bool       mFocused {true};
-	bool       mHidden {false};
+	String     Title {"Engine"};
+	Vec2ui     Resolution {640, 480};
+	Vec2ui     Position;
+	WindowMode Mode {WindowMode::Windowed};
+	VSyncMode  VSync {VSyncMode::Immediate};
+	U32        MSAA {1};
+	bool       SRGB {false};
+	bool       Resizable {true};
+	bool       Borderless {false};
+	bool       Focused {true};
+	bool       Hidden {false};
 };
-
 
 class Window
 {
@@ -64,7 +59,7 @@ public:
 	Window(const WindowSettings& settings);
 	virtual ~Window() = default;
 
-	static Uptr<Window> Create(const WindowSettings& settings);
+	static WindowPtr Create(const WindowSettings& settings);
 
 	virtual void Destroy() = 0;
 
@@ -115,12 +110,8 @@ public:
 	virtual void SwapBuffers() = 0;
 	virtual void PollEvents()  = 0;
 
-	bool operator==(const Window& rhs) const
-	{
-		return GetHandle() == rhs.GetHandle();
-	}
-
-	bool operator!=(const Window& rhs) const { return !operator==(rhs); }
+	bool operator==(const Window& rhs) const;
+	bool operator!=(const Window& rhs) const;
 
 protected:
 	WindowSettings mSettings;

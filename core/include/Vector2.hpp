@@ -246,5 +246,5 @@ template<typename T>
 const Vector2<T> Vector2<T>::ONE(1);
 
 using Vec2   = Vector2<float>;
-using Vec2i  = Vector2<int>;
-using Vec2ui = Vector2<unsigned int>;
+using Vec2i  = Vector2<I32>;
+using Vec2ui = Vector2<U32>;

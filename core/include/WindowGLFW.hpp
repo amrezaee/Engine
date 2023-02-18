@@ -7,8 +7,8 @@
 class WindowGLFW final: public Window
 {
 public:
-	PREVENT_COPY(WindowGLFW);
 	WindowGLFW(const WindowSettings& settings);
+	PREVENT_COPY(WindowGLFW);
 	~WindowGLFW();
 
 public:

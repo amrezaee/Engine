@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Common.hpp>
+
 #include <RenderDevice.hpp>
 #include <Renderer.hpp>
 #include <Vector2.hpp>
@@ -41,11 +42,11 @@ private:
 	bool OnFramebuffer(Vec2ui resolution);
 
 private:
-	String             mName;
-	Path               mWorkingDir;
-	Uptr<RenderDevice> mRenderDevice;
-	Uptr<Window>       mWindow;
-	Uptr<Renderer>     mRenderer;
+	String          mName;
+	Path            mWorkingDir;
+	RenderDevicePtr mRenderDevice;
+	WindowPtr       mWindow;
+	Uptr<Renderer>  mRenderer;
 
 	bool mRunning {true};
 	bool mFocus {true};

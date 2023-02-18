@@ -19,21 +19,21 @@ void Camera::SetProjection(float left, float right, float bottom, float top)
 
 void Camera::SetCamera(Vec2 position, float angle, float zoom, Vec2 offset)
 {
-	mPosition = position;
-	mAngle    = angle;
-	mZoom     = zoom;
-	mOffset   = offset;
+	Position = position;
+	mAngle   = angle;
+	mZoom    = zoom;
+	mOffset  = offset;
 	Calculate();
 }
 
 Vec2 Camera::GetPosition() const
 {
-	return mPosition;
+	return Position;
 }
 
 void Camera::SetPosition(Vec2 position)
 {
-	mPosition = position;
+	Position = position;
 	Calculate();
 }
 
@@ -91,6 +91,6 @@ void Camera::Calculate()
 	mView.Translate(mCenterOffset + mOffset)
 	        .Scale(mZoom)
 	        .Rotate(-mAngle)
-	        .Translate(-mPosition);
+	        .Translate(-Position);
 	mViewProjection = mProjection * mView;
 }

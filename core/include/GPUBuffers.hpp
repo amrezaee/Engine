@@ -2,6 +2,16 @@
 
 #include <Common.hpp>
 
+
+class VertexBuffer;
+class IndexBuffer;
+class VertexArray;
+
+using VertexBufferPtr = Sptr<VertexBuffer>;
+using IndexBufferPtr  = Sptr<IndexBuffer>;
+using VertexArrayPtr  = Sptr<VertexArray>;
+
+
 enum class VertexType
 {
 	Byte,
@@ -30,24 +40,16 @@ enum class VertexType
 U32 VertexTypeCount(VertexType type);
 U32 VertexTypeSize(VertexType type);
 
-class VertexBuffer;
-class IndexBuffer;
-class VertexArray;
-
-using VertexBufferPtr = Sptr<VertexBuffer>;
-using IndexBufferPtr  = Sptr<IndexBuffer>;
-using VertexArrayPtr  = Sptr<VertexArray>;
-
 struct Vertex
 {
-	Vertex(VertexType atype, bool anormalize = false)
-	        : type(atype), offset(0), normalize(anormalize)
+	Vertex(VertexType type, bool normalize = false)
+	        : Type(type), Offset(0), Normalize(normalize)
 	{
 	}
 
-	VertexType type;
-	U32        offset;
-	bool       normalize;
+	VertexType Type;
+	U32        Offset;
+	bool       Normalize;
 };
 
 class VertexBuffer
@@ -58,7 +60,7 @@ public:
 	static VertexBufferPtr Create(std::initializer_list<Vertex> layout, U32 count,
 	                              U32 stride);
 
-	virtual const std::vector<Vertex>& GetLayout() const         = 0;
+	virtual const Vector<Vertex>& GetLayout() const              = 0;
 	virtual void SetLayout(std::initializer_list<Vertex> layout) = 0;
 	virtual U32  GetCount() const                                = 0;
 	virtual void SetData(const void* data, U32 count)            = 0;

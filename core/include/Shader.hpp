@@ -5,14 +5,14 @@
 #include <Color.hpp>
 #include <Transform.hpp>
 
+class Shader;
+using ShaderPtr = Sptr<Shader>;
+
 enum class ShaderType
 {
 	Vertex,
 	Fragment
 };
-
-class Shader;
-using ShaderPtr = Sptr<Shader>;
 
 class Shader
 {

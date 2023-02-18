@@ -9,7 +9,7 @@ template<typename... Args>
 class Signal
 {
 public:
-	using slot_t = Delegate<bool(Args...)>;
+	using SlotType = Delegate<bool(Args...)>;
 
 	void Clear() { mSlots.clear(); }
 	bool Empty() const { return mSlots.empty(); }
@@ -26,7 +26,7 @@ public:
 		auto begin = mSlots.cbegin();
 		auto end   = mSlots.cend();
 
-		auto found = std::find(begin, end, slot_t(args...));
+		auto found = std::find(begin, end, SlotType(args...));
 
 		if(found != end)
 			mSlots.erase(found);
@@ -43,5 +43,5 @@ public:
 	}
 
 private:
-	std::vector<slot_t> mSlots;
+	Vector<SlotType> mSlots;
 };

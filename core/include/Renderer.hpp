@@ -33,7 +33,7 @@ struct CircleVertex
 	Vec2  LocalPosition;
 	Color Color;
 	float Thickness;
-	float Fade;
+	float Smoothness;
 };
 
 class Renderer
@@ -70,7 +70,7 @@ public:
 	void DrawRotatedQuad(Vec2 pos, Vec2 size, float angle, Color color);
 
 	void DrawCircle(Vec2 pos, float radius, Color color, float thickness = 1.0f,
-	                float fade = 0.03f);
+	                float smoothness = 0.03f);
 
 private:
 	RenderDevice& mDevice;
@@ -79,24 +79,24 @@ private:
 	const U32 mMaxVertices;
 	const U32 mMaxIndices;
 
-	IndexBufferPtr          mIB;
-	std::vector<TexturePtr> mTextures;
-	U32                     mTextureIndex;
-	TexturePtr              mWhiteTexture;
-	Transform               mViewProjection;
-	FrameStats              mStats;
+	IndexBufferPtr     mIB;
+	Vector<TexturePtr> mTextures;
+	U32                mTextureIndex;
+	TexturePtr         mWhiteTexture;
+	Transform          mViewProjection;
+	FrameStats         mStats;
 
-	VertexBufferPtr         mQuadVB;
-	VertexArrayPtr          mQuadVA;
-	std::vector<QuadVertex> mQuadVertices;
-	ShaderPtr               mQuadShader;
-	U32                     mQuadCount;
+	VertexBufferPtr    mQuadVB;
+	VertexArrayPtr     mQuadVA;
+	Vector<QuadVertex> mQuadVertices;
+	ShaderPtr          mQuadShader;
+	U32                mQuadCount;
 
-	VertexBufferPtr           mCircleVB;
-	VertexArrayPtr            mCircleVA;
-	std::vector<CircleVertex> mCircleVertices;
-	ShaderPtr                 mCircleShader;
-	U32                       mCircleCount;
+	VertexBufferPtr      mCircleVB;
+	VertexArrayPtr       mCircleVA;
+	Vector<CircleVertex> mCircleVertices;
+	ShaderPtr            mCircleShader;
+	U32                  mCircleCount;
 
 	constexpr static Vec2 mQuadPositions[4] = {
 	        {-0.5f, -0.5f}, {0.5f, -0.5f}, {0.5f, 0.5f}, {-0.5f, 0.5f}};

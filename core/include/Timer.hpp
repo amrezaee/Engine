@@ -5,57 +5,58 @@
 class Timer
 {
 public:
-	using clock_type     = std::chrono::steady_clock;
-	using timepoint_type = std::chrono::time_point<clock_type>;
-	using s_type         = std::chrono::duration<double>;
-	using ms_type        = std::chrono::duration<double, std::milli>;
-	using us_type        = std::chrono::duration<double, std::micro>;
-	using ns_type        = std::chrono::duration<double, std::nano>;
+	using ClockType       = std::chrono::steady_clock;
+	using TimepointType   = std::chrono::time_point<ClockType>;
+	using SecondType      = std::chrono::duration<double>;
+	using MilliSecondType = std::chrono::duration<double, std::milli>;
+	using MicroSecondType = std::chrono::duration<double, std::micro>;
+	using NanoSecondType  = std::chrono::duration<double, std::nano>;
 
 	Timer() { Reset(); }
 
 	void Reset()
 	{
-		mStart   = clock_type::now();
+		mStart   = ClockType::now();
 		mStopped = false;
 	}
 
 	void Stop()
 	{
-		mStop    = clock_type::now();
+		mStop    = ClockType::now();
 		mStopped = true;
 	}
 
 	// elapsed time in second since ctor or Reset called
-	double Seconds() const { return GetTime<s_type>(); }
+	double Seconds() const { return GetTime<SecondType>(); }
 
 	// elapsed time in millisecond since ctor or Reset called
-	double MilliSeconds() const { return GetTime<ms_type>(); }
+	double MilliSeconds() const { return GetTime<MilliSecondType>(); }
 
 	// elapsed time in microsecond since ctor or Reset called
-	double MicroSeconds() const { return GetTime<us_type>(); }
+	double MicroSeconds() const { return GetTime<MicroSecondType>(); }
 
 	// elapsed time in nanosecond since ctor or Reset called
-	double NanoSeconds() const { return GetTime<ns_type>(); }
+	double NanoSeconds() const { return GetTime<NanoSecondType>(); }
 
 	// returns current time since this function called for the first time in seconds
 	static double TimeNow()
 	{
-		static timepoint_type start = clock_type::now();
-		return std::chrono::duration_cast<s_type>(clock_type::now() - start).count();
+		static TimepointType start = ClockType::now();
+		return std::chrono::duration_cast<SecondType>(ClockType::now() - start)
+		        .count();
 	}
 
 private:
 	template<typename T>
 	inline double GetTime() const
 	{
-		return std::chrono::duration_cast<T>((mStopped ? mStop : clock_type::now()) -
+		return std::chrono::duration_cast<T>((mStopped ? mStop : ClockType::now()) -
 		                                     mStart)
 		        .count();
 	}
 
 private:
-	timepoint_type mStart;
-	timepoint_type mStop;
-	bool           mStopped {false};
+	TimepointType mStart;
+	TimepointType mStop;
+	bool          mStopped {false};
 };

@@ -5,6 +5,9 @@
 #include <Color.hpp>
 #include <Vector2.hpp>
 
+class Texture;
+using TexturePtr = Sptr<Texture>;
+
 enum class WrapMode
 {
 	Repeat,
@@ -12,9 +15,6 @@ enum class WrapMode
 	Border,
 	Clamp
 };
-
-class Texture;
-using TexturePtr = Sptr<Texture>;
 
 class Texture
 {

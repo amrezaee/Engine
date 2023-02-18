@@ -8,6 +8,8 @@
 
 class Window;
 class WindowSettings;
+class RenderDevice;
+using RenderDevicePtr = Uptr<RenderDevice>;
 
 enum class RenderAPI
 {
@@ -63,12 +65,12 @@ public:
 	virtual ~RenderDevice() = default;
 	PREVENT_COPY(RenderDevice);
 
-	static Uptr<RenderDevice> Create();
+	static RenderDevicePtr Create();
 
 	virtual void Initialize() = 0;
 
-	static RenderAPI        GetAPI() { return sAPI; }
-	const RenderDeviceInfo& GetInfo() const { return mInfo; }
+	static RenderAPI        GetAPI();
+	const RenderDeviceInfo& GetInfo() const;
 
 	virtual void SetClearColor(Color color = Color::BLACK) = 0;
 	virtual void Clear()                                   = 0;

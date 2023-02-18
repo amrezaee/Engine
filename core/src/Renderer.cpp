@@ -22,8 +22,8 @@ void Renderer::Initialize()
 	TRACE("Renderer initializing...");
 
 	{  // Create index buffer and upload to GPU
-		std::vector<uint32_t> indices(mMaxIndices);
-		for(uint32_t offset = 0, i = 0; i < mMaxIndices; i += 6, offset += 4)
+		Vector<U32> indices(mMaxIndices);
+		for(U32 offset = 0, i = 0; i < mMaxIndices; i += 6, offset += 4)
 		{
 			indices[i]     = offset;
 			indices[i + 1] = offset + 1;
@@ -219,7 +219,7 @@ void Renderer::DrawRotatedQuad(Vec2 pos, Vec2 size, float angle, Color color)
 }
 
 void Renderer::DrawCircle(Vec2 pos, float radius, Color color, float thickness,
-                          float fade)
+                          float smoothness)
 {
 	if(mCircleCount >= mMaxQuads)
 	{
@@ -236,25 +236,25 @@ void Renderer::DrawCircle(Vec2 pos, float radius, Color color, float thickness,
 	mCircleVertices[i].LocalPosition = mQuadPositions[0] * 2.0f;
 	mCircleVertices[i].Color         = color;
 	mCircleVertices[i].Thickness     = thickness;
-	mCircleVertices[i++].Fade        = fade;
+	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[1];
 	mCircleVertices[i].LocalPosition = mQuadPositions[1] * 2.0f;
 	mCircleVertices[i].Color         = color;
 	mCircleVertices[i].Thickness     = thickness;
-	mCircleVertices[i++].Fade        = fade;
+	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[2];
 	mCircleVertices[i].LocalPosition = mQuadPositions[2] * 2.0f;
 	mCircleVertices[i].Color         = color;
 	mCircleVertices[i].Thickness     = thickness;
-	mCircleVertices[i++].Fade        = fade;
+	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[3];
 	mCircleVertices[i].LocalPosition = mQuadPositions[3] * 2.0f;
 	mCircleVertices[i].Color         = color;
 	mCircleVertices[i].Thickness     = thickness;
-	mCircleVertices[i].Fade          = fade;
+	mCircleVertices[i].Smoothness    = smoothness;
 
 	++mCircleCount;
 	++mStats.QuadCount;
