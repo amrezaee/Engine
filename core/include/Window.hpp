@@ -33,7 +33,7 @@ public:
 	               bool focused = false, bool hidden = false);
 
 	String     Title {"Engine"};
-	Vec2ui     Resolution {640, 480};
+	Vec2ui     Resolution {960, 540};
 	Vec2ui     Position;
 	WindowMode Mode {WindowMode::Windowed};
 	VSyncMode  VSync {VSyncMode::Immediate};

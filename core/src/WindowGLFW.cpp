@@ -184,9 +184,6 @@ bool WindowGLFW::IsFullscreen() const
 
 void WindowGLFW::SetWindowMode(WindowMode mode)
 {
-	if(mode == mSettings.Mode)
-		return;
-
 	mSettings.Mode = mode;
 
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();

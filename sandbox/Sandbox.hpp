@@ -26,7 +26,7 @@ public:
 		GetRenderer().DrawBegin(mCamera);
 
 		for(U32 i = 0; i < 90; ++i)
-			for(U32 j = 0; j < 1000; ++j)
+			for(U32 j = 0; j < 100; ++j)
 				GetRenderer().DrawCircle({wp.x + (i * 20.0f), wp.y + (j * 20.0f)},
 				                         20.0f, Color::BURLYWOOD, 1.0f, 0.095f);
 		GetRenderer().DrawQuad({0.0f, 0.0f}, mSprite->GetResolution() * 10.0f,
@@ -37,7 +37,8 @@ public:
 		time += dt;
 		if(time > 0.8f)
 		{
-			INFO("{},  {},  {},  {}", GetRenderer().GetFrameStats().DrawCalls,
+			INFO("{},  {},  {:.4f},  {:.1f}",
+			     GetRenderer().GetFrameStats().DrawCalls,
 			     GetRenderer().GetFrameStats().QuadCount, dt, 1.0f / dt);
 			time = 0.0f;
 		}
