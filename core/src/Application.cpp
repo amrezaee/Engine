@@ -1,5 +1,6 @@
 #include <Application.hpp>
 
+#include <MathFunctions.hpp>
 #include <Timer.hpp>
 
 Application::Application(const String& name, const Path& workig_dir)
@@ -17,10 +18,9 @@ void Application::Run()
 		fs::current_path(mWorkingDir);
 
 	mRenderDevice = RenderDevice::Create();
-	mWindow       = Window::Create(WindowSettings(mName, {800, 600}, {400, 200}));
+	mWindow       = Window::Create(WindowSettings(mName, {960, 540}, {400, 200}));
 	mRenderDevice->Initialize();
 	mRenderer = MakeUptr<Renderer>(*mRenderDevice, 3072);
-
 
 	mWindow->CloseSignal.Connect(this, &Application::OnWindowClose);
 	mWindow->FocusSignal.Connect(this, &Application::OnWindowFocus);
@@ -32,20 +32,28 @@ void Application::Run()
 
 	while(mRunning)
 	{
-		mDeltaTime = timer.Seconds();
+		mDeltaTimeArray[mDeltaTimeIndex++] = Min(timer.Seconds(), mMinDeltaTime);
+		mDeltaTimeIndex %= ArraySize(mDeltaTimeArray);
+		mDeltaTime =
+		        std::accumulate(mDeltaTimeArray,
+		                        mDeltaTimeArray + ArraySize(mDeltaTimeArray), 0.0) /
+		        ArraySize(mDeltaTimeArray);
 		timer.Reset();
+
+		mDeltaTimeAccumulator += mDeltaTime;
 
 		mWindow->PollEvents();
 
 		if(mFocus)
 		{
-			BeforeUpdate();
-			Update(mDeltaTime);
-			AfterUpdate();
+			while(mDeltaTimeAccumulator >= mFixedUpdateTime)
+			{
+				FixedUpdate(mFixedUpdateTime);
+				mDeltaTimeAccumulator -= mFixedUpdateTime;
+			}
 
-			BeforeDraw();
+			Update(mDeltaTime);
 			Draw(mDeltaTime);
-			AfterDraw();
 		}
 
 		mWindow->SwapBuffers();

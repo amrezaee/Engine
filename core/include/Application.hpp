@@ -25,13 +25,10 @@ public:
 
 protected:
 	// Don't call this methods in derived class!!
-	virtual void Initialize() = 0;
-	virtual bool BeforeDraw() { return true; }
+	virtual void Initialize()    = 0;
 	virtual void Draw(double dt) = 0;
-	virtual void AfterDraw() {}
-	virtual void BeforeUpdate() {}
+	virtual void FixedUpdate(double fdt) { UNUSED(fdt); }
 	virtual void Update(double dt) = 0;
-	virtual void AfterUpdate() {}
 
 	virtual void OnExit() {}                             // Called on exiting
 	virtual void OnFocus(bool focus) { UNUSED(focus); }  // Called on gain/lose focus
@@ -52,6 +49,14 @@ private:
 	bool mFocus {true};
 
 	double mDeltaTime {0.0};
+	double mMinDeltaTime {0.25};
+
+	// for lowering framespikes impacts
+	double mDeltaTimeArray[10] {};
+	U32    mDeltaTimeIndex {0};
+
+	double mFixedUpdateTime {0.016666};
+	double mDeltaTimeAccumulator {0.0};
 };
 
 extern Uptr<Application> CreateApp();

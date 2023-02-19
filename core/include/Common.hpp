@@ -15,6 +15,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <numeric>
 #include <random>
 #include <regex>
 #include <set>
@@ -57,6 +58,7 @@ extern void __cdecl __debugbreak(void);
 #else
 	#define DEBUGBREAK() ((void)0)
 #endif
+
 
 template<typename T>
 using Sptr = std::shared_ptr<T>;
@@ -120,3 +122,9 @@ struct Version
 	U32 release {0};
 	U32 build {0};
 };
+
+template<typename T, size_t size>
+constexpr size_t ArraySize(T (&)[size])
+{
+	return size;
+}
