@@ -29,16 +29,17 @@ void Application::Run()
 	Initialize();
 
 	Timer timer;
+	U32   fixed_iterations = 0;
 
 	while(mRunning)
 	{
 		mDeltaTimeArray[mDeltaTimeIndex++] = Min(timer.Seconds(), mMinDeltaTime);
+		timer.Reset();
 		mDeltaTimeIndex %= ArraySize(mDeltaTimeArray);
 		mDeltaTime =
 		        std::accumulate(mDeltaTimeArray,
 		                        mDeltaTimeArray + ArraySize(mDeltaTimeArray), 0.0) /
 		        ArraySize(mDeltaTimeArray);
-		timer.Reset();
 
 		mDeltaTimeAccumulator += mDeltaTime;
 
@@ -46,11 +47,13 @@ void Application::Run()
 
 		if(mFocus)
 		{
-			while(mDeltaTimeAccumulator >= mFixedUpdateTime)
+			while((mDeltaTimeAccumulator >= mFixedUpdateTime) &&
+			      (fixed_iterations++ < mMaxFixedIterations))
 			{
 				FixedUpdate(mFixedUpdateTime);
 				mDeltaTimeAccumulator -= mFixedUpdateTime;
 			}
+			fixed_iterations = 0;
 
 			Update(mDeltaTime);
 			Draw(mDeltaTime);

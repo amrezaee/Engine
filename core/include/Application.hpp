@@ -55,7 +55,8 @@ private:
 	double mDeltaTimeArray[10] {};
 	U32    mDeltaTimeIndex {0};
 
-	double mFixedUpdateTime {0.016666};
+	double mFixedUpdateTime {1.0 / 60.0};
+	U32    mMaxFixedIterations {8};
 	double mDeltaTimeAccumulator {0.0};
 };
 
