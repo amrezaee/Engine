@@ -15,9 +15,7 @@ public:
 
 	void Run();  // Run the game loop
 	void Terminate();
-	void Rerun();
-	// void Tick();  // Run the game loop one time
-	void Exit();  // Exit game
+	// void Tick();  // Run the game loop one iteration
 
 	Window&       GetWindow();
 	Renderer&     GetRenderer();
@@ -25,13 +23,14 @@ public:
 
 protected:
 	// Don't call this methods in derived class!!
-	virtual void Initialize()    = 0;
-	virtual void Draw(double dt) = 0;
+	virtual void Initialize() = 0;
 	virtual void FixedUpdate(double fdt) { UNUSED(fdt); }
 	virtual void Update(double dt) = 0;
 
 	virtual void OnExit() {}                             // Called on exiting
 	virtual void OnFocus(bool focus) { UNUSED(focus); }  // Called on gain/lose focus
+	// Called on Framebuffer resize
+	virtual void OnResize(Vec2ui resolution) { UNUSED(resolution); }
 
 private:
 	bool OnWindowClose();
@@ -55,7 +54,7 @@ private:
 	double mDeltaTimeArray[10] {};
 	U32    mDeltaTimeIndex {0};
 
-	double mFixedUpdateTime {1.0 / 60.0};
+	double mFixedDeltaTime {1.0 / 60.0};
 	U32    mMaxFixedIterations {8};
 	double mDeltaTimeAccumulator {0.0};
 };

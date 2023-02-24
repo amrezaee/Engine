@@ -58,6 +58,18 @@ public:
 	void SwapBuffers() override;
 	void PollEvents() override;
 
+	friend void CloseCallback(GLFWwindow* win);
+	friend void FramebufferCallback(GLFWwindow* win, int width, int height);
+	friend void FocusCallback(GLFWwindow* win, int state);
+	friend void SizeCallback(GLFWwindow* win, int width, int height);
+	friend void PositionCallback(GLFWwindow* win, int x, int y);
+
 private:
 	GLFWwindow* mHWin;
 };
+
+void CloseCallback(GLFWwindow* win);
+void FramebufferCallback(GLFWwindow* win, int width, int height);
+void FocusCallback(GLFWwindow* win, int state);
+void SizeCallback(GLFWwindow* win, int width, int height);
+void PositionCallback(GLFWwindow* win, int x, int y);

@@ -6,38 +6,39 @@
 
 static U32 window_count = 0;
 
-static void CloseCallback(GLFWwindow* win)
+void CloseCallback(GLFWwindow* win)
 {
 	((WindowGLFW*)glfwGetWindowUserPointer(win))->CloseSignal();
 }
 
-static void FramebufferCallback(GLFWwindow* win, int width, int height)
+void FramebufferCallback(GLFWwindow* win, int width, int height)
 {
 	WindowGLFW* w = (WindowGLFW*)glfwGetWindowUserPointer(win);
 
-	w->FramebufferSignal({U32(width), U32(height)});
-	w->SetResolution({U32(width), U32(height)});
+	w->FramebufferSignal({width, height});
+	w->mSettings.Resolution.x = width;
+	w->mSettings.Resolution.y = height;
 }
 
-static void FocusCallback(GLFWwindow* win, int state)
+void FocusCallback(GLFWwindow* win, int state)
 {
 	WindowGLFW* w = (WindowGLFW*)glfwGetWindowUserPointer(win);
 
 	w->FocusSignal(state == GLFW_TRUE ? true : false);
-	w->SetFocus(state == GLFW_TRUE ? true : false);
+	w->mSettings.Focused = GLFW_TRUE ? true : false;
 }
 
-static void SizeCallback(GLFWwindow* win, int width, int height)
+void SizeCallback(GLFWwindow* win, int width, int height)
 {
-	((WindowGLFW*)glfwGetWindowUserPointer(win))
-	        ->SizeSignal({U32(width), U32(height)});
+	((WindowGLFW*)glfwGetWindowUserPointer(win))->SizeSignal({width, height});
 }
 
-static void PositionCallback(GLFWwindow* win, int x, int y)
+void PositionCallback(GLFWwindow* win, int x, int y)
 {
 	WindowGLFW* w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-	w->PositionSignal({U32(x), U32(y)});
-	w->SetPosition({U32(x), U32(y)});
+	w->PositionSignal({x, y});
+	w->mSettings.Position.x = x;
+	w->mSettings.Position.y = y;
 }
 
 static void ErrorCallback(int code, const char* desc)
@@ -91,9 +92,10 @@ void WindowGLFW::Create()
 	glfwSetWindowFocusCallback(mHWin, FocusCallback);
 	glfwSetWindowPosCallback(mHWin, PositionCallback);
 
-	glfwHideWindow(mHWin);
+	SetHidden(true);
 	SetWindowMode(mSettings.Mode);
-	glfwShowWindow(mHWin);
+	SetPosition(mSettings.Position);
+	SetHidden(false);
 
 	SetVSyncMode(mSettings.VSync);
 	SetHidden(mSettings.Hidden);
@@ -237,7 +239,7 @@ void WindowGLFW::SetMSAA(U32 samples)
 
 	mSettings.MSAA = samples;
 
-	// implement
+	// TODO: implement
 }
 
 bool WindowGLFW::IsSRGB() const

@@ -6,6 +6,8 @@
 Application::Application(const String& name, const Path& workig_dir)
         : mName(name), mWorkingDir(workig_dir)
 {
+	if(!mWorkingDir.empty() && fs::exists(mWorkingDir))
+		fs::current_path(mWorkingDir);
 }
 
 Application::~Application()
@@ -14,13 +16,10 @@ Application::~Application()
 
 void Application::Run()
 {
-	if(!mWorkingDir.empty() && fs::exists(mWorkingDir))
-		fs::current_path(mWorkingDir);
-
 	mRenderDevice = RenderDevice::Create();
-	mWindow       = Window::Create(WindowSettings(mName, {960, 540}, {400, 200}));
+	mWindow       = Window::Create(WindowSettings(mName));
 	mRenderDevice->Initialize();
-	mRenderer = MakeUptr<Renderer>(*mRenderDevice, 3072);
+	mRenderer = MakeUptr<Renderer>(*mRenderDevice, 2048);
 
 	mWindow->CloseSignal.Connect(this, &Application::OnWindowClose);
 	mWindow->FocusSignal.Connect(this, &Application::OnWindowFocus);
@@ -47,16 +46,15 @@ void Application::Run()
 
 		if(mFocus)
 		{
-			while((mDeltaTimeAccumulator >= mFixedUpdateTime) &&
+			while((mDeltaTimeAccumulator >= mFixedDeltaTime) &&
 			      (fixed_iterations++ < mMaxFixedIterations))
 			{
-				FixedUpdate(mFixedUpdateTime);
-				mDeltaTimeAccumulator -= mFixedUpdateTime;
+				FixedUpdate(mFixedDeltaTime);
+				mDeltaTimeAccumulator -= mFixedDeltaTime;
 			}
 			fixed_iterations = 0;
 
 			Update(mDeltaTime);
-			Draw(mDeltaTime);
 		}
 
 		mWindow->SwapBuffers();
@@ -67,20 +65,11 @@ void Application::Run()
 
 void Application::Terminate()
 {
+	mRunning = false;
+
 	mWindow->CloseSignal.Disconnect(this, &Application::OnWindowClose);
 	mWindow->FocusSignal.Disconnect(this, &Application::OnWindowFocus);
 	mWindow->FramebufferSignal.Disconnect(this, &Application::OnFramebuffer);
-}
-
-void Application::Rerun()
-{
-	Terminate();
-	Run();
-}
-
-void Application::Exit()
-{
-	mRunning = false;
 }
 
 Window& Application::GetWindow()
@@ -114,5 +103,6 @@ bool Application::OnWindowFocus(bool b)
 bool Application::OnFramebuffer(Vec2ui resolution)
 {
 	mRenderDevice->UpdateViewport(0, 0, resolution.x, resolution.y);
+	OnResize(resolution);
 	return true;
 }

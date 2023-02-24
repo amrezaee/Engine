@@ -26,15 +26,14 @@ class WindowSettings
 {
 public:
 	WindowSettings() = default;
+	WindowSettings(const String& title): Title(title) {}
 	WindowSettings(const String& title, Vec2ui resolution, Vec2ui position,
-	               WindowMode mode = WindowMode::Windowed,
-	               VSyncMode vsync = VSyncMode::Immediate, U32 msaa = 1,
-	               bool srgb = false, bool resizable = true, bool borderless = false,
-	               bool focused = false, bool hidden = false);
+	               WindowMode mode, VSyncMode vsync, U32 msaa, bool srgb,
+	               bool resizable, bool borderless, bool focused, bool hidden);
 
 	String     Title {"Engine"};
 	Vec2ui     Resolution {960, 540};
-	Vec2ui     Position;
+	Vec2ui     Position {5, 40};
 	WindowMode Mode {WindowMode::Windowed};
 	VSyncMode  VSync {VSyncMode::Immediate};
 	U32        MSAA {1};
