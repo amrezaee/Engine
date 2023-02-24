@@ -1,7 +1,14 @@
 #include <Entity.hpp>
 
+#include <Components.hpp>
+
 Entity::Entity(HandleType handle, Scene* scene): mHandle(handle), mScene(scene)
 {
+}
+
+const String& Entity::GetName() const
+{
+	return GetComponent<TagComponent>().Tag;
 }
 
 Entity::operator HandleType() const

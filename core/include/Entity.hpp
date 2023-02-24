@@ -16,8 +16,10 @@ public:
 	Entity(HandleType handle, Scene* scene);
 	Entity(const Entity&) = default;
 
+	const String& GetName() const;
+
 	template<typename T>
-	bool HasComponent()
+	bool HasComponent() const
 	{
 		return mScene->GetRegistry().all_of<T>(mHandle);
 	}
@@ -41,6 +43,13 @@ public:
 
 	template<typename T>
 	T& GetComponent()
+	{
+		ASSERT(HasComponent<T>(), "Component does not exist");
+		return mScene->GetRegistry().get<T>(mHandle);
+	}
+
+	template<typename T>
+	const T& GetComponent() const
 	{
 		ASSERT(HasComponent<T>(), "Component does not exist");
 		return mScene->GetRegistry().get<T>(mHandle);
