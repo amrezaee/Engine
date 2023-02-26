@@ -52,6 +52,9 @@ file(GLOB SHADER_SOURCES "../shaders/*.glsl")
 
 add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS} ${SHADER_SOURCES})
 
+DEFINE_COMPILER_INFO(core)
+DEFINE_PLATFORM_INFO(core)
+
 target_include_directories(core PUBLIC "include/")
 
 target_link_libraries(core PUBLIC core-deps)
@@ -63,14 +66,14 @@ target_compile_definitions(core PUBLIC
 									GLFW_INCLUDE_NONE
 )
 
-if(GCC_CLI)
+if(ENGINE_COMPILER_GCC_VARIANT)
 	target_compile_options(core PRIVATE
 									-Wall -Weffc++ -Wctor-dtor-privacy -Woverloaded-virtual
 									-fno-gnu-keywords
 									-fno-exceptions #-fno-rtti
 )
 
-elseif(MSVC_CLI)
+elseif(ENGINE_COMPILER_MSVC_VARIANT)
 	target_compile_options(core PRIVATE
 									#/GR-
 									/options:strict /permissive- /W4 /nologo /Zc:__cplusplus /MP
