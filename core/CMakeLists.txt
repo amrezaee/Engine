@@ -66,24 +66,25 @@ target_compile_definitions(core PUBLIC
 									GLFW_INCLUDE_NONE
 )
 
+
 if(ENGINE_COMPILER_GCC_VARIANT)
+	
 	target_compile_options(core PRIVATE
 									-Wall -Weffc++ -Wctor-dtor-privacy -Woverloaded-virtual
 									-fno-gnu-keywords
 									-fno-exceptions #-fno-rtti
-)
+	)
 
 elseif(ENGINE_COMPILER_MSVC_VARIANT)
+
 	target_compile_options(core PRIVATE
 									#/GR-
-									/options:strict /permissive- /W4 /nologo /Zc:__cplusplus /MP
-)
+									/options:strict /permissive- /W4 /nologo /Zc:__cplusplus /MP /fp:fast
+	)
 
 	target_compile_definitions(core PRIVATE 
 										_HAS_EXCEPTIONS=0
-)
-
-	string(REGEX REPLACE "/EHsc" "/EHs-c-" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	)
 
 endif()
 
