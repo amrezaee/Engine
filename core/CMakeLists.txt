@@ -55,31 +55,28 @@ add_library(core STATIC ${CORE_SOURCES} ${CORE_HEADERS} ${SHADER_SOURCES})
 DEFINE_COMPILER_INFO(core)
 DEFINE_PLATFORM_INFO(core)
 
+target_precompile_headers(core PRIVATE "include/Common.hpp")
+
 target_include_directories(core PUBLIC "include/")
 
 target_link_libraries(core PUBLIC core-deps)
 
 target_compile_definitions(core PUBLIC
-									$<$<CONFIG:Debug>:DEBUG_BUILD>
-									
-								PRIVATE
-									GLFW_INCLUDE_NONE
+									$<$<CONFIG:Debug>:ENGINE_DEBUG_BUILD>
 )
-
 
 if(ENGINE_COMPILER_GCC_VARIANT)
 	
 	target_compile_options(core PRIVATE
 									-Wall -Weffc++ -Wctor-dtor-privacy -Woverloaded-virtual
 									-fno-gnu-keywords
-									-fno-exceptions #-fno-rtti
 	)
 
 elseif(ENGINE_COMPILER_MSVC_VARIANT)
 
 	target_compile_options(core PRIVATE
-									#/GR-
 									/options:strict /permissive- /W4 /nologo /Zc:__cplusplus /MP /fp:fast
+									$<$<CONFIG:Debug>:/Oi>
 	)
 
 	target_compile_definitions(core PRIVATE 
