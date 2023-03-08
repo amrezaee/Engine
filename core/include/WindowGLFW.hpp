@@ -2,13 +2,10 @@
 
 #include <Window.hpp>
 
-#include <GLFW/glfw3.h>
-
 class WindowGLFW final: public Window
 {
 public:
 	WindowGLFW(const WindowSettings& settings);
-	PREVENT_COPY(WindowGLFW);
 	~WindowGLFW();
 
 public:
@@ -18,11 +15,11 @@ public:
 	const String& GetTitle() const;
 	void          SetTitle(const String& title) override;
 
-	U32    GetWidth() const override;
-	U32    GetHeight() const override;
+	uword  GetWidth() const override;
+	uword  GetHeight() const override;
 	Vec2ui GetResolution() const override;
-	void   SetWidth(U32 width) override;
-	void   SetHeight(U32 height) override;
+	void   SetWidth(uword width) override;
+	void   SetHeight(uword height) override;
 	void   SetResolution(Vec2ui resolution) override;
 
 	Vec2ui GetPosition() const override;
@@ -35,8 +32,8 @@ public:
 	VSyncMode GetVSyncMode() const override;
 	void      SetVSyncMode(VSyncMode mode) override;
 
-	U32  GetMSAA() const override;
-	void SetMSAA(U32 samples) override;
+	uword GetMSAA() const override;
+	void  SetMSAA(uword samples) override;
 
 	bool IsSRGB() const override;
 	void SetSRGB(bool srgb) override;

@@ -16,9 +16,9 @@ Entity::operator HandleType() const
 	return mHandle;
 }
 
-Entity::operator U32() const
+Entity::operator uword() const
 {
-	return U32(mHandle);
+	return uword(mHandle);
 }
 
 Entity::operator bool() const

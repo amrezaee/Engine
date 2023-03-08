@@ -1,9 +1,8 @@
 #pragma once
 
-#include <Common.hpp>
-
 #include <Camera.hpp>
 #include <Color.hpp>
+#include <Common.hpp>
 #include <GPUBuffers.hpp>
 #include <RenderDevice.hpp>
 #include <Shader.hpp>
@@ -15,8 +14,8 @@ class Window;
 
 struct FrameStats
 {
-	U32 DrawCalls;
-	U32 QuadCount;
+	uword DrawCalls;
+	uword QuadCount;
 };
 
 struct QuadVertex
@@ -39,8 +38,9 @@ struct CircleVertex
 class Renderer
 {
 public:
-	Renderer(RenderDevice& device, U32 max_quads);
-	PREVENT_COPY(Renderer);
+	Renderer(RenderDevice& device, uword max_quads);
+	Renderer(const Renderer&)            = delete;
+	Renderer& operator=(const Renderer&) = delete;
 	~Renderer();
 
 	void Initialize();
@@ -75,13 +75,13 @@ public:
 private:
 	RenderDevice& mDevice;
 
-	const U32 mMaxQuads;
-	const U32 mMaxVertices;
-	const U32 mMaxIndices;
+	const uword mMaxQuads;
+	const uword mMaxVertices;
+	const uword mMaxIndices;
 
 	IndexBufferPtr     mIB;
 	Vector<TexturePtr> mTextures;
-	U32                mTextureIndex;
+	uword              mTextureIndex;
 	TexturePtr         mWhiteTexture;
 	Transform          mViewProjection;
 	FrameStats         mStats;
@@ -90,13 +90,13 @@ private:
 	VertexArrayPtr     mQuadVA;
 	Vector<QuadVertex> mQuadVertices;
 	ShaderPtr          mQuadShader;
-	U32                mQuadCount;
+	uword              mQuadCount;
 
 	VertexBufferPtr      mCircleVB;
 	VertexArrayPtr       mCircleVA;
 	Vector<CircleVertex> mCircleVertices;
 	ShaderPtr            mCircleShader;
-	U32                  mCircleCount;
+	uword                mCircleCount;
 
 	constexpr static Vec2 mQuadPositions[4] = {
 	        {-0.5f, -0.5f}, {0.5f, -0.5f}, {0.5f, 0.5f}, {-0.5f, 0.5f}};

@@ -59,7 +59,7 @@ Transform& Transform::Shear(float x, float y)
 
 Transform& Transform::Rotate(float angle)
 {
-	float rad = Deg2Rad(angle);
+	float rad = (float)Deg2Rad(angle);
 	float c   = std::cos(rad);
 	float s   = std::sin(rad);
 	float a   = m[0];

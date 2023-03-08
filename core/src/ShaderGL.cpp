@@ -81,7 +81,7 @@ void ShaderGL::SetTransform(const String& name, const Transform& transform) cons
 	                            transform.GetPtr());
 }
 
-U32 ShaderGL::GetID() const
+uword ShaderGL::GetID() const
 {
 	return mProgramID;
 }
@@ -178,7 +178,7 @@ void ShaderGL::Postprocess()
 	glGetProgramInterfaceiv(mProgramID, GL_UNIFORM, GL_ACTIVE_RESOURCES, &count);
 	const GLenum properties[3] = {GL_BLOCK_INDEX, GL_NAME_LENGTH, GL_LOCATION};
 
-	for(U32 i = 0; i < U32(count); ++i)
+	for(uword i = 0; i < uword(count); ++i)
 	{
 		GLint values[3];
 		glGetProgramResourceiv(mProgramID, GL_UNIFORM, i, 3, properties, 3, nullptr,

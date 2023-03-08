@@ -6,8 +6,8 @@
 
 WindowSettings::WindowSettings(const String& title, Vec2ui resolution,
                                Vec2ui position, WindowMode mode, VSyncMode vsync,
-                               U32 msaa, bool srgb, bool resizable, bool borderless,
-                               bool focused, bool hidden)
+                               uword msaa, bool srgb, bool resizable,
+                               bool borderless, bool focused, bool hidden)
         : Title(title), Resolution(resolution), Position(position), Mode(mode),
           VSync(vsync), MSAA(msaa), SRGB(srgb), Resizable(resizable),
           Borderless(borderless), Focused(focused), Hidden(hidden)
@@ -24,7 +24,7 @@ WindowPtr Window::Create(const WindowSettings& settings)
 {
 	switch(RenderDevice::GetAPI())
 	{
-	case RenderAPI::GL: return MakeUptr<WindowGLFW>(settings);
+	case RenderAPI::GL: return MakeUnique<WindowGLFW>(settings);
 	}
 
 	ASSERT(false, "Render API not supported");

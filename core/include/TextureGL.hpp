@@ -1,25 +1,24 @@
 #pragma once
 
+#include <Common.hpp>
 #include <Texture.hpp>
-
-#include <glad/gl.h>
 
 class TextureGL final: public Texture
 {
 public:
 	TextureGL();
 	TextureGL(const Path& path);
-	TextureGL(U32 width, U32 height, bool filter = false,
+	TextureGL(uword width, uword height, bool filter = false,
 	          WrapMode wrap = WrapMode::Repeat, Color border = Color::WHITE);
 	~TextureGL();
 
-	void Bind(U32 slot) const override;
+	void Bind(uword slot) const override;
 
 	size_t GetSize() const override;
 
 	Vec2ui GetResolution() const override;
-	U32    GetWidth() const override;
-	U32    GetHeight() const override;
+	uword  GetWidth() const override;
+	uword  GetHeight() const override;
 
 	bool IsFiltered() const override;
 	void SetFilter(bool enable) override;
@@ -29,15 +28,15 @@ public:
 
 	void SetData(const void* data, size_t size) override;
 
-	U32 GetID() const override;
+	uword GetID() const override;
 
 private:
-	U32      mID;
-	U32      mWidth;
-	U32      mHeight;
+	uword    mID;
+	uword    mWidth;
+	uword    mHeight;
 	bool     mFiltered;
 	WrapMode mWrapMode;
 	Color    mBorder;
-	U32      mDataFormat;
-	U32      mInternalFormat;
+	uword    mDataFormat;
+	uword    mInternalFormat;
 };

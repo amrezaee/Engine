@@ -2,8 +2,6 @@
 
 #include <Assert.hpp>
 
-#include <stb_image.h>
-
 TextureGL::TextureGL()
         : mWidth(1), mHeight(1), mDataFormat(GL_RGBA), mInternalFormat(GL_RGBA8)
 {
@@ -11,16 +9,16 @@ TextureGL::TextureGL()
 	glTextureStorage2D(mID, 1, mInternalFormat, mWidth, mHeight);
 	SetFilter(false);
 	SetWrapMode(WrapMode::Repeat);
-	U8 white[4] {0xff, 0xff, 0xff, 0xff};
+	byte white[4] {0xff, 0xff, 0xff, 0xff};
 	SetData(white, 4);
 }
 
 TextureGL::TextureGL(const Path& path)
 {
-	std::ifstream   in(path, std::ios::binary | std::ios::ate);
-	std::vector<U8> image;
-	int             w, h, c;
-	stbi_uc*        raw;
+	std::ifstream     in(path, std::ios::binary | std::ios::ate);
+	std::vector<byte> image;
+	int               w, h, c;
+	stbi_uc*          raw;
 
 	ASSERT(in, "Could not open file");
 
@@ -59,7 +57,8 @@ TextureGL::TextureGL(const Path& path)
 	stbi_image_free(raw);
 }
 
-TextureGL::TextureGL(U32 width, U32 height, bool filter, WrapMode wrap, Color border)
+TextureGL::TextureGL(uword width, uword height, bool filter, WrapMode wrap,
+                     Color border)
         : mWidth(width), mHeight(height), mDataFormat(GL_RGBA),
           mInternalFormat(GL_RGBA8)
 {
@@ -74,14 +73,14 @@ TextureGL::~TextureGL()
 	glDeleteTextures(1, &mID);
 }
 
-void TextureGL::Bind(U32 slot) const
+void TextureGL::Bind(uword slot) const
 {
 	glBindTextureUnit(slot, mID);
 }
 
 size_t TextureGL::GetSize() const
 {
-	U32 bpp = mDataFormat == GL_RGBA ? 4 : 3;
+	uword bpp = mDataFormat == GL_RGBA ? 4 : 3;
 	return size_t(mWidth) * mHeight * bpp;
 }
 
@@ -90,12 +89,12 @@ Vec2ui TextureGL::GetResolution() const
 	return Vec2i {mWidth, mHeight};
 }
 
-U32 TextureGL::GetWidth() const
+uword TextureGL::GetWidth() const
 {
 	return mWidth;
 }
 
-U32 TextureGL::GetHeight() const
+uword TextureGL::GetHeight() const
 {
 	return mHeight;
 }
@@ -167,7 +166,7 @@ void TextureGL::SetData(const void* data, size_t size)
 	                    data);
 }
 
-U32 TextureGL::GetID() const
+uword TextureGL::GetID() const
 {
 	return mID;
 }

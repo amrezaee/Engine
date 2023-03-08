@@ -2,8 +2,6 @@
 
 #include <Shader.hpp>
 
-#include <glad/gl.h>
-
 class ShaderGL final: public Shader
 {
 public:
@@ -20,7 +18,7 @@ public:
 	void SetColor(const String& name, Color color) const override;
 	void SetTransform(const String& name, const Transform& transform) const override;
 
-	U32 GetID() const override;
+	uword GetID() const override;
 
 private:
 	void ReadFile(const Path& shaderfile, String& source);
@@ -31,6 +29,6 @@ private:
 	GLenum ShaderTypeMap(ShaderType type);
 
 private:
-	U32                    mProgramID;
+	uword                  mProgramID;
 	HashMap<String, GLint> mUniformLocations;
 };

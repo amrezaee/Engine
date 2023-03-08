@@ -1,12 +1,12 @@
 #pragma once
 
 #include <Common.hpp>
-
+#include <InputMap.hpp>
 #include <Signal.hpp>
 #include <Vector2.hpp>
 
 class Window;
-using WindowPtr = Uptr<Window>;
+using WindowPtr = UniquePtr<Window>;
 
 enum class WindowMode
 {
@@ -15,7 +15,7 @@ enum class WindowMode
 	ExclusiveFS    // Exclusive Fullscreen
 };
 
-enum class VSyncMode : I32
+enum class VSyncMode : word
 {
 	Immediate    = 0,
 	Synchronized = 1,
@@ -28,7 +28,7 @@ public:
 	WindowSettings() = default;
 	WindowSettings(const String& title): Title(title) {}
 	WindowSettings(const String& title, Vec2ui resolution, Vec2ui position,
-	               WindowMode mode, VSyncMode vsync, U32 msaa, bool srgb,
+	               WindowMode mode, VSyncMode vsync, uword msaa, bool srgb,
 	               bool resizable, bool borderless, bool focused, bool hidden);
 
 	String     Title {"Engine"};
@@ -36,7 +36,7 @@ public:
 	Vec2ui     Position {5, 40};
 	WindowMode Mode {WindowMode::Windowed};
 	VSyncMode  VSync {VSyncMode::Immediate};
-	U32        MSAA {1};
+	uword      MSAA {1};
 	bool       SRGB {false};
 	bool       Resizable {true};
 	bool       Borderless {false};
@@ -54,9 +54,10 @@ public:
 	Signal<bool>   FocusSignal;
 
 public:
-	PREVENT_COPY(Window);
 	Window(const WindowSettings& settings);
-	virtual ~Window() = default;
+	Window(const Window&)            = delete;
+	Window& operator=(const Window&) = delete;
+	virtual ~Window()                = default;
 
 	static WindowPtr Create(const WindowSettings& settings);
 
@@ -66,11 +67,11 @@ public:
 	virtual void          SetTitle(const String& title) = 0;
 
 	// Client area width and height
-	virtual U32    GetWidth() const           = 0;
-	virtual U32    GetHeight() const          = 0;
+	virtual uword  GetWidth() const           = 0;
+	virtual uword  GetHeight() const          = 0;
 	virtual Vec2ui GetResolution() const      = 0;
-	virtual void   SetWidth(U32 width)        = 0;
-	virtual void   SetHeight(U32 height)      = 0;
+	virtual void   SetWidth(uword width)      = 0;
+	virtual void   SetHeight(uword height)    = 0;
 	virtual void   SetResolution(Vec2ui size) = 0;
 
 	// Top left x and y position
@@ -86,8 +87,8 @@ public:
 	virtual void      SetVSyncMode(VSyncMode mode) = 0;
 
 	// Multisampling anti aliasing (e.g. 1, 2, 4, 8, 16 and 32)
-	virtual U32  GetMSAA() const      = 0;
-	virtual void SetMSAA(U32 samples) = 0;
+	virtual uword GetMSAA() const        = 0;
+	virtual void  SetMSAA(uword samples) = 0;
 
 	virtual bool IsSRGB() const     = 0;
 	virtual void SetSRGB(bool srgb) = 0;

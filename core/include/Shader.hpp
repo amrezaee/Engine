@@ -1,12 +1,11 @@
 #pragma once
 
-#include <Common.hpp>
-
 #include <Color.hpp>
+#include <Common.hpp>
 #include <Transform.hpp>
 
 class Shader;
-using ShaderPtr = Sptr<Shader>;
+using ShaderPtr = SharedPtr<Shader>;
 
 enum class ShaderType
 {
@@ -32,5 +31,5 @@ public:
 	virtual void SetTransform(const String&    name,
 	                          const Transform& transform) const    = 0;
 
-	virtual U32 GetID() const = 0;
+	virtual uword GetID() const = 0;
 };

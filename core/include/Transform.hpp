@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Common.hpp>
-
 #include <MathFunctions.hpp>
 #include <Vector2.hpp>
 
@@ -71,7 +70,10 @@ public:
 
 	// angle in degrees
 	Transform&        Rotate(float angle);
-	inline Transform& RotateRadians(float angle) { return Rotate(Rad2Deg(angle)); }
+	inline Transform& RotateRadians(float angle)
+	{
+		return Rotate((float)Rad2Deg(angle));
+	}
 
 	Transform& Project(float left, float right, float bottom, float top);
 

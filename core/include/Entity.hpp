@@ -1,11 +1,8 @@
 #pragma once
 
-#include <Common.hpp>
-
 #include <Assert.hpp>
+#include <Common.hpp>
 #include <Scene.hpp>
-
-#include <entt/entt.hpp>
 
 class Entity
 {
@@ -63,7 +60,7 @@ public:
 	}
 
 	explicit operator HandleType() const;
-	explicit operator U32() const;
+	explicit operator uword() const;
 	explicit operator bool() const;
 
 	bool operator==(const Entity& rhs) const;

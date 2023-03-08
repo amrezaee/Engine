@@ -19,7 +19,7 @@ void Application::Run()
 	mRenderDevice = RenderDevice::Create();
 	mWindow       = Window::Create(WindowSettings(mName));
 	mRenderDevice->Initialize();
-	mRenderer = MakeUptr<Renderer>(*mRenderDevice, 2048);
+	mRenderer = MakeUnique<Renderer>(*mRenderDevice, 2048);
 
 	mWindow->CloseSignal.Connect(this, &Application::OnWindowClose);
 	mWindow->FocusSignal.Connect(this, &Application::OnWindowFocus);
@@ -28,13 +28,14 @@ void Application::Run()
 	Initialize();
 
 	Timer timer;
-	U32   fixed_iterations = 0;
+	uword fixed_iterations = 0;
+	uword index            = 0;
 
 	while(mRunning)
 	{
-		mDeltaTimeArray[mDeltaTimeIndex++] = Min(timer.Seconds(), mMinDeltaTime);
+		mDeltaTimeArray[index++] = std::min(timer.Seconds(), mMaxDeltaTime);
 		timer.Reset();
-		mDeltaTimeIndex %= ArraySize(mDeltaTimeArray);
+		index %= ArraySize(mDeltaTimeArray);
 		mDeltaTime =
 		        std::accumulate(mDeltaTimeArray,
 		                        mDeltaTimeArray + ArraySize(mDeltaTimeArray), 0.0) /

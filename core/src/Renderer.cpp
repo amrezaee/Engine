@@ -3,7 +3,7 @@
 #include <Assert.hpp>
 #include <Logger.hpp>
 
-Renderer::Renderer(RenderDevice& device, U32 max_quads)
+Renderer::Renderer(RenderDevice& device, uword max_quads)
         : mDevice(device), mMaxQuads(max_quads), mMaxVertices(mMaxQuads * 4),
           mMaxIndices(mMaxQuads * 6), mTextureIndex(0), mStats {},
           mQuadVertices(mMaxVertices), mQuadCount(0), mCircleVertices(mMaxVertices),
@@ -22,8 +22,8 @@ void Renderer::Initialize()
 	TRACE("Renderer initializing...");
 
 	{  // Create index buffer and upload to GPU
-		Vector<U32> indices(mMaxIndices);
-		for(U32 offset = 0, i = 0; i < mMaxIndices; i += 6, offset += 4)
+		Vector<uword> indices(mMaxIndices);
+		for(uword offset = 0, i = 0; i < mMaxIndices; i += 6, offset += 4)
 		{
 			indices[i]     = offset;
 			indices[i + 1] = offset + 1;
@@ -119,7 +119,7 @@ void Renderer::BatchEnd()
 
 	if(mQuadCount != 0)
 	{  // flush quads
-		for(U32 i = 0; i < mTextureIndex; ++i) { mTextures[i]->Bind(i); }
+		for(uword i = 0; i < mTextureIndex; ++i) { mTextures[i]->Bind(i); }
 
 		mQuadVB->SetData(mQuadVertices.data(), mQuadCount * 4);
 		mQuadShader->Bind();
@@ -139,7 +139,7 @@ void Renderer::DrawQuad(Transform& model, const TexturePtr& texture,
 	}
 
 	float texture_index = 0.0f;
-	for(U32 i = 1; i < mTextureIndex; ++i)
+	for(uword i = 1; i < mTextureIndex; ++i)
 	{
 		if(*texture == *mTextures[i])
 		{
@@ -161,7 +161,7 @@ void Renderer::DrawQuad(Transform& model, const TexturePtr& texture,
 		mTextures[mTextureIndex++] = texture;
 	}
 
-	U32 i = mQuadCount * 4;
+	uword i = mQuadCount * 4;
 
 	mQuadVertices[i].Position = model * mQuadPositions[0];
 	mQuadVertices[i].UV       = tex_coords[0];
@@ -230,7 +230,7 @@ void Renderer::DrawCircle(Vec2 pos, float radius, Color color, float thickness,
 	Transform model;
 	model.Translate(pos).Scale(radius);
 
-	U32 i = mCircleCount * 4;
+	uword i = mCircleCount * 4;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[0];
 	mCircleVertices[i].LocalPosition = mQuadPositions[0] * 2.0f;

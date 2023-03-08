@@ -5,10 +5,6 @@
 class RenderDeviceGL: public RenderDevice
 {
 public:
-	RenderDeviceGL()  = default;
-	~RenderDeviceGL() = default;
-	PREVENT_COPY(RenderDeviceGL);
-
 	void Initialize() override;
 
 	void SetClearColor(Color color = Color::BLACK) override;
@@ -19,12 +15,12 @@ public:
 	                  Color color = Color::WHITE) override;
 	bool IsBlendingEnable() const override;
 
-	void UpdateViewport(U32 x, U32 y, U32 width, U32 height) override;
+	void UpdateViewport(uword x, uword y, uword width, uword height) override;
 
 	void SetPointSize(float size) override;
 
-	void DrawIndexed(const VertexArrayPtr& va, U32 index_count = 0) override;
+	void DrawIndexed(const VertexArrayPtr& va, uword index_count = 0) override;
 
 private:
-	I32 BlendFuncMap(BlendFunc func);
+	word BlendFuncMap(BlendFunc func);
 };

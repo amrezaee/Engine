@@ -3,13 +3,11 @@
 #include <Assert.hpp>
 #include <Logger.hpp>
 
-#include <glad/gl.h>
-
-VertexBufferGL::VertexBufferGL(std::initializer_list<Vertex> layout, U32 count,
-                               U32 stride)
+VertexBufferGL::VertexBufferGL(std::initializer_list<Vertex> layout, uword count,
+                               uword stride)
         : mLayout(layout), mCount(count), mStride(stride)
 {
-	U32 offset {0};
+	uword offset {0};
 	for(auto& e : mLayout)
 	{
 		e.Offset = offset;
@@ -34,31 +32,31 @@ void VertexBufferGL::SetLayout(std::initializer_list<Vertex> layout)
 	mLayout = layout;
 }
 
-U32 VertexBufferGL::GetCount() const
+uword VertexBufferGL::GetCount() const
 {
 	return mCount;
 }
 
-void VertexBufferGL::SetData(const void* data, U32 count)
+void VertexBufferGL::SetData(const void* data, uword count)
 {
 	glNamedBufferSubData(mID, 0, count * mStride, data);
 }
 
-U32 VertexBufferGL::GetStride() const
+uword VertexBufferGL::GetStride() const
 {
 	return mStride;
 }
 
-U32 VertexBufferGL::GetID() const
+uword VertexBufferGL::GetID() const
 {
 	return mID;
 }
 
 
-IndexBufferGL::IndexBufferGL(const U32* data, U32 count): mCount(count)
+IndexBufferGL::IndexBufferGL(const uword* data, uword count): mCount(count)
 {
 	glCreateBuffers(1, &mID);
-	glNamedBufferStorage(mID, count * sizeof(U32), data, GL_DYNAMIC_STORAGE_BIT);
+	glNamedBufferStorage(mID, count * sizeof(uword), data, GL_DYNAMIC_STORAGE_BIT);
 }
 
 IndexBufferGL::~IndexBufferGL()
@@ -66,17 +64,17 @@ IndexBufferGL::~IndexBufferGL()
 	glDeleteBuffers(1, &mID);
 }
 
-U32 IndexBufferGL::GetCount() const
+uword IndexBufferGL::GetCount() const
 {
 	return mCount;
 }
 
-void IndexBufferGL::SetData(const U32* data, U32 count)
+void IndexBufferGL::SetData(const uword* data, uword count)
 {
-	glNamedBufferSubData(mID, 0, count * sizeof(U32), data);
+	glNamedBufferSubData(mID, 0, count * sizeof(uword), data);
 }
 
-U32 IndexBufferGL::GetID() const
+uword IndexBufferGL::GetID() const
 {
 	return mID;
 }
@@ -102,13 +100,13 @@ void VertexArrayGL::AttachVertexBuffer(const VertexBufferPtr& vb)
 {
 	glVertexArrayVertexBuffer(mID, mVBIndex, vb->GetID(), 0, vb->GetStride());
 
-	auto layout  = vb->GetLayout();
-	U32  attribs = U32(layout.size());
+	auto  layout  = vb->GetLayout();
+	uword attribs = uword(layout.size());
 
-	for(U32 i = 0; i < attribs; ++i)
+	for(uword i = 0; i < attribs; ++i)
 	{
 		VertexType type   = layout[i].Type;
-		U32        offset = layout[i].Offset;
+		uword      offset = layout[i].Offset;
 
 		glEnableVertexArrayAttrib(mID, i);
 		glVertexArrayAttribBinding(mID, i, mVBIndex);
@@ -163,12 +161,12 @@ void VertexArrayGL::AttachVertexBuffer(const VertexBufferPtr& vb)
 	++mVBIndex;
 }
 
-U32 VertexArrayGL::GetVertexBufferCount() const
+uword VertexArrayGL::GetVertexBufferCount() const
 {
-	return U32(mVBList.size());
+	return uword(mVBList.size());
 }
 
-VertexBufferPtr VertexArrayGL::GetVertexBuffer(U32 i) const
+VertexBufferPtr VertexArrayGL::GetVertexBuffer(uword i) const
 {
 	if(mVBList.size() != 0)
 		return mVBList[mVBList.size() - 1 - i];
@@ -200,7 +198,7 @@ void VertexArrayGL::Unbind() const
 	glBindVertexArray(0);
 }
 
-U32 VertexArrayGL::VertexTypeMap(VertexType type)
+uword VertexArrayGL::VertexTypeMap(VertexType type)
 {
 	switch(type)
 	{

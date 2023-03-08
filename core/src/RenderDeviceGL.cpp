@@ -3,9 +3,6 @@
 #include <Assert.hpp>
 #include <Logger.hpp>
 
-#include <GLFW/glfw3.h>
-#include <glad/gl.h>
-
 void RenderDeviceGL::Initialize()
 {
 	TRACE("RenderDevice initializing...");
@@ -18,7 +15,7 @@ void RenderDeviceGL::Initialize()
 
 	ASSERT(mj == 4 && mi == 6, "OpenGL 4.6 required");
 
-#ifdef DEBUG_BUILD
+#ifdef ENGINE_DEBUG_BUILD
 	void GLDebugOutput(GLenum, GLenum, GLuint, GLenum, GLsizei length, const char*,
 	                   const void*);
 
@@ -28,7 +25,7 @@ void RenderDeviceGL::Initialize()
 
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION,
 	                      0, nullptr, GL_FALSE);
-#endif
+#endif  // ENGINE_DEBUG_BUILD
 
 	{
 		String r                  = (const char*)glGetString(GL_RENDERER);
@@ -115,7 +112,7 @@ bool RenderDeviceGL::IsBlendingEnable() const
 	return glIsEnabled(GL_BLEND) == GL_TRUE;
 }
 
-void RenderDeviceGL::UpdateViewport(U32 x, U32 y, U32 width, U32 height)
+void RenderDeviceGL::UpdateViewport(uword x, uword y, uword width, uword height)
 {
 	glViewport(GLint(x), GLint(y), GLsizei(width), GLsizei(height));
 }
@@ -125,14 +122,14 @@ void RenderDeviceGL::SetPointSize(float size)
 	glPointSize(size);
 }
 
-void RenderDeviceGL::DrawIndexed(const VertexArrayPtr& va, U32 index_count)
+void RenderDeviceGL::DrawIndexed(const VertexArrayPtr& va, uword index_count)
 {
-	U32 count = index_count ? index_count : va->GetIndexBuffer()->GetCount();
+	uword count = index_count ? index_count : va->GetIndexBuffer()->GetCount();
 	va->Bind();
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
 }
 
-I32 RenderDeviceGL::BlendFuncMap(BlendFunc func)
+word RenderDeviceGL::BlendFuncMap(BlendFunc func)
 {
 	switch(func)
 	{
@@ -154,13 +151,13 @@ I32 RenderDeviceGL::BlendFuncMap(BlendFunc func)
 	}
 }
 
-#ifdef DEBUG_BUILD
+#ifdef ENGINE_DEBUG_BUILD
 void GLDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
                    GLsizei length, const char* message, const void* userparam)
 {
-	UNUSED(userparam);
-	UNUSED(length);
-	UNUSED(id);
+	(void)userparam;
+	(void)length;
+	(void)id;
 
 	const char *src, *tp;
 	switch(source)
@@ -200,4 +197,4 @@ void GLDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
 		return;
 	}
 }
-#endif  // DEBUG_BUILD
+#endif  // ENGINE_DEBUG_BUILD

@@ -1,15 +1,14 @@
 #pragma once
 
-#include <Common.hpp>
-
 #include <Color.hpp>
+#include <Common.hpp>
 #include <GPUBuffers.hpp>
 #include <Texture.hpp>
 
 class Window;
 class WindowSettings;
 class RenderDevice;
-using RenderDevicePtr = Uptr<RenderDevice>;
+using RenderDevicePtr = UniquePtr<RenderDevice>;
 
 enum class RenderAPI
 {
@@ -27,17 +26,18 @@ struct RenderDeviceInfo
 	String  Name;
 	String  Vendor;
 	Version DriverVersion;
-	bool    ASTC;         // Adaptive scalable texture compression
-	bool    S3TC;         // or DXT1 to DXT5
-	bool    ETC1;         // Ericsson texture compression 1
-	bool    ETC2;         // Ericsson texture compression 2
-	bool    PVRTC;        // PowerVR texture compression
-	bool    BC4BC5;       // BC4 and BC5
-	bool    BC6HBC7;      // BC6H and BC7
-	U32 NumTextureUnits;  // number of available texture samplers in fragment shader
-	U32 MaxTextureWidth;
-	U32 MaxTextureHeight;
-	U32 NumSamples;
+	bool    ASTC;             // Adaptive scalable texture compression
+	bool    S3TC;             // or DXT1 to DXT5
+	bool    ETC1;             // Ericsson texture compression 1
+	bool    ETC2;             // Ericsson texture compression 2
+	bool    PVRTC;            // PowerVR texture compression
+	bool    BC4BC5;           // BC4 and BC5
+	bool    BC6HBC7;          // BC6H and BC7
+	uword   NumTextureUnits;  // number of available texture samplers in fragment
+	                          // shader
+	uword MaxTextureWidth;
+	uword MaxTextureHeight;
+	uword NumSamples;
 };
 
 enum class BlendFunc
@@ -61,9 +61,10 @@ enum class BlendFunc
 class RenderDevice
 {
 public:
-	RenderDevice()          = default;
-	virtual ~RenderDevice() = default;
-	PREVENT_COPY(RenderDevice);
+	RenderDevice()                               = default;
+	RenderDevice(const RenderDevice&)            = delete;
+	RenderDevice& operator=(const RenderDevice&) = delete;
+	virtual ~RenderDevice()                      = default;
 
 	static RenderDevicePtr Create();
 
@@ -80,11 +81,11 @@ public:
 	                          Color color = Color::WHITE) = 0;
 	virtual bool IsBlendingEnable() const                 = 0;
 
-	virtual void UpdateViewport(U32 x, U32 y, U32 width, U32 height) = 0;
+	virtual void UpdateViewport(uword x, uword y, uword width, uword height) = 0;
 
 	virtual void SetPointSize(float size) = 0;
 
-	virtual void DrawIndexed(const VertexArrayPtr& va, U32 index_count = 0) = 0;
+	virtual void DrawIndexed(const VertexArrayPtr& va, uword index_count = 0) = 0;
 
 private:
 	static RenderAPI sAPI;

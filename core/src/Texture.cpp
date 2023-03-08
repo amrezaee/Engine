@@ -8,7 +8,7 @@ TexturePtr Texture::Create()
 {
 	switch(RenderDevice::GetAPI())
 	{
-	case RenderAPI::GL: return MakeSptr<TextureGL>();
+	case RenderAPI::GL: return MakeShared<TextureGL>();
 	}
 	ASSERT(false, "Render API not supported");
 	return nullptr;
@@ -18,19 +18,19 @@ TexturePtr Texture::Create(const Path& path)
 {
 	switch(RenderDevice::GetAPI())
 	{
-	case RenderAPI::GL: return MakeSptr<TextureGL>(path);
+	case RenderAPI::GL: return MakeShared<TextureGL>(path);
 	}
 	ASSERT(false, "Render API not supported");
 	return nullptr;
 }
 
-TexturePtr Texture::Create(U32 width, U32 height, bool filter, WrapMode wrap,
+TexturePtr Texture::Create(uword width, uword height, bool filter, WrapMode wrap,
                            Color border)
 {
 	switch(RenderDevice::GetAPI())
 	{
 	case RenderAPI::GL:
-		return MakeSptr<TextureGL>(width, height, filter, wrap, border);
+		return MakeShared<TextureGL>(width, height, filter, wrap, border);
 	}
 	ASSERT(false, "Render API not supported");
 	return nullptr;

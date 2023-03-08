@@ -15,13 +15,13 @@ void Logger::Init()
 	sinks[0]->set_pattern("[%t] [%T] [%n] %^[%=8l] | %v%$");
 	sinks[1]->set_pattern("[%t] [%T] [%n] [%=8l] | %v");
 
-	logger = MakeSptr<spdlog::logger>("Engine", begin(sinks), end(sinks));
+	logger = MakeShared<spdlog::logger>("Engine", begin(sinks), end(sinks));
 	spdlog::register_logger(logger);
 	logger->set_level(spdlog::level::trace);
 	logger->flush_on(spdlog::level::trace);
 }
 
-Sptr<spdlog::logger>& Logger::GetLogger()
+SharedPtr<spdlog::logger>& Logger::GetLogger()
 {
 	return logger;
 }

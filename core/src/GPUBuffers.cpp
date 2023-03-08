@@ -4,22 +4,22 @@
 #include <GPUBuffersGL.hpp>
 #include <RenderDevice.hpp>
 
-VertexBufferPtr VertexBuffer::Create(std::initializer_list<Vertex> layout, U32 count,
-                                     U32 stride)
+VertexBufferPtr VertexBuffer::Create(std::initializer_list<Vertex> layout,
+                                     uword count, uword stride)
 {
 	switch(RenderDevice::GetAPI())
 	{
-	case RenderAPI::GL: return MakeSptr<VertexBufferGL>(layout, count, stride);
+	case RenderAPI::GL: return MakeShared<VertexBufferGL>(layout, count, stride);
 	}
 	ASSERT(false, "Render API not supported");
 	return nullptr;
 }
 
-IndexBufferPtr IndexBuffer::Create(const U32* data, U32 count)
+IndexBufferPtr IndexBuffer::Create(const uword* data, uword count)
 {
 	switch(RenderDevice::GetAPI())
 	{
-	case RenderAPI::GL: return MakeSptr<IndexBufferGL>(data, count);
+	case RenderAPI::GL: return MakeShared<IndexBufferGL>(data, count);
 	}
 	ASSERT(false, "Render API not supported");
 	return nullptr;
@@ -29,13 +29,13 @@ VertexArrayPtr VertexArray::Create()
 {
 	switch(RenderDevice::GetAPI())
 	{
-	case RenderAPI::GL: return MakeSptr<VertexArrayGL>();
+	case RenderAPI::GL: return MakeShared<VertexArrayGL>();
 	}
 	ASSERT(false, "Render API not supported");
 	return nullptr;
 }
 
-U32 VertexTypeSize(VertexType type)
+uword VertexTypeSize(VertexType type)
 {
 	switch(type)
 	{
@@ -72,7 +72,7 @@ U32 VertexTypeSize(VertexType type)
 	}
 }
 
-U32 VertexTypeCount(VertexType type)
+uword VertexTypeCount(VertexType type)
 {
 	switch(type)
 	{

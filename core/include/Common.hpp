@@ -27,53 +27,29 @@
 #include <utility>
 #include <vector>
 
-#define UNUSED(x) ((void)x)
-#define EXPAND(x) x
-#define STR(s)    #s
+// clang-format off
+#include <entt/entt.hpp>
 
-#if defined(_MSC_VER)
-extern void __cdecl __debugbreak(void);
-	#define DEBUGBREAK() __debugbreak()
+#include <glad/gl.h>
+#include <GLFW/glfw3.h>
 
-#elif((!defined(__NACL__)) && ((defined(__GNUC__) || defined(__clang__)) && \
-                               (defined(__i386__) || defined(__x86_64__))))
-	#define DEBUGBREAK() __asm__ __volatile__("int $3\n\t")
-
-#elif(defined(__APPLE__) && (defined(__arm64__) || defined(__aarch64__)))
-	#define DEBUGBREAK() __asm__ __volatile__("brk #22\n\t")
-
-#elif defined(__APPLE__) && defined(__arm__)
-	#define DEBUGBREAK() __asm__ __volatile__("bkpt #22\n\t")
-
-#elif defined(__386__) && defined(__WATCOMC__)
-	#define DEBUGBREAK()      \
-		{                     \
-			_asm { int 0x03 } \
-		}
-
-#elif defined(HAVE_SIGNAL_H) && !defined(__WATCOMC__)
-	#include <signal.h>
-	#define DEBUGBREAK() raise(SIGTRAP)
-
-#else
-	#define DEBUGBREAK() ((void)0)
-#endif
-
+#include <stb_image.h>
+//clang-format on
 
 template<typename T>
-using Sptr = std::shared_ptr<T>;
+using SharedPtr = std::shared_ptr<T>;
 
 template<typename T>
-using Uptr = std::unique_ptr<T>;
+using UniquePtr = std::unique_ptr<T>;
 
 template<typename T, typename... Args>
-constexpr Sptr<T> MakeSptr(Args&&... args)
+constexpr SharedPtr<T> MakeShared(Args&&... args)
 {
 	return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
 template<typename T, typename... Args>
-constexpr Uptr<T> MakeUptr(Args&&... args)
+constexpr UniquePtr<T> MakeUnique(Args&&... args)
 {
 	return std::make_unique<T>(std::forward<Args>(args)...);
 }
@@ -90,20 +66,17 @@ using Path        = std::filesystem::path;
 
 namespace fs = std::filesystem;
 
-using U64 = uint64_t;
-using U32 = uint32_t;
-using U16 = uint16_t;
-using U8  = uint8_t;
+using udword = uint64_t;
+using uword  = uint32_t;
+using uhalf  = uint16_t;
+using byte   = uint8_t;
+using uchar  = unsigned char;
 
-using I64 = int64_t;
-using I32 = int32_t;
-using I16 = int16_t;
-using I8  = int8_t;
+using dword = int64_t;
+using word  = int32_t;
+using half  = int16_t;
 
-// use this only in public section of class
-#define PREVENT_COPY(cls)                \
-	cls& operator=(const cls&) = delete; \
-	cls(const cls&)            = delete
+using real = double;
 
 struct Version
 {
@@ -117,10 +90,10 @@ struct Version
 		return r;
 	}
 
-	U32 major {0};
-	U32 minor {0};
-	U32 release {0};
-	U32 build {0};
+	uword major {0};
+	uword minor {0};
+	uword release {0};
+	uword build {0};
 };
 
 template<typename T, size_t size>

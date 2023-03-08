@@ -4,7 +4,7 @@
 #include <Logger.hpp>
 #include <Renderer.hpp>
 
-static U32 window_count = 0;
+static uword window_count = 0;
 
 void CloseCallback(GLFWwindow* win)
 {
@@ -130,12 +130,12 @@ void WindowGLFW::SetTitle(const String& title)
 	glfwSetWindowTitle(mHWin, title.c_str());
 }
 
-U32 WindowGLFW::GetWidth() const
+uword WindowGLFW::GetWidth() const
 {
 	return mSettings.Resolution.x;
 }
 
-U32 WindowGLFW::GetHeight() const
+uword WindowGLFW::GetHeight() const
 {
 	return mSettings.Resolution.y;
 }
@@ -145,13 +145,13 @@ Vec2ui WindowGLFW::GetResolution() const
 	return mSettings.Resolution;
 }
 
-void WindowGLFW::SetWidth(U32 width)
+void WindowGLFW::SetWidth(uword width)
 {
 	mSettings.Resolution.x = width;
 	glfwSetWindowSize(mHWin, int(width), int(mSettings.Resolution.y));
 }
 
-void WindowGLFW::SetHeight(U32 height)
+void WindowGLFW::SetHeight(uword height)
 {
 	mSettings.Resolution.y = height;
 	glfwSetWindowSize(mHWin, int(mSettings.Resolution.x), int(height));
@@ -226,12 +226,12 @@ void WindowGLFW::SetVSyncMode(VSyncMode mode)
 	glfwSwapInterval(int(mode));
 }
 
-U32 WindowGLFW::GetMSAA() const
+uword WindowGLFW::GetMSAA() const
 {
 	return mSettings.MSAA;
 }
 
-void WindowGLFW::SetMSAA(U32 samples)
+void WindowGLFW::SetMSAA(uword samples)
 {
 	if(samples != 0 || samples != 2 || samples != 4 || samples != 8 ||
 	   samples != 16 || samples != 32)
@@ -248,7 +248,7 @@ bool WindowGLFW::IsSRGB() const
 }
 void WindowGLFW::SetSRGB(bool srgb)
 {
-	UNUSED(srgb);
+	(void)srgb;
 }
 
 bool WindowGLFW::IsResizable() const

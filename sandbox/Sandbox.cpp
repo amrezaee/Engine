@@ -1,6 +1,6 @@
 #include "Sandbox.hpp"
 
-Uptr<Application> CreateApp()
+UniquePtr<Application> CreateApp()
 {
-	return MakeUptr<Sandbox>();
+	return MakeUnique<Sandbox>();
 }

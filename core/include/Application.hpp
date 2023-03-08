@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Common.hpp>
-
 #include <RenderDevice.hpp>
 #include <Renderer.hpp>
 #include <Vector2.hpp>
@@ -15,7 +14,6 @@ public:
 
 	void Run();  // Run the game loop
 	void Terminate();
-	// void Tick();  // Run the game loop one iteration
 
 	Window&       GetWindow();
 	Renderer&     GetRenderer();
@@ -24,13 +22,13 @@ public:
 protected:
 	// Don't call this methods in derived class!!
 	virtual void Initialize() = 0;
-	virtual void FixedUpdate(double fdt) { UNUSED(fdt); }
+	virtual void FixedUpdate(double fdt) { (void)fdt; }
 	virtual void Update(double dt) = 0;
 
-	virtual void OnExit() {}                             // Called on exiting
-	virtual void OnFocus(bool focus) { UNUSED(focus); }  // Called on gain/lose focus
+	virtual void OnExit() {}                           // Called on exiting
+	virtual void OnFocus(bool focus) { (void)focus; }  // Called on gain/lose focus
 	// Called on Framebuffer resize
-	virtual void OnResize(Vec2ui resolution) { UNUSED(resolution); }
+	virtual void OnResize(Vec2ui resolution) { (void)resolution; }
 
 private:
 	bool OnWindowClose();
@@ -38,25 +36,24 @@ private:
 	bool OnFramebuffer(Vec2ui resolution);
 
 private:
-	String          mName;
-	Path            mWorkingDir;
-	RenderDevicePtr mRenderDevice;
-	WindowPtr       mWindow;
-	Uptr<Renderer>  mRenderer;
+	String              mName;
+	Path                mWorkingDir;
+	RenderDevicePtr     mRenderDevice;
+	WindowPtr           mWindow;
+	UniquePtr<Renderer> mRenderer;
 
 	bool mRunning {true};
 	bool mFocus {true};
 
 	double mDeltaTime {0.0};
-	double mMinDeltaTime {0.25};
+	double mMaxDeltaTime {0.25};
 
 	// for lowering framespikes impacts
 	double mDeltaTimeArray[10] {};
-	U32    mDeltaTimeIndex {0};
 
 	double mFixedDeltaTime {1.0 / 60.0};
-	U32    mMaxFixedIterations {8};
+	uword  mMaxFixedIterations {8};
 	double mDeltaTimeAccumulator {0.0};
 };
 
-extern Uptr<Application> CreateApp();
+extern UniquePtr<Application> CreateApp();

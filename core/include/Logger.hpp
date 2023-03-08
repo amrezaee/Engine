@@ -10,7 +10,7 @@ class Logger
 public:
 	static void Init();
 
-	static Sptr<spdlog::logger>& GetLogger();
+	static SharedPtr<spdlog::logger>& GetLogger();
 };  // class Logger
 
 #define TRACE(...) ::Logger::GetLogger()->trace(__VA_ARGS__)

@@ -8,7 +8,7 @@ ShaderPtr Shader::Create(const Path& path)
 {
 	switch(RenderDevice::GetAPI())
 	{
-	case RenderAPI::GL: return MakeSptr<ShaderGL>(path);
+	case RenderAPI::GL: return MakeShared<ShaderGL>(path);
 	}
 	ASSERT(false, "Render API not supported");
 	return nullptr;
