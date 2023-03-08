@@ -10,12 +10,14 @@ public:
 	static const Vector2 ONE;
 
 	// constructors
-
 	constexpr Vector2(): x(static_cast<T>(0)), y(static_cast<T>(0)) {}
-	explicit constexpr Vector2(T s): x(s), y(s) {}
+
+	constexpr Vector2(T s): x(s), y(s) {}
+
 	constexpr Vector2(T nx, T ny): x(nx), y(ny) {}
+
 	template<typename A>
-	explicit constexpr Vector2(A a): x(static_cast<T>(a)), y(static_cast<T>(a))
+	constexpr Vector2(A a): x(static_cast<T>(a)), y(static_cast<T>(a))
 	{
 	}
 
@@ -52,7 +54,6 @@ public:
 	Vector2<T>& operator=(Vector2<T>&&)      = default;
 
 	// unary operations
-
 	T& operator[](int i) { return i == 0 ? x : y; }
 	T  operator[](int i) const { return i == 0 ? x : y; }
 
@@ -89,13 +90,12 @@ public:
 		return v;
 	}
 
-	constexpr explicit operator bool() const
+	explicit constexpr operator bool() const
 	{
 		return (x != static_cast<T>(0)) && (y != static_cast<T>(0));
 	}
 
 	// logical operations
-
 	constexpr bool operator==(Vector2<T> r) const { return x == r.x && y == r.y; }
 	constexpr bool operator!=(Vector2<T> r) const { return !operator==(r); }
 	constexpr bool operator>=(Vector2<T> r) const { return x >= r.x && y >= r.y; }
@@ -104,7 +104,6 @@ public:
 	constexpr bool operator>(Vector2<T> r) const { return !operator<=(r); }
 
 	// vector-vector operations
-
 	constexpr Vector2<T> operator+(Vector2<T> r) const
 	{
 		return Vector2<T>(x + r.x, y + r.y);
@@ -125,28 +124,28 @@ public:
 		return Vector2<T>(x / r.x, y / r.y);
 	}
 
-	Vector2<T>& operator+=(Vector2<T> r) const
+	Vector2<T>& operator+=(Vector2<T> r)
 	{
 		x += r.x;
 		y += r.y;
 		return *this;
 	}
 
-	Vector2<T>& operator-=(Vector2<T> r) const
+	Vector2<T>& operator-=(Vector2<T> r)
 	{
 		x -= r.x;
 		y -= r.y;
 		return *this;
 	}
 
-	Vector2<T>& operator*=(Vector2<T> r) const
+	Vector2<T>& operator*=(Vector2<T> r)
 	{
 		x *= r.x;
 		y *= r.y;
 		return *this;
 	}
 
-	Vector2<T>& operator/=(Vector2<T> r) const
+	Vector2<T>& operator/=(Vector2<T> r)
 	{
 		x /= r.x;
 		y /= r.y;
@@ -154,34 +153,33 @@ public:
 	}
 
 	// vector-scaler operations
-
 	constexpr Vector2<T> operator+(T r) const { return Vector2<T>(x + r, y + r); }
 	constexpr Vector2<T> operator-(T r) const { return Vector2<T>(x - r, y - r); }
 	constexpr Vector2<T> operator*(T r) const { return Vector2<T>(x * r, y * r); }
 	constexpr Vector2<T> operator/(T r) const { return Vector2<T>(x / r, y / r); }
 
-	Vector2<T>& operator+=(T r) const
+	Vector2<T>& operator+=(T r)
 	{
 		x += r;
 		y += r;
 		return *this;
 	}
 
-	Vector2<T>& operator-=(T r) const
+	Vector2<T>& operator-=(T r)
 	{
 		x -= r;
 		y -= r;
 		return *this;
 	}
 
-	Vector2<T>& operator*=(T r) const
+	Vector2<T>& operator*=(T r)
 	{
 		x *= r;
 		y *= r;
 		return *this;
 	}
 
-	Vector2<T>& operator/=(T r) const
+	Vector2<T>& operator/=(T r)
 	{
 		x /= r;
 		y /= r;
@@ -189,7 +187,6 @@ public:
 	}
 
 	// functions
-
 	T Length() const { return static_cast<T>(std::sqrt(x * x + y * y)); }
 
 	constexpr T LengthSqrd() const { return x * x + y * y; }
@@ -214,7 +211,6 @@ public:
 };
 
 // scalar-vector operations
-
 template<typename T>
 Vector2<T> operator+(T l, Vector2<T> r)
 {
@@ -246,5 +242,5 @@ template<typename T>
 const Vector2<T> Vector2<T>::ONE(1);
 
 using Vec2   = Vector2<float>;
-using Vec2i  = Vector2<I32>;
-using Vec2ui = Vector2<U32>;
+using Vec2i  = Vector2<word>;
+using Vec2ui = Vector2<uword>;
