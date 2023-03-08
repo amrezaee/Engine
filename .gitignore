@@ -23,4 +23,6 @@
 *.[Ll][Oo][Gg]
 *.[Tt][Ee][Xx][Tt]
 *.[Ee][Xx][Ee]
+out/
+CMakeSettings.json
 
