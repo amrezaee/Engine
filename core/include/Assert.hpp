@@ -1,8 +1,38 @@
 #pragma once
 
-#include <Common.hpp>
-
 #ifndef DISABLE_ASSERTION
+
+	#define EXPAND(x) x
+	#define STR(s)    #s
+
+	#if defined(_MSC_VER)
+extern void __cdecl __debugbreak(void);
+		#define DEBUGBREAK() __debugbreak()
+
+	#elif((!defined(__NACL__)) && ((defined(__GNUC__) || defined(__clang__)) && \
+	                               (defined(__i386__) || defined(__x86_64__))))
+		#define DEBUGBREAK() __asm__ __volatile__("int $3\n\t")
+
+	#elif(defined(__APPLE__) && (defined(__arm64__) || defined(__aarch64__)))
+		#define DEBUGBREAK() __asm__ __volatile__("brk #22\n\t")
+
+	#elif defined(__APPLE__) && defined(__arm__)
+		#define DEBUGBREAK() __asm__ __volatile__("bkpt #22\n\t")
+
+	#elif defined(__386__) && defined(__WATCOMC__)
+		#define DEBUGBREAK()      \
+			{                     \
+				_asm { int 0x03 } \
+			}
+
+	#elif defined(HAVE_SIGNAL_H) && !defined(__WATCOMC__)
+		#include <signal.h>
+		#define DEBUGBREAK() raise(SIGTRAP)
+
+	#else
+		#define DEBUGBREAK() ((void)0)
+	#endif
+
 
 void OutputAssertionFailure(const char* expr, const char* msg, const char* file,
                             const int line);
