@@ -63,6 +63,7 @@ target_link_libraries(core PUBLIC core-deps)
 
 target_compile_definitions(core PUBLIC
 									$<$<CONFIG:Debug>:ENGINE_DEBUG_BUILD>
+									ENGINE_ROOT_PATH="${CMAKE_SOURCE_DIR}"
 )
 
 if(ENGINE_COMPILER_GCC_VARIANT)

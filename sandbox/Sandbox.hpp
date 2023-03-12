@@ -5,7 +5,7 @@
 class Sandbox final: public Application
 {
 public:
-	Sandbox(): Application("Sandbox", "D:/Amir/Sources/Projects/Engine/") {}
+	Sandbox(): Application("Sandbox", ENGINE_ROOT_PATH) {}
 
 	void Initialize() override
 	{
