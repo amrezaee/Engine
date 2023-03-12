@@ -16,7 +16,14 @@ public:
 	template<typename... UArgs>
 	void Connect(UArgs... args)
 	{
-		mSlots.emplace_back(args...);
+		auto begin = mSlots.cbegin();
+		auto end   = mSlots.cend();
+		auto found = std::find(begin, end, SlotType(args...));
+
+		if(found != end)
+			WARN("Slot is already connected");
+		else
+			mSlots.emplace_back(args...);
 	}
 
 	template<typename... UArgs>
@@ -24,7 +31,6 @@ public:
 	{
 		auto begin = mSlots.cbegin();
 		auto end   = mSlots.cend();
-
 		auto found = std::find(begin, end, SlotType(args...));
 
 		if(found != end)
@@ -36,8 +42,8 @@ public:
 	void operator()(Args... args) const
 	{
 		for(const auto& s : mSlots)
-			if(s(std::forward<Args>(args)...))  // if slot returns true it means that
-			                                    // event is handled.
+			if(s(std::forward<Args>(args)...))  // if slot returns true it means
+			                                    // that event is handled.
 				break;                          // so we don't call other slots.
 	}
 

@@ -15,7 +15,7 @@ void FramebufferCallback(GLFWwindow* win, int width, int height)
 {
 	WindowGLFW* w = (WindowGLFW*)glfwGetWindowUserPointer(win);
 
-	w->FramebufferSignal({width, height});
+	w->FramebufferSignal(Vec2ui{width, height});
 	w->mSettings.Resolution.x = width;
 	w->mSettings.Resolution.y = height;
 }
@@ -30,13 +30,13 @@ void FocusCallback(GLFWwindow* win, int state)
 
 void SizeCallback(GLFWwindow* win, int width, int height)
 {
-	((WindowGLFW*)glfwGetWindowUserPointer(win))->SizeSignal({width, height});
+	((WindowGLFW*)glfwGetWindowUserPointer(win))->SizeSignal(Vec2ui{width, height});
 }
 
 void PositionCallback(GLFWwindow* win, int x, int y)
 {
 	WindowGLFW* w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-	w->PositionSignal({x, y});
+	w->PositionSignal(Vec2ui{x, y});
 	w->mSettings.Position.x = x;
 	w->mSettings.Position.y = y;
 }
