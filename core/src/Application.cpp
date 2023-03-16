@@ -1,10 +1,9 @@
 #include <Application.hpp>
 
-#include <MathFunctions.hpp>
 #include <Timer.hpp>
 
 Application::Application(const String& name, const Path& workig_dir)
-        : mName(name), mWorkingDir(workig_dir)
+        : mName(name), mWorkingDir(workig_dir), mSceneManager(this)
 {
 	if(!mWorkingDir.empty() && fs::exists(mWorkingDir))
 		fs::current_path(mWorkingDir);
@@ -43,6 +42,8 @@ void Application::Run()
 
 		mDeltaTimeAccumulator += mDeltaTime;
 
+		mScene = mSceneManager.GetCurrent();
+
 		mWindow->PollEvents();
 
 		if(mFocus)
@@ -51,11 +52,14 @@ void Application::Run()
 			      (fixed_iterations++ < mMaxFixedIterations))
 			{
 				FixedUpdate(mFixedDeltaTime);
+				mScene->FixedUpdate(mFixedDeltaTime);
 				mDeltaTimeAccumulator -= mFixedDeltaTime;
 			}
 			fixed_iterations = 0;
 
 			Update(mDeltaTime);
+			mScene->Update(mDeltaTime);
+			mScene->Render(mDeltaTimeAccumulator / mFixedDeltaTime);
 		}
 
 		mWindow->SwapBuffers();
@@ -71,21 +75,6 @@ void Application::Terminate()
 	mWindow->CloseSignal.Disconnect(this, &Application::OnWindowClose);
 	mWindow->FocusSignal.Disconnect(this, &Application::OnWindowFocus);
 	mWindow->FramebufferSignal.Disconnect(this, &Application::OnFramebuffer);
-}
-
-Window& Application::GetWindow()
-{
-	return *mWindow;
-}
-
-Renderer& Application::GetRenderer()
-{
-	return *mRenderer;
-}
-
-RenderDevice& Application::GetRenderDevice()
-{
-	return *mRenderDevice;
 }
 
 bool Application::OnWindowClose()
@@ -104,6 +93,7 @@ bool Application::OnWindowFocus(bool b)
 bool Application::OnFramebuffer(Vec2ui resolution)
 {
 	mRenderDevice->UpdateViewport(0, 0, resolution.x, resolution.y);
+	mScene->Resize(resolution);
 	OnResize(resolution);
 	return true;
 }

@@ -5,6 +5,7 @@
 #include <Camera.hpp>
 #include <Color.hpp>
 #include <Common.hpp>
+#include <Components.hpp>
 #include <Delegate.hpp>
 #include <Entity.hpp>
 #include <EntryPoint.hpp>

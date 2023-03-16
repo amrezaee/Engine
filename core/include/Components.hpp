@@ -1,9 +1,10 @@
 #pragma once
 
+#include <Camera.hpp>
+#include <Color.hpp>
 #include <Common.hpp>
-
+#include <Texture.hpp>
 #include <Vector2.hpp>
-
 
 struct TagComponent
 {
@@ -19,7 +20,41 @@ struct TransformComponent
 	TransformComponent()                          = default;
 	TransformComponent(const TransformComponent&) = default;
 
-	Vec2  Position {0.0f, 0.0f};
-	Vec2  Scale {1.0f, 1.0f};
+	Vec2  Position {0.0f};
+	Vec2  Scale {1.0f};
 	float Rotation {0.0f};
+};
+
+struct SpriteRendererComponent
+{
+	SpriteRendererComponent()                               = default;
+	SpriteRendererComponent(TexturePtr& texture): Texture(texture) {}
+	SpriteRendererComponent(const SpriteRendererComponent&) = default;
+
+	TexturePtr Texture;
+	Color      Color {Color::WHITE};
+	bool       FlipX {false};
+	bool       FlipY {false};
+};
+
+struct CircleRendererComponent
+{
+	CircleRendererComponent()                               = default;
+	CircleRendererComponent(const CircleRendererComponent&) = default;
+
+	Color Color {Color::WHITE};
+	float Thickness {1.0f};
+	float Smoothness {0.03f};
+};
+
+struct CameraComponent
+{
+	CameraComponent()                       = default;
+	CameraComponent(float left, float right, float bottom, float top)
+	        : Camera {left, right, bottom, top}
+	{
+	}
+	CameraComponent(const CameraComponent&) = default;
+
+	Camera Camera;
 };
