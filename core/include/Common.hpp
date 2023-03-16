@@ -59,6 +59,9 @@ constexpr UniquePtr<T> MakeUnique(Args&&... args)
 template<typename T>
 using Vector = std::vector<T>;
 
+template<typename T>
+using List = std::list<T>;
+
 template<typename T1, typename T2>
 using HashMap = std::unordered_map<T1, T2>;
 

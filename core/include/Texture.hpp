@@ -4,8 +4,7 @@
 #include <Common.hpp>
 #include <Vector2.hpp>
 
-class Texture;
-using TexturePtr = SharedPtr<Texture>;
+using TexturePtr = SharedPtr<class Texture>;
 
 enum class WrapMode
 {

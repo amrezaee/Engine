@@ -1,12 +1,10 @@
 #pragma once
 
 #include <Common.hpp>
-#include <InputMap.hpp>
 #include <Signal.hpp>
 #include <Vector2.hpp>
 
-class Window;
-using WindowPtr = UniquePtr<Window>;
+using WindowPtr = UniquePtr<class Window>;
 
 enum class WindowMode
 {

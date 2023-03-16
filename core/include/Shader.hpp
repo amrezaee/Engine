@@ -4,8 +4,7 @@
 #include <Common.hpp>
 #include <Transform.hpp>
 
-class Shader;
-using ShaderPtr = SharedPtr<Shader>;
+using ShaderPtr = SharedPtr<class Shader>;
 
 enum class ShaderType
 {

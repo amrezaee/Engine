@@ -7,8 +7,7 @@
 
 class Window;
 class WindowSettings;
-class RenderDevice;
-using RenderDevicePtr = UniquePtr<RenderDevice>;
+using RenderDevicePtr = UniquePtr<class RenderDevice>;
 
 enum class RenderAPI
 {
