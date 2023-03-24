@@ -26,4 +26,7 @@
 *.[Ee][Xx][Ee]
 out/
 CMakeSettings.json
+.idea
+cmake-build-debug-visual-studio/
+cmake-build-release-visual-studio/
 

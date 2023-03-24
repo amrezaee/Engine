@@ -49,7 +49,7 @@ private:
 	double mDeltaTime {0.0};
 	double mMaxDeltaTime {0.25};
 
-	// for lowering framespikes impacts
+	// for lowering frame spikes impacts
 	double mDeltaTimeArray[10] {};
 
 	double mFixedDeltaTime {1.0 / 60.0};
