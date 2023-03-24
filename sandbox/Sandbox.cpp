@@ -76,7 +76,7 @@ void Sandbox::Update(double dt)
 	time += dt;
 	if(time > 1.0f)
 	{
-		INFO("{},  {},  {:.4f},  {:.1f}", mRenderer->GetFrameStats().DrawCalls,
+		INFO("%u,  %u,  %.4f,  %.1f", mRenderer->GetFrameStats().DrawCalls,
 		     mRenderer->GetFrameStats().QuadCount, dt, 1.0f / dt);
 		time = 0.0f;
 	}

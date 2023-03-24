@@ -1,27 +1,29 @@
 #include <Logger.hpp>
 
-#include <spdlog/sinks/basic_file_sink.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
+#if ENGINE_PLATFORM_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	#include <Windows.h>
+#endif
 
-static std::shared_ptr<spdlog::logger> logger;
+char Logger::sBuffer[1024] {};
+char Logger::sFormatBuffer[512] {};
 
 void Logger::Init()
 {
-	Vector<spdlog::sink_ptr> sinks;
-	sinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-	sinks.emplace_back(
-	        std::make_shared<spdlog::sinks::basic_file_sink_mt>("log.txt", true));
+	std::ios_base::sync_with_stdio(false);
 
-	sinks[0]->set_pattern("[%t] [%T] [%n] %^[%=8l] | %v%$");
-	sinks[1]->set_pattern("[%t] [%T] [%n] [%=8l] | %v");
+#if ENGINE_PLATFORM_WINDOWS
+	// Set output mode to handle virtual terminal sequences
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	HANDLE hStdErr = GetStdHandle(STD_ERROR_HANDLE);
+	DWORD  dwMode  = 0;
+	GetConsoleMode(hStdOut, &dwMode);
+	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	SetConsoleMode(hStdOut, dwMode);
 
-	logger = MakeShared<spdlog::logger>("Engine", begin(sinks), end(sinks));
-	spdlog::register_logger(logger);
-	logger->set_level(spdlog::level::trace);
-	logger->flush_on(spdlog::level::trace);
-}
-
-SharedPtr<spdlog::logger>& Logger::GetLogger()
-{
-	return logger;
+	dwMode = 0;
+	GetConsoleMode(hStdErr, &dwMode);
+	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	SetConsoleMode(hStdErr, dwMode);
+#endif
 }

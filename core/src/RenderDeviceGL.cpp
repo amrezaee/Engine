@@ -49,23 +49,23 @@ void RenderDeviceGL::Initialize()
 		glGetIntegerv(GL_MAX_SAMPLES, (int*)&mInfo.NumSamples);
 
 		INFO("Render API: OpenGL");
-		INFO("Render API Ver.: {}", (const char*)glGetString(GL_VERSION));
-		INFO("Render API Shader Ver.: {}",
+		INFO("Render API Ver.: %s", (const char*)glGetString(GL_VERSION));
+		INFO("Render API Shader Ver.: %s",
 		     (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
-		INFO("Render Device: {}", mInfo.Name);
-		INFO("Render Device Vendor: {}", mInfo.Vendor);
-		INFO("Max Texture Size: {}x{}", mInfo.MaxTextureWidth,
+		INFO("Render Device: %s", mInfo.Name);
+		INFO("Render Device Vendor: %s", mInfo.Vendor);
+		INFO("Max Texture Size: %ux%u", mInfo.MaxTextureWidth,
 		     mInfo.MaxTextureHeight);
-		INFO("Number of Texture Units: {}", mInfo.NumTextureUnits);
-		INFO("Number of Samples: {}", mInfo.NumSamples);
+		INFO("Number of Texture Units: %u", mInfo.NumTextureUnits);
+		INFO("Number of Samples: %u", mInfo.NumSamples);
 
-		INFO("ASTC  Support: {}", mInfo.ASTC);
-		INFO("S3TC  Support: {}", mInfo.S3TC);
-		INFO("ETC1  Support: {}", mInfo.ETC1);
-		INFO("ETC2  Support: {}", mInfo.ETC2);
-		INFO("PVRTC Support: {}", mInfo.PVRTC);
-		INFO("BC4_5 Support: {}", mInfo.BC4BC5);
-		INFO("BC6_7 Support: {}", mInfo.BC6HBC7);
+		INFO("ASTC  Support: %s", mInfo.ASTC);
+		INFO("S3TC  Support: %s", mInfo.S3TC);
+		INFO("ETC1  Support: %s", mInfo.ETC1);
+		INFO("ETC2  Support: %s", mInfo.ETC2);
+		INFO("PVRTC Support: %s", mInfo.PVRTC);
+		INFO("BC4_5 Support: %s", mInfo.BC4BC5);
+		INFO("BC6_7 Support: %s", mInfo.BC6HBC7);
 	}
 
 	EnableBlending(true);
