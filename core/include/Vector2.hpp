@@ -152,7 +152,7 @@ public:
 		return *this;
 	}
 
-	// vector-scaler operations
+	// vector-scalar operations
 	constexpr Vector2<T> operator+(T r) const { return Vector2<T>(x + r, y + r); }
 	constexpr Vector2<T> operator-(T r) const { return Vector2<T>(x - r, y - r); }
 	constexpr Vector2<T> operator*(T r) const { return Vector2<T>(x * r, y * r); }

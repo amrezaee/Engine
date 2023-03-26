@@ -2,11 +2,10 @@
 
 #include <Assert.hpp>
 
-TextureGL::TextureGL()
-        : mWidth(1), mHeight(1), mDataFormat(GL_RGBA), mInternalFormat(GL_RGBA8)
+TextureGL::TextureGL(): mDataFormat(GL_RGBA), mInternalFormat(GL_RGBA8)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
-	glTextureStorage2D(mID, 1, mInternalFormat, mWidth, mHeight);
+	glTextureStorage2D(mID, 1, mInternalFormat, (GLsizei)mWidth, (GLsizei)mHeight);
 	SetFilter(false);
 	SetWrapMode(WrapMode::Repeat);
 	byte white[4] {0xff, 0xff, 0xff, 0xff};
@@ -26,7 +25,7 @@ TextureGL::TextureGL(const Path& path)
 	ASSERT(size != -1, "Could not read from file");
 	image.resize(size);
 	in.seekg(0, std::ios::beg);
-	in.read((char*)&image[0], size);
+	in.read((char*)&image[0], (std::streamsize)size);
 
 	raw = stbi_load_from_memory(&image[0], int(size), &w, &h, &c, 0);
 	ASSERT(raw, "Invalid image file");
@@ -48,9 +47,9 @@ TextureGL::TextureGL(const Path& path)
 		ASSERT(false, "Channel count not supported");
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
-	glTextureStorage2D(mID, 1, mInternalFormat, mWidth, mHeight);
-	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE,
-	                    raw);
+	glTextureStorage2D(mID, 1, mInternalFormat, (GLsizei)mWidth, (GLsizei)mHeight);
+	glTextureSubImage2D(mID, 0, 0, 0, (GLsizei)mWidth, (GLsizei)mHeight, mDataFormat,
+	                    GL_UNSIGNED_BYTE, raw);
 	SetFilter(false);
 	SetWrapMode(WrapMode::Repeat);
 
@@ -63,7 +62,7 @@ TextureGL::TextureGL(uword width, uword height, bool filter, WrapMode wrap,
           mInternalFormat(GL_RGBA8)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
-	glTextureStorage2D(mID, 1, mInternalFormat, width, height);
+	glTextureStorage2D(mID, 1, mInternalFormat, (GLsizei)width, (GLsizei)height);
 	SetFilter(filter);
 	SetWrapMode(wrap, border);
 }
@@ -162,8 +161,8 @@ void TextureGL::SetWrapMode(WrapMode wrap, Color border)
 void TextureGL::SetData(const void* data, size_t size)
 {
 	ASSERT(size == GetSize(), "Incorrect texture size");
-	glTextureSubImage2D(mID, 0, 0, 0, mWidth, mHeight, mDataFormat, GL_UNSIGNED_BYTE,
-	                    data);
+	glTextureSubImage2D(mID, 0, 0, 0, (GLsizei)mWidth, (GLsizei)mHeight, mDataFormat,
+	                    GL_UNSIGNED_BYTE, data);
 }
 
 uword TextureGL::GetID() const

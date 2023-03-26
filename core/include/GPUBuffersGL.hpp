@@ -6,7 +6,7 @@ class VertexBufferGL final: public VertexBuffer
 {
 public:
 	VertexBufferGL(std::initializer_list<Vertex> layout, uword count, uword stride);
-	~VertexBufferGL();
+	~VertexBufferGL() override;
 
 	const Vector<Vertex>& GetLayout() const override;
 	void                  SetLayout(std::initializer_list<Vertex> layout) override;
@@ -26,7 +26,7 @@ class IndexBufferGL final: public IndexBuffer
 {
 public:
 	IndexBufferGL(const uword* data, uword count);
-	~IndexBufferGL();
+	~IndexBufferGL() override;
 
 	uword GetCount() const override;
 	void  SetData(const uword* data, uword count) override;
@@ -41,7 +41,7 @@ class VertexArrayGL final: public VertexArray
 {
 public:
 	VertexArrayGL();
-	~VertexArrayGL();
+	~VertexArrayGL() override;
 
 	void AttachIndexBuffer(const IndexBufferPtr& ib) override;
 	void AttachVertexBuffer(const VertexBufferPtr& vb) override;
@@ -54,7 +54,7 @@ public:
 	void Unbind() const override;
 
 private:
-	uword VertexTypeMap(VertexType type);
+	static uword VertexTypeMap(VertexType type);
 
 private:
 	uword                   mID {0};

@@ -4,19 +4,23 @@
 #include <RenderDevice.hpp>
 #include <WindowGLFW.hpp>
 
-WindowSettings::WindowSettings(const String& title, Vec2ui resolution,
-                               Vec2ui position, WindowMode mode, VSyncMode vsync,
-                               uword msaa, bool srgb, bool resizable,
-                               bool borderless, bool focused, bool hidden)
-        : Title(title), Resolution(resolution), Position(position), Mode(mode),
-          VSync(vsync), MSAA(msaa), SRGB(srgb), Resizable(resizable),
+WindowSettings::WindowSettings(String title): Title(std::move(title))
+{
+}
+
+WindowSettings::WindowSettings(String title, Vec2ui resolution, Vec2ui position,
+                               WindowMode mode, VSyncMode vsync, uword msaa,
+                               bool srgb, bool resizable, bool borderless,
+                               bool focused, bool hidden)
+        : Title(std::move(title)), Resolution(resolution), Position(position),
+          Mode(mode), VSync(vsync), MSAA(msaa), SRGB(srgb), Resizable(resizable),
           Borderless(borderless), Focused(focused), Hidden(hidden)
 
 {
 }
 
 
-Window::Window(const WindowSettings& settings): mSettings(settings)
+Window::Window(WindowSettings settings): mSettings(std::move(settings))
 {
 }
 

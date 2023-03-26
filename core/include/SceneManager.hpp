@@ -8,7 +8,7 @@ class Application;
 class SceneManager
 {
 public:
-	SceneManager(Application* app);
+	explicit SceneManager(Application* app);
 	SceneManager(const SceneManager&)            = delete;
 	SceneManager& operator=(const SceneManager&) = delete;
 

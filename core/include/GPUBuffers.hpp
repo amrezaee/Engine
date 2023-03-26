@@ -2,14 +2,9 @@
 
 #include <Common.hpp>
 
-class VertexBuffer;
-class IndexBuffer;
-class VertexArray;
-
-using VertexBufferPtr = SharedPtr<VertexBuffer>;
-using IndexBufferPtr  = SharedPtr<IndexBuffer>;
-using VertexArrayPtr  = SharedPtr<VertexArray>;
-
+using VertexBufferPtr = SharedPtr<class VertexBuffer>;
+using IndexBufferPtr  = SharedPtr<class IndexBuffer>;
+using VertexArrayPtr  = SharedPtr<class VertexArray>;
 
 enum class VertexType
 {
@@ -41,7 +36,7 @@ uword VertexTypeSize(VertexType type);
 
 struct Vertex
 {
-	Vertex(VertexType type, bool normalize = false)
+	explicit Vertex(VertexType type, bool normalize = false)
 	        : Type(type), Offset(0), Normalize(normalize)
 	{
 	}

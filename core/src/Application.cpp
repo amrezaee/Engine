@@ -2,16 +2,15 @@
 
 #include <Timer.hpp>
 
-Application::Application(const String& name, const Path& workig_dir)
-        : mName(name), mWorkingDir(workig_dir), mSceneManager(this)
+Application::Application(String name, Path working_dir)
+        : mName(std::move(name)), mWorkingDir(std::move(working_dir)),
+          mSceneManager(this)
 {
 	if(!mWorkingDir.empty() && fs::exists(mWorkingDir))
 		fs::current_path(mWorkingDir);
 }
 
-Application::~Application()
-{
-}
+Application::~Application() = default;
 
 void Application::Run()
 {
@@ -38,7 +37,7 @@ void Application::Run()
 		mDeltaTime =
 		        std::accumulate(mDeltaTimeArray,
 		                        mDeltaTimeArray + ArraySize(mDeltaTimeArray), 0.0) /
-		        ArraySize(mDeltaTimeArray);
+		        (double)ArraySize(mDeltaTimeArray);
 
 		mDeltaTimeAccumulator += mDeltaTime;
 

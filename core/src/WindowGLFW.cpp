@@ -2,7 +2,6 @@
 
 #include <Assert.hpp>
 #include <Logger.hpp>
-#include <Renderer.hpp>
 
 static uword window_count = 0;
 
@@ -13,30 +12,30 @@ void CloseCallback(GLFWwindow* win)
 
 void FramebufferCallback(GLFWwindow* win, int width, int height)
 {
-	WindowGLFW* w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
 
-	w->FramebufferSignal(Vec2ui{width, height});
+	w->FramebufferSignal(Vec2ui {width, height});
 	w->mSettings.Resolution.x = width;
 	w->mSettings.Resolution.y = height;
 }
 
 void FocusCallback(GLFWwindow* win, int state)
 {
-	WindowGLFW* w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
 
-	w->FocusSignal(state == GLFW_TRUE ? true : false);
-	w->mSettings.Focused = GLFW_TRUE ? true : false;
+	w->FocusSignal(state == GLFW_TRUE);
+	w->mSettings.Focused = state == GLFW_TRUE;
 }
 
 void SizeCallback(GLFWwindow* win, int width, int height)
 {
-	((WindowGLFW*)glfwGetWindowUserPointer(win))->SizeSignal(Vec2ui{width, height});
+	((WindowGLFW*)glfwGetWindowUserPointer(win))->SizeSignal(Vec2ui {width, height});
 }
 
 void PositionCallback(GLFWwindow* win, int x, int y)
 {
-	WindowGLFW* w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-	w->PositionSignal(Vec2ui{x, y});
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+	w->PositionSignal(Vec2ui {x, y});
 	w->mSettings.Position.x = x;
 	w->mSettings.Position.y = y;
 }
@@ -181,7 +180,7 @@ WindowMode WindowGLFW::GetWindowMode() const
 
 bool WindowGLFW::IsFullscreen() const
 {
-	return mSettings.Mode != WindowMode::Windowed ? true : false;
+	return mSettings.Mode != WindowMode::Windowed;
 }
 
 void WindowGLFW::SetWindowMode(WindowMode mode)
@@ -233,8 +232,8 @@ uword WindowGLFW::GetMSAA() const
 
 void WindowGLFW::SetMSAA(uword samples)
 {
-	if(samples != 0 || samples != 2 || samples != 4 || samples != 8 ||
-	   samples != 16 || samples != 32)
+	if(samples != 0 && samples != 2 && samples != 4 && samples != 8 &&
+	   samples != 16 && samples != 32)
 		return;
 
 	mSettings.MSAA = samples;

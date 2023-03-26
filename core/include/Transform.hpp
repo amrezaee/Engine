@@ -56,15 +56,15 @@ public:
 
 	void Reset();
 
-	Transform&        Translate(float x, const float y);
+	Transform&        Translate(float x, float y);
 	inline Transform& Translate(Vec2 v) { return Translate(v.x, v.y); }
 	inline Transform& Translate(float s) { return Translate(s, s); }
 
-	Transform&        Scale(float x, const float y);
+	Transform&        Scale(float x, float y);
 	inline Transform& Scale(Vec2 v) { return Scale(v.x, v.y); }
 	inline Transform& Scale(float s) { return Scale(s, s); }
 
-	Transform&        Shear(float x, const float y);
+	Transform&        Shear(float x, float y);
 	inline Transform& Shear(Vec2 v) { return Shear(v.x, v.y); }
 	inline Transform& Shear(float f) { return Shear(f, f); }
 

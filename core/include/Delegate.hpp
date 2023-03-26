@@ -98,14 +98,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //						Compiler identification for workarounds
 ////////////////////////////////////////////////////////////////////////////////
-
-// Compiler identification. It's not easy to identify Visual C++ because
-// many vendors fraudulently define Microsoft's identifiers.
-#if defined(_MSC_VER) && !defined(__MWERKS__) && !defined(__VECTOR_C) && \
-        !defined(__ICL) && !defined(__BORLANDC__)
-	#define FASTDLGT_ISMSVC
-#endif
-
 // Does the compiler uses Microsoft's member function pointer structure?
 // If so, it needs special treatment.
 // Metrowerks CodeWarrior, Intel, and CodePlay fraudulently define Microsoft's
@@ -161,7 +153,7 @@ union horrible_union
 template<class OutputClass, class InputClass>
 inline OutputClass horrible_cast(const InputClass input)
 {
-	horrible_union<OutputClass, InputClass> u;
+	horrible_union<OutputClass, InputClass> u {};
 	// Cause a compile-time error if in, out and u are not the same size.
 	// If the compile fails here, it means the compiler has peculiar
 	// unions which would prevent the cast from working.
@@ -190,20 +182,6 @@ template<>
 struct DefaultVoidToVoid<DefaultVoid>
 {
 	using type = void;
-};
-
-// Translate from 'void' into 'DefaultVoid'
-// Everything else is unchanged
-template<class T>
-struct VoidToDefaultVoid
-{
-	using type = T;
-};
-
-template<>
-struct VoidToDefaultVoid<void>
-{
-	using type = DefaultVoid;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,8 +229,7 @@ template<int N>
 struct SimplifyMemFunc
 {
 	template<class X, class XFuncType, class GenericMemFuncType>
-	inline static GenericClass* Convert(X* pthis, XFuncType function_to_bind,
-	                                    GenericMemFuncType& bound_func)
+	inline static GenericClass* Convert(X*, XFuncType, GenericMemFuncType&)
 	{
 		// Unsupported member function type. force a compile failure.
 		static_assert(N - 100, "Unsupported member function type");
@@ -446,7 +423,7 @@ struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE + 3 * sizeof(int)>
 		                                       u.s.delta + virtual_delta);
 	};
 };
-#endif  // MSVC 7 and greater
+#endif  // FASTDLGT_MICROSOFT_MFP
 }  // namespace detail
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -552,22 +529,26 @@ public:
 	}
 
 public:
-	DelegateMemento& operator=(const DelegateMemento& right)
+	inline DelegateMemento& operator=(const DelegateMemento& right)
 	{
+		if(this == &right)
+			return *this;
+
 		SetMementoFrom(right);
 		return *this;
 	}
 
-	inline bool operator<(const DelegateMemento& right) { return IsLess(right); }
-	inline bool operator>(const DelegateMemento& right)
+	inline bool operator<(const DelegateMemento& right) const
+	{
+		return IsLess(right);
+	}
+
+	inline bool operator>(const DelegateMemento& right) const
 	{
 		return right.IsLess(*this);
 	}
 
-	DelegateMemento(const DelegateMemento& right)
-	        : m_pthis(right.m_pthis), m_pFunction(right.m_pFunction)
-	{
-	}
+	DelegateMemento(const DelegateMemento& right) = default;
 
 protected:
 	void SetMementoFrom(const DelegateMemento& right)
@@ -693,7 +674,7 @@ public:
 	{
 		// Ensure that there's a compilation failure if function pointers
 		// and data pointers have different sizes.
-		static_assert(sizeof(UnvoidStaticFuncPtr) == sizeof(this),
+		static_assert(sizeof(UnvoidStaticFuncPtr) == sizeof(void*),
 		              "Cannot use evil method");
 
 		return horrible_cast<UnvoidStaticFuncPtr>(this);
@@ -785,7 +766,12 @@ public:
 	Delegate() { Clear(); }
 	Delegate(const Delegate& x) { m_Closure.CopyFrom(this, x.m_Closure); }
 
-	void operator=(const Delegate& x) { m_Closure.CopyFrom(this, x.m_Closure); }
+	Delegate& operator=(const Delegate& x)
+	{
+		m_Closure.CopyFrom(this, x.m_Closure);
+		return *this;
+	}
+
 	bool operator==(const Delegate& x) const
 	{
 		return m_Closure.IsEqual(x.m_Closure);
@@ -867,9 +853,10 @@ public:
 	}
 
 	// for efficiency, prevent creation of a temporary
-	void operator=(DesiredRetType (*function_to_bind)(Args... args))
+	Delegate& operator=(DesiredRetType (*function_to_bind)(Args... args))
 	{
 		Bind(function_to_bind);
+		return *this;
 	}
 
 	inline void Bind(DesiredRetType (*function_to_bind)(Args... args))
@@ -898,11 +885,10 @@ private:
 		StaticFunctionPtr m_nonzero;
 	};
 
-	using UselessTypedef        = SafeBoolStruct;
 	using unspecified_bool_type = StaticFunctionPtr SafeBoolStruct::*;
 
 public:
-	operator unspecified_bool_type() const
+	explicit operator unspecified_bool_type() const
 	{
 		return Empty() ? 0 : &SafeBoolStruct::m_nonzero;
 	}

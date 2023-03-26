@@ -5,8 +5,8 @@
 class ShaderGL final: public Shader
 {
 public:
-	ShaderGL(const Path& shaderfile);
-	~ShaderGL();
+	explicit ShaderGL(const Path& shaderfile);
+	~ShaderGL() override;
 
 	void Bind() const override;
 	void Unbind() const override;
@@ -21,12 +21,12 @@ public:
 	uword GetID() const override;
 
 private:
-	void ReadFile(const Path& shaderfile, String& source);
-	void Preprocess(const String& source, String& vsout, String& fsout);
-	void Compile(const String& vsource, const String& fsource);
-	void Postprocess();
+	static void ReadFile(const Path& shaderfile, String& source);
+	static void Preprocess(const String& source, String& vsout, String& fsout);
+	void        Compile(const String& vsource, const String& fsource);
+	void        Postprocess();
 
-	GLenum ShaderTypeMap(ShaderType type);
+	static GLenum ShaderTypeMap(ShaderType type);
 
 private:
 	uword                  mProgramID;

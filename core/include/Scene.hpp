@@ -11,7 +11,7 @@ class Scene
 public:
 	using RegistryType = entt::registry;
 
-	Scene(const String& name);
+	explicit Scene(String name);
 	~Scene();
 
 	void          SetApp(Application* app);

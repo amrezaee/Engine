@@ -56,7 +56,8 @@ uword VertexBufferGL::GetID() const
 IndexBufferGL::IndexBufferGL(const uword* data, uword count): mCount(count)
 {
 	glCreateBuffers(1, &mID);
-	glNamedBufferStorage(mID, count * sizeof(uword), data, GL_DYNAMIC_STORAGE_BIT);
+	glNamedBufferStorage(mID, count * (GLsizeiptr)sizeof(uword), data,
+	                     GL_DYNAMIC_STORAGE_BIT);
 }
 
 IndexBufferGL::~IndexBufferGL()
@@ -71,7 +72,7 @@ uword IndexBufferGL::GetCount() const
 
 void IndexBufferGL::SetData(const uword* data, uword count)
 {
-	glNamedBufferSubData(mID, 0, count * sizeof(uword), data);
+	glNamedBufferSubData(mID, 0, count * (GLsizeiptr)sizeof(uword), data);
 }
 
 uword IndexBufferGL::GetID() const
@@ -98,10 +99,11 @@ void VertexArrayGL::AttachIndexBuffer(const IndexBufferPtr& ib)
 
 void VertexArrayGL::AttachVertexBuffer(const VertexBufferPtr& vb)
 {
-	glVertexArrayVertexBuffer(mID, mVBIndex, vb->GetID(), 0, vb->GetStride());
+	glVertexArrayVertexBuffer(mID, mVBIndex, vb->GetID(), 0,
+	                          (GLsizei)vb->GetStride());
 
-	auto  layout  = vb->GetLayout();
-	uword attribs = uword(layout.size());
+	auto layout  = vb->GetLayout();
+	auto attribs = uword(layout.size());
 
 	for(uword i = 0; i < attribs; ++i)
 	{
@@ -113,7 +115,7 @@ void VertexArrayGL::AttachVertexBuffer(const VertexBufferPtr& vb)
 
 		if(layout[i].Normalize)
 		{
-			glVertexArrayAttribFormat(mID, i, VertexTypeCount(type),
+			glVertexArrayAttribFormat(mID, i, (GLint)VertexTypeCount(type),
 			                          VertexTypeMap(type), GL_TRUE, offset);
 			continue;
 		}
@@ -125,7 +127,7 @@ void VertexArrayGL::AttachVertexBuffer(const VertexBufferPtr& vb)
 		case VertexType::Float3:
 		case VertexType::Float4:
 		{
-			glVertexArrayAttribFormat(mID, i, VertexTypeCount(type),
+			glVertexArrayAttribFormat(mID, i, (GLint)VertexTypeCount(type),
 			                          VertexTypeMap(type), GL_FALSE, offset);
 		}
 		break;
@@ -148,7 +150,7 @@ void VertexArrayGL::AttachVertexBuffer(const VertexBufferPtr& vb)
 		case VertexType::Int3:
 		case VertexType::Int4:
 		{
-			glVertexArrayAttribIFormat(mID, i, VertexTypeCount(type),
+			glVertexArrayAttribIFormat(mID, i, (GLint)VertexTypeCount(type),
 			                           VertexTypeMap(type), offset);
 		}
 		break;
@@ -168,7 +170,7 @@ uword VertexArrayGL::GetVertexBufferCount() const
 
 VertexBufferPtr VertexArrayGL::GetVertexBuffer(uword i) const
 {
-	if(mVBList.size() != 0)
+	if(!mVBList.empty())
 		return mVBList[mVBList.size() - 1 - i];
 	else
 	{

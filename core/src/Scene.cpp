@@ -5,13 +5,11 @@
 #include <Entity.hpp>
 
 
-Scene::Scene(const String& name): mName(name), mApp(nullptr)
+Scene::Scene(String name): mName(std::move(name)), mApp(nullptr)
 {
 }
 
-Scene::~Scene()
-{
-}
+Scene::~Scene() = default;
 
 void Scene::SetApp(Application* app)
 {

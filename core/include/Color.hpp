@@ -15,7 +15,7 @@ public:
 	Color& operator=(const Color&) = default;
 	Color& operator=(Color&&)      = default;
 
-	constexpr Color(uword color)
+	explicit constexpr Color(uword color)
 	        : mColor(((color >> 24) & 0xff) | ((color << 8) & 0xff0000) |
 	                 ((color >> 8) & 0xff00) | ((color << 24) & 0xff000000))
 	{
@@ -33,9 +33,9 @@ public:
 	{
 	}
 
-	constexpr Color(byte r, byte g, byte b): Color(255u, b, g, r) {}
+	constexpr Color(byte r, byte g, byte b): Color(r, g, b, 255) {}
 
-	constexpr Color(float r, float g, float b): Color(1.0f, b, g, r) {}
+	constexpr Color(float r, float g, float b): Color(r, g, b, 1.0f) {}
 
 	constexpr Color(Color color, byte alpha)
 	        : mColor((static_cast<uword>(alpha) << 24) | color.mColor)
@@ -55,7 +55,7 @@ public:
 
 	void Set(float r, float g, float b);
 
-	void GetColors(float* const out) const;
+	void GetColors(float* out) const;
 
 	constexpr byte GetRed() const { return static_cast<byte>(mColor); }
 
@@ -75,7 +75,7 @@ public:
 	void SetBlue(float b);
 	void SetAlpha(float a);
 
-	void            SetPacked(const uword pack);
+	void            SetPacked(uword pack);
 	constexpr uword GetPacked() const { return mColor; }
 
 	bool operator==(Color rhs) const;
@@ -108,7 +108,7 @@ public:
 	static const Color CORNSILK;
 	static const Color CRIMSON;
 	static const Color DARK_ORCHID;
-	static const Color DARK_SALAMON;
+	static const Color DARK_SALMON;
 	static const Color DEEP_PINK;
 	static const Color FLORAL_WHITE;
 	static const Color GHOST_WHITE;

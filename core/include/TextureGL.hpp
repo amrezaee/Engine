@@ -7,10 +7,10 @@ class TextureGL final: public Texture
 {
 public:
 	TextureGL();
-	TextureGL(const Path& path);
+	explicit TextureGL(const Path& path);
 	TextureGL(uword width, uword height, bool filter = false,
 	          WrapMode wrap = WrapMode::Repeat, Color border = Color::WHITE);
-	~TextureGL();
+	~TextureGL() override;
 
 	void Bind(uword slot) const override;
 
@@ -31,12 +31,12 @@ public:
 	uword GetID() const override;
 
 private:
-	uword    mID;
-	uword    mWidth;
-	uword    mHeight;
-	bool     mFiltered;
-	WrapMode mWrapMode;
-	Color    mBorder;
-	uword    mDataFormat;
-	uword    mInternalFormat;
+	uword    mID {0};
+	uword    mWidth {1};
+	uword    mHeight {1};
+	bool     mFiltered {false};
+	WrapMode mWrapMode {WrapMode::Repeat};
+	Color    mBorder {Color::WHITE};
+	uword    mDataFormat {0};
+	uword    mInternalFormat {0};
 };

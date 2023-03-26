@@ -38,11 +38,10 @@ void Renderer::Initialize()
 	}
 
 	// Quad initialization
-	mQuadVB = VertexBuffer::Create({{VertexType::Float2},
-	                                {VertexType::Float2},
-	                                {VertexType::UByte4, true},
-	                                {VertexType::Float}},
-	                               mMaxVertices, sizeof(QuadVertex));
+	mQuadVB = VertexBuffer::Create(
+	        {Vertex {VertexType::Float2}, Vertex {VertexType::Float2},
+	         Vertex {VertexType::UByte4, true}, Vertex {VertexType::Float}},
+	        mMaxVertices, sizeof(QuadVertex));
 
 	mQuadVA = VertexArray::Create();
 	mQuadVA->AttachIndexBuffer(mIB);
@@ -50,12 +49,11 @@ void Renderer::Initialize()
 	mQuadShader = Shader::Create("shaders/QuadShader.glsl");
 
 	// Circle initialization
-	mCircleVB = VertexBuffer::Create({{VertexType::Float2},
-	                                  {VertexType::Float2},
-	                                  {VertexType::UByte4, true},
-	                                  {VertexType::Float},
-	                                  {VertexType::Float}},
-	                                 mMaxVertices, sizeof(CircleVertex));
+	mCircleVB = VertexBuffer::Create(
+	        {Vertex {VertexType::Float2}, Vertex {VertexType::Float2},
+	         Vertex {VertexType::UByte4, true}, Vertex {VertexType::Float},
+	         Vertex {VertexType::Float}},
+	        mMaxVertices, sizeof(CircleVertex));
 
 	mCircleVA = VertexArray::Create();
 	mCircleVA->AttachIndexBuffer(mIB);

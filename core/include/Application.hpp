@@ -11,7 +11,7 @@
 class Application
 {
 public:
-	Application(const String& name, const Path& workig_dir);
+	Application(String name, Path working_dir);
 	virtual ~Application();
 
 	void Run();  // Run the game loop

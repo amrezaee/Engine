@@ -24,10 +24,10 @@ class WindowSettings
 {
 public:
 	WindowSettings() = default;
-	WindowSettings(const String& title): Title(title) {}
-	WindowSettings(const String& title, Vec2ui resolution, Vec2ui position,
-	               WindowMode mode, VSyncMode vsync, uword msaa, bool srgb,
-	               bool resizable, bool borderless, bool focused, bool hidden);
+	explicit WindowSettings(String title);
+	WindowSettings(String title, Vec2ui resolution, Vec2ui position, WindowMode mode,
+	               VSyncMode vsync, uword msaa, bool srgb, bool resizable,
+	               bool borderless, bool focused, bool hidden);
 
 	String     Title {"Engine"};
 	Vec2ui     Resolution {960, 540};
@@ -52,7 +52,7 @@ public:
 	Signal<bool>   FocusSignal;
 
 public:
-	Window(const WindowSettings& settings);
+	explicit Window(WindowSettings settings);
 	Window(const Window&)            = delete;
 	Window& operator=(const Window&) = delete;
 	virtual ~Window()                = default;

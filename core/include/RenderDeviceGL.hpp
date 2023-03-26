@@ -22,5 +22,5 @@ public:
 	void DrawIndexed(const VertexArrayPtr& va, uword index_count = 0) override;
 
 private:
-	word BlendFuncMap(BlendFunc func);
+	static word BlendFuncMap(BlendFunc func);
 };

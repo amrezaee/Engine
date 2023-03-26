@@ -10,7 +10,7 @@ struct TagComponent
 {
 	TagComponent()                    = default;
 	TagComponent(const TagComponent&) = default;
-	TagComponent(const String& tag): Tag(tag) {}
+	explicit TagComponent(String tag): Tag(std::move(tag)) {}
 
 	String Tag;
 };
@@ -27,8 +27,8 @@ struct TransformComponent
 
 struct SpriteRendererComponent
 {
-	SpriteRendererComponent()                               = default;
-	SpriteRendererComponent(TexturePtr& texture): Texture(texture) {}
+	SpriteRendererComponent() = default;
+	explicit SpriteRendererComponent(TexturePtr& texture): Texture(texture) {}
 	SpriteRendererComponent(const SpriteRendererComponent&) = default;
 
 	TexturePtr Texture;

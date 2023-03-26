@@ -2,15 +2,17 @@
 
 Vec2 Transform::operator*(Vec2 v) const
 {
-	return Vec2(m[0] * v.x + m[1] * v.y + m[2], m[3] * v.x + m[4] * v.y + m[5]);
+	return {m[0] * v.x + m[1] * v.y + m[2], m[3] * v.x + m[4] * v.y + m[5]};
 }
 
 Transform Transform::operator*(const Transform& r) const
 {
-	return Transform(m[0] * r.m[0] + m[1] * r.m[3], m[0] * r.m[1] + m[1] * r.m[4],
-	                 m[0] * r.m[2] + m[1] * r.m[5] + m[2],
-	                 m[3] * r.m[0] + m[4] * r.m[3], m[3] * r.m[1] + m[4] * r.m[4],
-	                 m[3] * r.m[2] + m[4] * r.m[5] + m[5]);
+	return {m[0] * r.m[0] + m[1] * r.m[3],
+	        m[0] * r.m[1] + m[1] * r.m[4],
+	        m[0] * r.m[2] + m[1] * r.m[5] + m[2],
+	        m[3] * r.m[0] + m[4] * r.m[3],
+	        m[3] * r.m[1] + m[4] * r.m[4],
+	        m[3] * r.m[2] + m[4] * r.m[5] + m[5]};
 }
 
 std::ostream& operator<<(std::ostream& os, const Transform& transform)
@@ -59,7 +61,7 @@ Transform& Transform::Shear(float x, float y)
 
 Transform& Transform::Rotate(float angle)
 {
-	float rad = (float)Deg2Rad(angle);
+	auto  rad = (float)Deg2Rad(angle);
 	float c   = std::cos(rad);
 	float s   = std::sin(rad);
 	float a   = m[0];

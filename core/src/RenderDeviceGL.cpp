@@ -97,8 +97,8 @@ void RenderDeviceGL::EnableBlending(bool enable)
 
 void RenderDeviceGL::SetBlendFunc(BlendFunc src, BlendFunc dst, Color color)
 {
-	GLenum sfactor = GLenum(BlendFuncMap(src));
-	GLenum dfactor = GLenum(BlendFuncMap(dst));
+	auto sfactor = (GLenum)BlendFuncMap(src);
+	auto dfactor = (GLenum)BlendFuncMap(dst);
 
 	glBlendFunc(sfactor, dfactor);
 
@@ -126,7 +126,7 @@ void RenderDeviceGL::DrawIndexed(const VertexArrayPtr& va, uword index_count)
 {
 	uword count = index_count ? index_count : va->GetIndexBuffer()->GetCount();
 	va->Bind();
-	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, (GLsizei)count, GL_UNSIGNED_INT, nullptr);
 }
 
 word RenderDeviceGL::BlendFuncMap(BlendFunc func)
@@ -195,6 +195,7 @@ void GLDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
 	case GL_DEBUG_SEVERITY_NOTIFICATION:
 		TRACE("GL {} in {}: {}", tp, src, message);
 		return;
+	default: return;
 	}
 }
 #endif  // ENGINE_DEBUG_BUILD

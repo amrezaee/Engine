@@ -97,7 +97,7 @@ void ShaderGL::ReadFile(const Path& shaderfile, String& source)
 		{
 			source.resize(size);
 			in.seekg(0, std::ios::beg);
-			in.read(&source[0], size);
+			in.read(&source[0], (std::streamsize)size);
 		}
 		else
 		{
@@ -115,8 +115,8 @@ void ShaderGL::ReadFile(const Path& shaderfile, String& source)
 
 void ShaderGL::Preprocess(const String& source, String& vsout, String& fsout)
 {
-	std::regex vsregex("\\s*#\\s*type\\s+vertex\\s*\\r?\\n");
-	std::regex fsregex("\\s*#\\s*type\\s+fragment\\s*\\r?\\n");
+	std::regex vsregex(R"(\s*#\s*type\s+vertex\s*\r?\n)");
+	std::regex fsregex(R"(\s*#\s*type\s+fragment\s*\r?\n)");
 
 	std::smatch vsmatch;
 	std::smatch fsmatch;
@@ -191,7 +191,7 @@ void ShaderGL::Postprocess()
 		String name;
 		name.resize(size_t(values[1]) - 1);  // resize to retrieved size minus 1
 		// because we don't consider null termination
-		glGetProgramResourceName(mProgramID, GL_UNIFORM, i, size_t(values[1]),
+		glGetProgramResourceName(mProgramID, GL_UNIFORM, i, (GLsizei)values[1],
 		                         nullptr, &name[0]);
 		mUniformLocations[name] = values[2];
 	}

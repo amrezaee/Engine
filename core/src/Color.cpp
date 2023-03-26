@@ -26,7 +26,7 @@ const Color Color::CORNFLOWER_BLUE {0x6495edff};
 const Color Color::CORNSILK {0xfff8dcff};
 const Color Color::CRIMSON {0xdc143cff};
 const Color Color::DARK_ORCHID {0x9932ccff};
-const Color Color::DARK_SALAMON {0xe9967aff};
+const Color Color::DARK_SALMON {0xe9967aff};
 const Color Color::DEEP_PINK {0xaa336aff};
 const Color Color::FLORAL_WHITE {0xfffaf0ff};
 const Color Color::GHOST_WHITE {0xf8f8ffff};
@@ -62,12 +62,12 @@ void Color::Set(float r, float g, float b, float a)
 
 void Color::Set(byte r, byte g, byte b)
 {
-	Set(255u, b, g, r);
+	Set(r, g, b, 255);
 }
 
 void Color::Set(float r, float g, float b)
 {
-	Set(1.0f, b, g, r);
+	Set(r, g, b, 1.0f);
 }
 
 void Color::SetRed(byte r)
@@ -116,7 +116,7 @@ void Color::SetPacked(uword pack)
 	         ((pack >> 8) & 0xff00) | ((pack << 24) & 0xff000000);
 }
 
-void Color::GetColors(float* const out) const
+void Color::GetColors(float* out) const
 {
 	out[0] = static_cast<float>(GetRed()) / 255.0f;
 	out[1] = static_cast<float>(GetGreen()) / 255.0f;
