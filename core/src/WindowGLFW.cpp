@@ -7,7 +7,8 @@ static uword window_count = 0;
 
 void CloseCallback(GLFWwindow* win)
 {
-	((WindowGLFW*)glfwGetWindowUserPointer(win))->CloseSignal();
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+	w->CloseSignal();
 }
 
 void FramebufferCallback(GLFWwindow* win, int width, int height)
@@ -29,7 +30,8 @@ void FocusCallback(GLFWwindow* win, int state)
 
 void SizeCallback(GLFWwindow* win, int width, int height)
 {
-	((WindowGLFW*)glfwGetWindowUserPointer(win))->SizeSignal(Vec2ui {width, height});
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+	w->SizeSignal(Vec2ui {width, height});
 }
 
 void PositionCallback(GLFWwindow* win, int x, int y)
@@ -38,6 +40,38 @@ void PositionCallback(GLFWwindow* win, int x, int y)
 	w->PositionSignal(Vec2ui {x, y});
 	w->mSettings.Position.x = x;
 	w->mSettings.Position.y = y;
+}
+
+void KeyCallback(GLFWwindow* win, int key, int, int action, int)
+{
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+
+	if(action == GLFW_PRESS)
+		w->KeySignal((Key)key, Key::None);
+	else if(action == GLFW_RELEASE)
+		w->KeySignal(Key::None, (Key)key);
+}
+
+void MouseCallback(GLFWwindow* win, int button, int action, int)
+{
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+
+	if(action == GLFW_PRESS)
+		w->MouseSignal((MouseButton)button, MouseButton::None);
+	else
+		w->MouseSignal(MouseButton::None, (MouseButton)button);
+}
+
+void CursorCallback(GLFWwindow* win, double xpos, double ypos)
+{
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+	w->CursorSignal(Vec2 {xpos, ypos});
+}
+
+void ScrollCallback(GLFWwindow* win, double xoffset, double yoffset)
+{
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+	w->ScrollSignal(Vec2 {xoffset, yoffset});
 }
 
 static void ErrorCallback(int code, const char* desc)
@@ -90,6 +124,10 @@ void WindowGLFW::Create()
 	glfwSetWindowSizeCallback(mHWin, SizeCallback);
 	glfwSetWindowFocusCallback(mHWin, FocusCallback);
 	glfwSetWindowPosCallback(mHWin, PositionCallback);
+	glfwSetKeyCallback(mHWin, KeyCallback);
+	glfwSetMouseButtonCallback(mHWin, MouseCallback);
+	glfwSetCursorPosCallback(mHWin, CursorCallback);
+	glfwSetScrollCallback(mHWin, ScrollCallback);
 
 	SetHidden(true);
 	SetWindowMode(mSettings.Mode);

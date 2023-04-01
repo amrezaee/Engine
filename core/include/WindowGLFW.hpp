@@ -5,14 +5,14 @@
 class WindowGLFW final: public Window
 {
 public:
-	WindowGLFW(const WindowSettings& settings);
-	~WindowGLFW();
+	explicit WindowGLFW(const WindowSettings& settings);
+	~WindowGLFW() override;
 
 public:
 	void Create();
 	void Destroy() override;
 
-	const String& GetTitle() const;
+	const String& GetTitle() const override;
 	void          SetTitle(const String& title) override;
 
 	uword  GetWidth() const override;
@@ -60,6 +60,11 @@ public:
 	friend void FocusCallback(GLFWwindow* win, int state);
 	friend void SizeCallback(GLFWwindow* win, int width, int height);
 	friend void PositionCallback(GLFWwindow* win, int x, int y);
+	friend void KeyCallback(GLFWwindow* win, int key, int scancode, int action,
+	                        int mods);
+	friend void MouseCallback(GLFWwindow* win, int button, int action, int mods);
+	friend void CursorCallback(GLFWwindow* win, double xpos, double ypos);
+	friend void ScrollCallback(GLFWwindow* win, double xoffset, double yoffset);
 
 private:
 	GLFWwindow* mHWin;
@@ -70,3 +75,7 @@ void FramebufferCallback(GLFWwindow* win, int width, int height);
 void FocusCallback(GLFWwindow* win, int state);
 void SizeCallback(GLFWwindow* win, int width, int height);
 void PositionCallback(GLFWwindow* win, int x, int y);
+void KeyCallback(GLFWwindow* win, int key, int scancode, int action, int mods);
+void MouseCallback(GLFWwindow* win, int button, int action, int mods);
+void CursorCallback(GLFWwindow* win, double xpos, double ypos);
+void ScrollCallback(GLFWwindow* win, double xoffset, double yoffset);

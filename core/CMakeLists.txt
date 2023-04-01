@@ -1,54 +1,57 @@
-set(CORE_HEADERS "include/Application.hpp"
-				 "include/Assert.hpp"
-				 "include/Camera.hpp"
-				 "include/Color.hpp"
-				 "include/Common.hpp"
-				 "include/Components.hpp"
-				 "include/Delegate.hpp"
-				 "include/Entity.hpp"
-				 "include/EntryPoint.hpp"
-				 "include/GPUBuffers.hpp"
-				 "include/GPUBuffersGL.hpp"
-				 "include/Logger.hpp"
-				 "include/MathFunctions.hpp"
-				 "include/RenderDevice.hpp"
-				 "include/RenderDeviceGL.hpp"
-				 "include/Renderer.hpp"
-				 "include/Scene.hpp"
-				 "include/SceneManager.hpp"
-				 "include/Shader.hpp"
-				 "include/ShaderGL.hpp"
-				 "include/Signal.hpp"
-				 "include/Texture.hpp"
-				 "include/TextureGL.hpp"
-				 "include/Timer.hpp"
-				 "include/Transform.hpp"
-				 "include/Vector2.hpp"
-				 "include/Window.hpp"
-				 "include/WindowGLFW.hpp"
-)
+set(CORE_HEADERS
+    "include/Application.hpp"
+    "include/Assert.hpp"
+    "include/Camera.hpp"
+    "include/Color.hpp"
+    "include/Common.hpp"
+    "include/Components.hpp"
+    "include/Delegate.hpp"
+    "include/Entity.hpp"
+    "include/EntryPoint.hpp"
+    "include/GPUBuffers.hpp"
+    "include/GPUBuffersGL.hpp"
+    "include/InputMap.hpp"
+    "include/Logger.hpp"
+    "include/MathFunctions.hpp"
+    "include/RenderDevice.hpp"
+    "include/RenderDeviceGL.hpp"
+    "include/Renderer.hpp"
+    "include/Scene.hpp"
+    "include/SceneManager.hpp"
+    "include/Shader.hpp"
+    "include/ShaderGL.hpp"
+    "include/Signal.hpp"
+    "include/Texture.hpp"
+    "include/TextureGL.hpp"
+    "include/Timer.hpp"
+    "include/Transform.hpp"
+    "include/Vector2.hpp"
+    "include/Window.hpp"
+    "include/WindowGLFW.hpp"
+    )
 
-set(CORE_SOURCES "src/Application.cpp"
-				 "src/Assert.cpp"
-				 "src/Camera.cpp"
-				 "src/Color.cpp"
-				 "src/Entity.cpp"
-				 "src/GPUBuffers.cpp"
-				 "src/GPUBuffersGL.cpp"
-				 "src/Logger.cpp"
-				 "src/RenderDevice.cpp"
-				 "src/RenderDeviceGL.cpp"
-				 "src/Renderer.cpp"
-				 "src/Scene.cpp"
-				 "src/SceneManager.cpp"
-				 "src/Shader.cpp"
-				 "src/ShaderGL.cpp"
-				 "src/Texture.cpp"
-				 "src/TextureGL.cpp"
-				 "src/Transform.cpp"
-				 "src/Window.cpp"
-				 "src/WindowGLFW.cpp"
-)
+set(CORE_SOURCES
+    "src/Application.cpp"
+    "src/Assert.cpp"
+    "src/Camera.cpp"
+    "src/Color.cpp"
+    "src/Entity.cpp"
+    "src/GPUBuffers.cpp"
+    "src/GPUBuffersGL.cpp"
+    "src/Logger.cpp"
+    "src/RenderDevice.cpp"
+    "src/RenderDeviceGL.cpp"
+    "src/Renderer.cpp"
+    "src/Scene.cpp"
+    "src/SceneManager.cpp"
+    "src/Shader.cpp"
+    "src/ShaderGL.cpp"
+    "src/Texture.cpp"
+    "src/TextureGL.cpp"
+    "src/Transform.cpp"
+    "src/Window.cpp"
+    "src/WindowGLFW.cpp"
+    )
 
 file(GLOB SHADER_SOURCES "../shaders/*.glsl")
 
@@ -64,30 +67,30 @@ target_include_directories(core PUBLIC "include/")
 target_link_libraries(core PUBLIC core-deps)
 
 target_compile_definitions(core PUBLIC
-									$<$<CONFIG:Debug>:ENGINE_DEBUG_BUILD>
-									ENGINE_ROOT_PATH="${CMAKE_SOURCE_DIR}"
-)
+                           $<$<CONFIG:Debug>:ENGINE_DEBUG_BUILD>
+                           ENGINE_ROOT_PATH="${CMAKE_SOURCE_DIR}"
+                           )
 
 if(ENGINE_COMPILER_GCC_VARIANT)
-	
-	target_compile_options(core PRIVATE
-									-Wall -Weffc++ -Wctor-dtor-privacy -Woverloaded-virtual
-									-fno-gnu-keywords
-	)
+
+    target_compile_options(core PRIVATE
+                           -Wall -Weffc++ -Wctor-dtor-privacy -Woverloaded-virtual
+                           -fno-gnu-keywords
+                           )
 
 elseif(ENGINE_COMPILER_MSVC_VARIANT)
 
-	target_compile_options(core PRIVATE
-									/options:strict /permissive- /W4 /nologo /Zc:__cplusplus /MP /fp:fast
-									$<$<CONFIG:Debug>:/Oi>
-	)
+    target_compile_options(core PRIVATE
+                           /options:strict /permissive- /W4 /nologo /Zc:__cplusplus /MP /fp:fast
+                           $<$<CONFIG:Debug>:/Oi>
+                           )
 
-	target_compile_definitions(core PRIVATE 
-										_HAS_EXCEPTIONS=0
-	)
+    target_compile_definitions(core PRIVATE
+                               _HAS_EXCEPTIONS=0
+                               )
 
 endif()
 
 source_group("include" FILES ${CORE_HEADERS})
-source_group("src"     FILES ${CORE_SOURCES})
-source_group("shader"  FILES ${SHADER_SOURCES})
+source_group("src" FILES ${CORE_SOURCES})
+source_group("shader" FILES ${SHADER_SOURCES})

@@ -11,22 +11,23 @@ Sandbox::Sandbox(): Application("Sandbox", ENGINE_ROOT_PATH)
 
 void Sandbox::Initialize()
 {
-	mRenderDevice->SetClearColor(Color::BLACK);
 	TexturePtr sprite = Texture::Create("assets/image.png");
 
 	mSceneManager.Add(MakeUnique<Scene>("Main"));
 	mSceneManager.Switch("Main");
 	Scene* scene = mSceneManager.GetCurrent();
 
+	mWindow->KeySignal.Connect(this, &Sandbox::KeyboardInput);
+	mWindow->MouseSignal.Connect(this, &Sandbox::MouseInput);
+	mWindow->CursorSignal.Connect(this, &Sandbox::CursorInput);
+	mWindow->ScrollSignal.Connect(this, &Sandbox::ScrollInput);
+
 	{
-		Entity player = scene->CreateEntity("player");
+		player = scene->CreateEntity("player");
 		player.AddComponent<SpriteRendererComponent>(sprite);
 		auto& t = player.GetComponent<TransformComponent>();
 		t.Scale = 8.0f;
 	}
-	// Vec2 wp;
-	// wp.x = mWindow->GetWidth() * -0.5f + 10.0f;
-	// wp.y = mWindow->GetHeight() * -0.5f + 10.0f;
 
 	{
 		Entity circle = scene->CreateEntity("circle0");
@@ -73,6 +74,9 @@ void Sandbox::Update(double dt)
 {
 	mRenderDevice->Clear();
 
+	auto& t = player.GetComponent<TransformComponent>();
+	t.Position += pos * dt;
+
 	time += dt;
 	if(time > 1.0f)
 	{
@@ -80,4 +84,55 @@ void Sandbox::Update(double dt)
 		     mRenderer->GetFrameStats().QuadCount, dt, 1.0f / dt);
 		time = 0.0f;
 	}
+}
+
+bool Sandbox::KeyboardInput(Key press, Key release)
+{
+	const float speed = 200.0f;
+	if(press == Key::Right)
+		pos.x = speed;
+	if(press == Key::Left)
+		pos.x = -speed;
+	if(press == Key::Up)
+		pos.y = -speed;
+	if(press == Key::Down)
+		pos.y = speed;
+
+	if(release == Key::Right)
+		pos.x = 0;
+	if(release == Key::Left)
+		pos.x = 0;
+	if(release == Key::Up)
+		pos.y = 0;
+	if(release == Key::Down)
+		pos.y = 0;
+
+	if(press == Key::Escape)
+		Terminate();
+
+	return true;
+}
+
+bool Sandbox::MouseInput(MouseButton press, MouseButton release)
+{
+	if(press == MouseButton::Right)
+		INFO("mouse right pressed");
+	if(press == MouseButton::Left)
+		INFO("mouse left pressed");
+	if(press == MouseButton::Middle)
+		INFO("mouse middle pressed");
+
+	return true;
+}
+
+bool Sandbox::CursorInput(Vec2 position)
+{
+	INFO("Cursor (%.2f, %.2f)", position.x, position.y);
+	return true;
+}
+
+bool Sandbox::ScrollInput(Vec2 offset)
+{
+	INFO("Scroll (%.2f, %.2f)", offset.x, offset.y);
+	return true;
 }

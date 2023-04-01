@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Common.hpp>
+#include <InputMap.hpp>
 #include <Signal.hpp>
 #include <Vector2.hpp>
 
@@ -45,11 +46,15 @@ public:
 class Window
 {
 public:
-	Signal<Vec2ui> FramebufferSignal;
-	Signal<Vec2ui> SizeSignal;
-	Signal<Vec2ui> PositionSignal;
-	Signal<>       CloseSignal;
-	Signal<bool>   FocusSignal;
+	Signal<Vec2ui>                   FramebufferSignal;
+	Signal<Vec2ui>                   SizeSignal;
+	Signal<Vec2ui>                   PositionSignal;
+	Signal<>                         CloseSignal;
+	Signal<bool>                     FocusSignal;
+	Signal<Key, Key>                 KeySignal;
+	Signal<MouseButton, MouseButton> MouseSignal;
+	Signal<Vec2>                     CursorSignal;
+	Signal<Vec2>                     ScrollSignal;
 
 public:
 	explicit Window(WindowSettings settings);
