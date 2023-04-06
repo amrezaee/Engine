@@ -67,24 +67,21 @@ public:
 
 	static RenderDevicePtr Create();
 
-	virtual void Initialize() = 0;
-
 	static RenderAPI        GetAPI();
 	const RenderDeviceInfo& GetInfo() const;
 
-	virtual void SetClearColor(Color color = Color::BLACK) = 0;
-	virtual void Clear()                                   = 0;
+	virtual void SetClearColor(Color color) = 0;
+	virtual void Clear()                    = 0;
 
-	virtual void EnableBlending(bool enable)              = 0;
-	virtual void SetBlendFunc(BlendFunc src, BlendFunc dst,
-	                          Color color = Color::WHITE) = 0;
-	virtual bool IsBlendingEnable() const                 = 0;
+	virtual void EnableBlending(bool enable)                             = 0;
+	virtual void SetBlendFunc(BlendFunc src, BlendFunc dst, Color color) = 0;
+	virtual bool IsBlendingEnable() const                                = 0;
 
 	virtual void UpdateViewport(uword x, uword y, uword width, uword height) = 0;
 
 	virtual void SetPointSize(float size) = 0;
 
-	virtual void DrawIndexed(const VertexArrayPtr& va, uword index_count = 0) = 0;
+	virtual void DrawIndexed(const VertexArrayPtr& va, uword index_count) = 0;
 
 private:
 	static RenderAPI sAPI;

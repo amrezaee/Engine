@@ -1,6 +1,5 @@
 #include <WindowGLFW.hpp>
 
-#include <Assert.hpp>
 #include <Logger.hpp>
 
 static uword window_count = 0;
@@ -82,16 +81,6 @@ static void ErrorCallback(int code, const char* desc)
 WindowGLFW::WindowGLFW(const WindowSettings& settings)
         : Window(settings), mHWin(nullptr)
 {
-	Create();
-}
-
-WindowGLFW::~WindowGLFW()
-{
-	Destroy();
-}
-
-void WindowGLFW::Create()
-{
 	glfwSetErrorCallback(ErrorCallback);
 
 	if(window_count == 0)
@@ -140,7 +129,7 @@ void WindowGLFW::Create()
 	++window_count;
 }
 
-void WindowGLFW::Destroy()
+WindowGLFW::~WindowGLFW()
 {
 	if(!mHWin)
 	{

@@ -3,7 +3,7 @@
 #include <Assert.hpp>
 #include <Logger.hpp>
 
-void RenderDeviceGL::Initialize()
+RenderDeviceGL::RenderDeviceGL()
 {
 	TRACE("RenderDevice initializing...");
 
@@ -69,7 +69,7 @@ void RenderDeviceGL::Initialize()
 	}
 
 	EnableBlending(true);
-	SetBlendFunc(BlendFunc::SrcAlpha, BlendFunc::OneMinusSrcAlpha);
+	SetBlendFunc(BlendFunc::SrcAlpha, BlendFunc::OneMinusSrcAlpha, Color::WHITE);
 	glEnable(GL_LINE_SMOOTH);
 
 	TRACE("RenderDevice initialized");

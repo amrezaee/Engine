@@ -46,15 +46,14 @@ private:
 	bool mRunning {true};
 	bool mFocus {true};
 
-	double mDeltaTime {0.0};
-	double mMaxDeltaTime {0.25};
-
 	// for lowering frame spikes impacts
-	double mDeltaTimeArray[10] {};
+	std::array<double, 10> mDeltaTimeArray {};
 
-	double mFixedDeltaTime {1.0 / 60.0};
-	uword  mMaxFixedIterations {8};
-	double mDeltaTimeAccumulator {0.0};
+	const double mMinDeltaTime {0.000001};
+	const double mMaxDeltaTime {0.250000};
+	const uword  mMaxFixedIterations {8};
+	double       mFixedDeltaTime {1.0 / 60.0};
+	double       mDeltaTime {0.0};
 
 protected:
 	RenderDevicePtr     mRenderDevice;

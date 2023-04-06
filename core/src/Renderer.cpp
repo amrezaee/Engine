@@ -1,23 +1,12 @@
 #include <Renderer.hpp>
 
-#include <Assert.hpp>
 #include <Logger.hpp>
 
-Renderer::Renderer(RenderDevice& device, uword max_quads)
-        : mDevice(device), mMaxQuads(max_quads), mMaxVertices(mMaxQuads * 4),
+Renderer::Renderer(RenderDevicePtr& device, uword max_quads)
+        : mDevice(*device), mMaxQuads(max_quads), mMaxVertices(mMaxQuads * 4),
           mMaxIndices(mMaxQuads * 6), mTextureIndex(0), mStats {},
           mQuadVertices(mMaxVertices), mQuadCount(0), mCircleVertices(mMaxVertices),
           mCircleCount(0)
-{
-	Initialize();
-}
-
-Renderer::~Renderer()
-{
-	Destroy();
-}
-
-void Renderer::Initialize()
 {
 	TRACE("Renderer initializing...");
 
@@ -69,7 +58,7 @@ void Renderer::Initialize()
 	TRACE("Renderer initialized");
 }
 
-void Renderer::Destroy()
+Renderer::~Renderer()
 {
 	TRACE("Renderer destroying...");
 

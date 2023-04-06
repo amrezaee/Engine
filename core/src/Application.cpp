@@ -14,10 +14,9 @@ Application::~Application() = default;
 
 void Application::Run()
 {
-	mRenderDevice = RenderDevice::Create();
 	mWindow       = Window::Create(WindowSettings(mName));
-	mRenderDevice->Initialize();
-	mRenderer = MakeUnique<Renderer>(*mRenderDevice, 2048);
+	mRenderDevice = RenderDevice::Create();
+	mRenderer     = MakeUnique<Renderer>(mRenderDevice, 2048);
 
 	mWindow->CloseSignal.Connect(this, &Application::OnWindowClose);
 	mWindow->FocusSignal.Connect(this, &Application::OnWindowFocus);
@@ -25,21 +24,21 @@ void Application::Run()
 
 	Initialize();
 
-	Timer timer;
-	uword fixed_iterations = 0;
-	uword index            = 0;
+	Timer  timer;
+	uword  fixed_iterations = 0;
+	uword  index            = 0;
+	double dt_accu          = 0.0;
 
 	while(mRunning)
 	{
-		mDeltaTimeArray[index++] = std::min(timer.Seconds(), mMaxDeltaTime);
+		mDeltaTimeArray[index++] =
+		        std::clamp(timer.Seconds(), mMinDeltaTime, mMaxDeltaTime);
 		timer.Reset();
-		index %= ArraySize(mDeltaTimeArray);
-		mDeltaTime =
-		        std::accumulate(mDeltaTimeArray,
-		                        mDeltaTimeArray + ArraySize(mDeltaTimeArray), 0.0) /
-		        (double)ArraySize(mDeltaTimeArray);
-
-		mDeltaTimeAccumulator += mDeltaTime;
+		index %= (uword)mDeltaTimeArray.size();
+		mDeltaTime = std::accumulate(mDeltaTimeArray.cbegin(),
+		                             mDeltaTimeArray.cend(), 0.0) /
+		             (double)mDeltaTimeArray.size();
+		dt_accu += mDeltaTime;
 
 		mScene = mSceneManager.GetCurrent();
 
@@ -47,18 +46,18 @@ void Application::Run()
 
 		if(mFocus)
 		{
-			while((mDeltaTimeAccumulator >= mFixedDeltaTime) &&
+			while((dt_accu >= mFixedDeltaTime) &&
 			      (fixed_iterations++ < mMaxFixedIterations))
 			{
 				FixedUpdate(mFixedDeltaTime);
 				mScene->FixedUpdate(mFixedDeltaTime);
-				mDeltaTimeAccumulator -= mFixedDeltaTime;
+				dt_accu -= mFixedDeltaTime;
 			}
 			fixed_iterations = 0;
 
 			Update(mDeltaTime);
 			mScene->Update(mDeltaTime);
-			mScene->Render(mDeltaTimeAccumulator / mFixedDeltaTime);
+			mScene->Render(dt_accu / mFixedDeltaTime);
 		}
 
 		mWindow->SwapBuffers();

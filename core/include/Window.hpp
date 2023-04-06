@@ -64,8 +64,6 @@ public:
 
 	static WindowPtr Create(const WindowSettings& settings);
 
-	virtual void Destroy() = 0;
-
 	virtual const String& GetTitle() const              = 0;
 	virtual void          SetTitle(const String& title) = 0;
 

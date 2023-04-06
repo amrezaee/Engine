@@ -121,6 +121,10 @@ bool Sandbox::MouseInput(MouseButton press, MouseButton release)
 		INFO("mouse left pressed");
 	if(press == MouseButton::Middle)
 		INFO("mouse middle pressed");
+	if(press == MouseButton::Button4)
+		INFO("mouse bt4 pressed");
+	if(press == MouseButton::Button5)
+		INFO("mouse bt5 pressed");
 
 	return true;
 }

@@ -8,10 +8,6 @@ public:
 	explicit WindowGLFW(const WindowSettings& settings);
 	~WindowGLFW() override;
 
-public:
-	void Create();
-	void Destroy() override;
-
 	const String& GetTitle() const override;
 	void          SetTitle(const String& title) override;
 

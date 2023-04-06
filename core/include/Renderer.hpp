@@ -38,13 +38,10 @@ struct CircleVertex
 class Renderer
 {
 public:
-	Renderer(RenderDevice& device, uword max_quads);
+	Renderer(RenderDevicePtr& device, uword max_quads);
 	Renderer(const Renderer&)            = delete;
 	Renderer& operator=(const Renderer&) = delete;
 	~Renderer();
-
-	void Initialize();
-	void Destroy();
 
 	const FrameStats& GetFrameStats();
 
