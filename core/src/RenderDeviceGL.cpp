@@ -187,13 +187,13 @@ void GLDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
 
 	switch(severity)
 	{
-	case GL_DEBUG_SEVERITY_HIGH: FATAL("GL {} in {}: {}", tp, src, message); return;
+	case GL_DEBUG_SEVERITY_HIGH: FATAL("GL %s in %s: %s", tp, src, message); return;
 	case GL_DEBUG_SEVERITY_MEDIUM:
-		ERROR("GL {} in {}: {}", tp, src, message);
+		ERROR("GL %s in %s: %s", tp, src, message);
 		return;
-	case GL_DEBUG_SEVERITY_LOW: WARN("GL {} in {}: {}", tp, src, message); return;
+	case GL_DEBUG_SEVERITY_LOW: WARN("GL %s in %s: %s", tp, src, message); return;
 	case GL_DEBUG_SEVERITY_NOTIFICATION:
-		TRACE("GL {} in {}: {}", tp, src, message);
+		TRACE("GL %s in %s: %s", tp, src, message);
 		return;
 	default: return;
 	}

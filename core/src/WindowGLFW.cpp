@@ -2,29 +2,12 @@
 
 #include <Logger.hpp>
 
-static uword window_count = 0;
+uword WindowGLFW::sWindowCount = 0;
 
 void CloseCallback(GLFWwindow* win)
 {
 	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
 	w->CloseSignal();
-}
-
-void FramebufferCallback(GLFWwindow* win, int width, int height)
-{
-	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-
-	w->FramebufferSignal(Vec2ui {width, height});
-	w->mSettings.Resolution.x = width;
-	w->mSettings.Resolution.y = height;
-}
-
-void FocusCallback(GLFWwindow* win, int state)
-{
-	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-
-	w->FocusSignal(state == GLFW_TRUE);
-	w->mSettings.Focused = state == GLFW_TRUE;
 }
 
 void SizeCallback(GLFWwindow* win, int width, int height)
@@ -33,12 +16,36 @@ void SizeCallback(GLFWwindow* win, int width, int height)
 	w->SizeSignal(Vec2ui {width, height});
 }
 
+void FramebufferCallback(GLFWwindow* win, int width, int height)
+{
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+	w->FramebufferSignal(Vec2ui {width, height});
+
+	if(w->GetWindowMode() == WindowMode::Windowed)
+	{
+		w->mSettings.Resolution.x = (uword)width;
+		w->mSettings.Resolution.y = (uword)height;
+	}
+}
+
 void PositionCallback(GLFWwindow* win, int x, int y)
 {
 	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
 	w->PositionSignal(Vec2ui {x, y});
-	w->mSettings.Position.x = x;
-	w->mSettings.Position.y = y;
+
+	if(w->GetWindowMode() == WindowMode::Windowed)
+	{
+		w->mSettings.Position.x = (uword)x;
+		w->mSettings.Position.y = (uword)y;
+	}
+}
+
+void FocusCallback(GLFWwindow* win, int state)
+{
+	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
+
+	w->FocusSignal(state == GLFW_TRUE);
+	w->mSettings.Focused = state == GLFW_TRUE;
 }
 
 void KeyCallback(GLFWwindow* win, int key, int, int action, int)
@@ -79,11 +86,11 @@ static void ErrorCallback(int code, const char* desc)
 }
 
 WindowGLFW::WindowGLFW(const WindowSettings& settings)
-        : Window(settings), mHWin(nullptr)
+        : Window(settings), mWindow(nullptr)
 {
 	glfwSetErrorCallback(ErrorCallback);
 
-	if(window_count == 0)
+	if(sWindowCount == 0)
 		glfwInit();
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -97,26 +104,26 @@ WindowGLFW::WindowGLFW(const WindowSettings& settings)
 	glfwWindowHint(GLFW_STENCIL_BITS, 0);
 	glfwWindowHint(GLFW_DEPTH_BITS, 0);
 	glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
-	glfwWindowHint(GLFW_RESIZABLE, mSettings.Resizable ? GLFW_TRUE : GLFW_FALSE);
-	glfwWindowHint(GLFW_DECORATED, mSettings.Borderless ? GLFW_FALSE : GLFW_TRUE);
-	glfwWindowHint(GLFW_FOCUSED, mSettings.Focused ? GLFW_TRUE : GLFW_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, mSettings.Resizable);
+	glfwWindowHint(GLFW_DECORATED, !mSettings.Borderless);
+	glfwWindowHint(GLFW_FOCUSED, mSettings.Focused);
 
-	mHWin = glfwCreateWindow(int(mSettings.Resolution.x),
-	                         int(mSettings.Resolution.y), mSettings.Title.c_str(),
-	                         nullptr, nullptr);
+	mWindow = glfwCreateWindow((int)mSettings.Resolution.x,
+	                           (int)mSettings.Resolution.y, mSettings.Title.c_str(),
+	                           nullptr, nullptr);
 
-	glfwMakeContextCurrent(mHWin);
+	glfwMakeContextCurrent(mWindow);
 
-	glfwSetWindowUserPointer(mHWin, this);
-	glfwSetFramebufferSizeCallback(mHWin, FramebufferCallback);
-	glfwSetWindowCloseCallback(mHWin, CloseCallback);
-	glfwSetWindowSizeCallback(mHWin, SizeCallback);
-	glfwSetWindowFocusCallback(mHWin, FocusCallback);
-	glfwSetWindowPosCallback(mHWin, PositionCallback);
-	glfwSetKeyCallback(mHWin, KeyCallback);
-	glfwSetMouseButtonCallback(mHWin, MouseCallback);
-	glfwSetCursorPosCallback(mHWin, CursorCallback);
-	glfwSetScrollCallback(mHWin, ScrollCallback);
+	glfwSetWindowUserPointer(mWindow, this);
+	glfwSetFramebufferSizeCallback(mWindow, FramebufferCallback);
+	glfwSetWindowCloseCallback(mWindow, CloseCallback);
+	glfwSetWindowSizeCallback(mWindow, SizeCallback);
+	glfwSetWindowFocusCallback(mWindow, FocusCallback);
+	glfwSetWindowPosCallback(mWindow, PositionCallback);
+	glfwSetKeyCallback(mWindow, KeyCallback);
+	glfwSetMouseButtonCallback(mWindow, MouseCallback);
+	glfwSetCursorPosCallback(mWindow, CursorCallback);
+	glfwSetScrollCallback(mWindow, ScrollCallback);
 
 	SetHidden(true);
 	SetWindowMode(mSettings.Mode);
@@ -126,22 +133,22 @@ WindowGLFW::WindowGLFW(const WindowSettings& settings)
 	SetVSyncMode(mSettings.VSync);
 	SetHidden(mSettings.Hidden);
 
-	++window_count;
+	++sWindowCount;
 }
 
 WindowGLFW::~WindowGLFW()
 {
-	if(!mHWin)
+	if(!mWindow)
 	{
 		WARN("Window already destroyed");
 		return;
 	}
 
-	glfwDestroyWindow(mHWin);
-	mHWin = nullptr;
-	--window_count;
+	glfwDestroyWindow(mWindow);
+	mWindow = nullptr;
+	--sWindowCount;
 
-	if(window_count == 0)
+	if(sWindowCount == 0)
 		glfwTerminate();
 }
 
@@ -153,7 +160,7 @@ const String& WindowGLFW::GetTitle() const
 void WindowGLFW::SetTitle(const String& title)
 {
 	mSettings.Title = title;
-	glfwSetWindowTitle(mHWin, title.c_str());
+	glfwSetWindowTitle(mWindow, title.c_str());
 }
 
 uword WindowGLFW::GetWidth() const
@@ -174,19 +181,19 @@ Vec2ui WindowGLFW::GetResolution() const
 void WindowGLFW::SetWidth(uword width)
 {
 	mSettings.Resolution.x = width;
-	glfwSetWindowSize(mHWin, int(width), int(mSettings.Resolution.y));
+	glfwSetWindowSize(mWindow, int(width), int(mSettings.Resolution.y));
 }
 
 void WindowGLFW::SetHeight(uword height)
 {
 	mSettings.Resolution.y = height;
-	glfwSetWindowSize(mHWin, int(mSettings.Resolution.x), int(height));
+	glfwSetWindowSize(mWindow, int(mSettings.Resolution.x), int(height));
 }
 
 void WindowGLFW::SetResolution(Vec2ui resolution)
 {
 	mSettings.Resolution = resolution;
-	glfwSetWindowSize(mHWin, int(resolution.x), int(resolution.y));
+	glfwSetWindowSize(mWindow, int(resolution.x), int(resolution.y));
 }
 
 Vec2ui WindowGLFW::GetPosition() const
@@ -197,7 +204,7 @@ Vec2ui WindowGLFW::GetPosition() const
 void WindowGLFW::SetPosition(Vec2ui pos)
 {
 	mSettings.Position = pos;
-	glfwSetWindowPos(mHWin, int(pos.x), int(pos.y));
+	glfwSetWindowPos(mWindow, int(pos.x), int(pos.y));
 }
 
 WindowMode WindowGLFW::GetWindowMode() const
@@ -212,30 +219,34 @@ bool WindowGLFW::IsFullscreen() const
 
 void WindowGLFW::SetWindowMode(WindowMode mode)
 {
-	mSettings.Mode = mode;
+	if(mode == mSettings.Mode)
+		return;
 
+	mSettings.Mode       = mode;
 	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 
 	switch(mode)
 	{
 	case WindowMode::Windowed:
-		glfwSetWindowMonitor(mHWin, nullptr, int(mSettings.Position.x),
-		                     int(mSettings.Position.y), int(mSettings.Resolution.x),
-		                     int(mSettings.Resolution.y), GLFW_DONT_CARE);
-		break;
-
-	case WindowMode::ExclusiveFS:
-		glfwSetWindowMonitor(mHWin, monitor, int(mSettings.Position.x),
-		                     int(mSettings.Position.y), int(mSettings.Resolution.x),
-		                     int(mSettings.Resolution.y), GLFW_DONT_CARE);
-		break;
+	{
+		glfwSetWindowMonitor(mWindow, nullptr, (int)mSettings.Position.x,
+		                     (int)mSettings.Position.y, (int)mSettings.Resolution.x,
+		                     (int)mSettings.Resolution.y, GLFW_DONT_CARE);
+	}
+	break;
 
 	case WindowMode::BorderlessFS:
 	{
 		const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
-
-		glfwSetWindowMonitor(mHWin, monitor, 0, 0, vidmode->width, vidmode->height,
+		glfwSetWindowMonitor(mWindow, monitor, 0, 0, vidmode->width, vidmode->height,
 		                     vidmode->refreshRate);
+	}
+	break;
+
+	case WindowMode::ExclusiveFS:
+	{
+		glfwSetWindowMonitor(mWindow, monitor, 0, 0, (int)mSettings.Resolution.x,
+		                     (int)mSettings.Resolution.y, GLFW_DONT_CARE);
 	}
 	break;
 	}
@@ -285,7 +296,7 @@ bool WindowGLFW::IsResizable() const
 void WindowGLFW::SetResizable(bool resizable)
 {
 	mSettings.Resizable = resizable;
-	glfwSetWindowAttrib(mHWin, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+	glfwSetWindowAttrib(mWindow, GLFW_RESIZABLE, resizable);
 }
 
 bool WindowGLFW::IsBorderless() const
@@ -296,7 +307,7 @@ bool WindowGLFW::IsBorderless() const
 void WindowGLFW::SetBorderless(bool borderless)
 {
 	mSettings.Borderless = borderless;
-	glfwSetWindowAttrib(mHWin, GLFW_DECORATED, borderless ? GLFW_FALSE : GLFW_TRUE);
+	glfwSetWindowAttrib(mWindow, GLFW_DECORATED, !borderless);
 }
 
 bool WindowGLFW::IsFocused() const
@@ -308,7 +319,7 @@ void WindowGLFW::SetFocus(bool focused)
 {
 	mSettings.Focused = focused;
 	if(focused)
-		glfwFocusWindow(mHWin);
+		glfwFocusWindow(mWindow);
 }
 
 bool WindowGLFW::IsHidden() const
@@ -321,19 +332,19 @@ void WindowGLFW::SetHidden(bool hidden)
 	mSettings.Hidden = hidden;
 
 	if(hidden)
-		glfwHideWindow(mHWin);
+		glfwHideWindow(mWindow);
 	else
-		glfwShowWindow(mHWin);
+		glfwShowWindow(mWindow);
 }
 
 void* WindowGLFW::GetHandle() const
 {
-	return mHWin;
+	return mWindow;
 }
 
 void WindowGLFW::SwapBuffers()
 {
-	glfwSwapBuffers(mHWin);
+	glfwSwapBuffers(mWindow);
 }
 
 void WindowGLFW::PollEvents()

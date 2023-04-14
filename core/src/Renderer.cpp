@@ -49,7 +49,6 @@ Renderer::Renderer(RenderDevicePtr& device, uword max_quads)
 	mCircleVA->AttachVertexBuffer(mCircleVB);
 	mCircleShader = Shader::Create("shaders/CircleShader.glsl");
 
-
 	// Textures initialization
 	mWhiteTexture = Texture::Create();
 	mTextures.resize(mDevice.GetInfo().NumTextureUnits);
@@ -95,23 +94,25 @@ void Renderer::BatchBegin()
 
 void Renderer::BatchEnd()
 {
-	if(mCircleCount != 0)
-	{  // flush circles
-		mCircleVB->SetData(mCircleVertices.data(), mCircleCount * 4);
-		mCircleShader->Bind();
-		mCircleShader->SetTransform("uViewProjection", mViewProjection);
-		mDevice.DrawIndexed(mCircleVA, mCircleCount * 6);
-		++mStats.DrawCalls;
-	}
-
+	// flush quads
 	if(mQuadCount != 0)
-	{  // flush quads
+	{
 		for(uword i = 0; i < mTextureIndex; ++i) { mTextures[i]->Bind(i); }
 
 		mQuadVB->SetData(mQuadVertices.data(), mQuadCount * 4);
 		mQuadShader->Bind();
 		mQuadShader->SetTransform("uViewProjection", mViewProjection);
 		mDevice.DrawIndexed(mQuadVA, mQuadCount * 6);
+		++mStats.DrawCalls;
+	}
+
+	// flush circles
+	if(mCircleCount != 0)
+	{
+		mCircleVB->SetData(mCircleVertices.data(), mCircleCount * 4);
+		mCircleShader->Bind();
+		mCircleShader->SetTransform("uViewProjection", mViewProjection);
+		mDevice.DrawIndexed(mCircleVA, mCircleCount * 6);
 		++mStats.DrawCalls;
 	}
 }
@@ -220,25 +221,25 @@ void Renderer::DrawCircle(Vec2 pos, float radius, Color color, float thickness,
 	uword i = mCircleCount * 4;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[0];
-	mCircleVertices[i].LocalPosition = mQuadPositions[0] * 2.0f;
+	mCircleVertices[i].LocalPosition = mCirclePositions[0];
 	mCircleVertices[i].Color         = color;
 	mCircleVertices[i].Thickness     = thickness;
 	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[1];
-	mCircleVertices[i].LocalPosition = mQuadPositions[1] * 2.0f;
+	mCircleVertices[i].LocalPosition = mCirclePositions[1];
 	mCircleVertices[i].Color         = color;
 	mCircleVertices[i].Thickness     = thickness;
 	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[2];
-	mCircleVertices[i].LocalPosition = mQuadPositions[2] * 2.0f;
+	mCircleVertices[i].LocalPosition = mCirclePositions[2];
 	mCircleVertices[i].Color         = color;
 	mCircleVertices[i].Thickness     = thickness;
 	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[3];
-	mCircleVertices[i].LocalPosition = mQuadPositions[3] * 2.0f;
+	mCircleVertices[i].LocalPosition = mCirclePositions[3];
 	mCircleVertices[i].Color         = color;
 	mCircleVertices[i].Thickness     = thickness;
 	mCircleVertices[i].Smoothness    = smoothness;

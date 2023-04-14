@@ -98,6 +98,9 @@ private:
 	constexpr static Vec2 mQuadPositions[4] = {
 	        {-0.5f, -0.5f}, {0.5f, -0.5f}, {0.5f, 0.5f}, {-0.5f, 0.5f}};
 
+	constexpr static Vec2 mCirclePositions[4] = {
+	        {-1.0f, -1.0f}, {1.0f, -1.0f}, {1.0f, 1.0f}, {-1.0f, 1.0f}};
+
 	constexpr static Vec2 mTextureCoords[4] = {
 	        {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}};
 };

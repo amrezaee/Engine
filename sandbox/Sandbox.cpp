@@ -89,6 +89,7 @@ void Sandbox::Update(double dt)
 bool Sandbox::KeyboardInput(Key press, Key release)
 {
 	const float speed = 200.0f;
+
 	if(press == Key::Right)
 		pos.x = speed;
 	if(press == Key::Left)
@@ -99,13 +100,27 @@ bool Sandbox::KeyboardInput(Key press, Key release)
 		pos.y = speed;
 
 	if(release == Key::Right)
+	{
 		pos.x = 0;
+	}
 	if(release == Key::Left)
+	{
 		pos.x = 0;
+	}
 	if(release == Key::Up)
+	{
 		pos.y = 0;
+	}
 	if(release == Key::Down)
+	{
 		pos.y = 0;
+	}
+
+	if(press == Key::F1)
+	{
+		auto mode = (WindowMode)(((int)mWindow->GetWindowMode() + 1) % 3);
+		mWindow->SetWindowMode(mode);
+	}
 
 	if(press == Key::Escape)
 		Terminate();
@@ -131,12 +146,10 @@ bool Sandbox::MouseInput(MouseButton press, MouseButton release)
 
 bool Sandbox::CursorInput(Vec2 position)
 {
-	INFO("Cursor (%.2f, %.2f)", position.x, position.y);
 	return true;
 }
 
 bool Sandbox::ScrollInput(Vec2 offset)
 {
-	INFO("Scroll (%.2f, %.2f)", offset.x, offset.y);
 	return true;
 }

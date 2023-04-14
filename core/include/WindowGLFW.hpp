@@ -52,10 +52,10 @@ public:
 	void PollEvents() override;
 
 	friend void CloseCallback(GLFWwindow* win);
-	friend void FramebufferCallback(GLFWwindow* win, int width, int height);
-	friend void FocusCallback(GLFWwindow* win, int state);
 	friend void SizeCallback(GLFWwindow* win, int width, int height);
+	friend void FramebufferCallback(GLFWwindow* win, int width, int height);
 	friend void PositionCallback(GLFWwindow* win, int x, int y);
+	friend void FocusCallback(GLFWwindow* win, int state);
 	friend void KeyCallback(GLFWwindow* win, int key, int scancode, int action,
 	                        int mods);
 	friend void MouseCallback(GLFWwindow* win, int button, int action, int mods);
@@ -63,14 +63,15 @@ public:
 	friend void ScrollCallback(GLFWwindow* win, double xoffset, double yoffset);
 
 private:
-	GLFWwindow* mHWin;
+	GLFWwindow*  mWindow;
+	static uword sWindowCount;
 };
 
 void CloseCallback(GLFWwindow* win);
-void FramebufferCallback(GLFWwindow* win, int width, int height);
-void FocusCallback(GLFWwindow* win, int state);
 void SizeCallback(GLFWwindow* win, int width, int height);
+void FramebufferCallback(GLFWwindow* win, int width, int height);
 void PositionCallback(GLFWwindow* win, int x, int y);
+void FocusCallback(GLFWwindow* win, int state);
 void KeyCallback(GLFWwindow* win, int key, int scancode, int action, int mods);
 void MouseCallback(GLFWwindow* win, int button, int action, int mods);
 void CursorCallback(GLFWwindow* win, double xpos, double ypos);

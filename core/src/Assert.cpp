@@ -9,12 +9,12 @@ void OutputAssertionFailure(const char* expr, const char* msg, const char* file,
 {
 	if(*msg)  // with message
 	{
-		FATAL("{}", msg);
+		FATAL("%s", msg);
 	}
 	else  // without message
 	{
 		Path p(file);
-		FATAL("Assertion {} Failed at  {}:{}", expr,
+		FATAL("Assertion %s Failed at  %s:%s", expr,
 		      p.filename().generic_string().c_str(), line);
 	}
 }
