@@ -32,11 +32,11 @@ struct RenderDeviceInfo
 	bool    PVRTC;            // PowerVR texture compression
 	bool    BC4BC5;           // BC4 and BC5
 	bool    BC6HBC7;          // BC6H and BC7
-	uword   NumTextureUnits;  // number of available texture samplers in fragment
+	u32     NumTextureUnits;  // number of available texture samplers in fragment
 	                          // shader
-	uword MaxTextureWidth;
-	uword MaxTextureHeight;
-	uword NumSamples;
+	u32 MaxTextureWidth;
+	u32 MaxTextureHeight;
+	u32 NumSamples;
 };
 
 enum class BlendFunc
@@ -77,11 +77,11 @@ public:
 	virtual void SetBlendFunc(BlendFunc src, BlendFunc dst, Color color) = 0;
 	virtual bool IsBlendingEnable() const                                = 0;
 
-	virtual void UpdateViewport(uword x, uword y, uword width, uword height) = 0;
+	virtual void UpdateViewport(u32 x, u32 y, u32 width, u32 height) = 0;
 
 	virtual void SetPointSize(float size) = 0;
 
-	virtual void DrawIndexed(const VertexArrayPtr& va, uword index_count) = 0;
+	virtual void DrawIndexed(const VertexArrayPtr& va, u32 index_count) = 0;
 
 private:
 	static RenderAPI sAPI;

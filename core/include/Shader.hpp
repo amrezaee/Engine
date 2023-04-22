@@ -30,5 +30,5 @@ public:
 	virtual void SetTransform(const String&    name,
 	                          const Transform& transform) const    = 0;
 
-	virtual uword GetID() const = 0;
+	virtual u32 GetID() const = 0;
 };

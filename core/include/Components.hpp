@@ -10,7 +10,10 @@ struct TagComponent
 {
 	TagComponent()                    = default;
 	TagComponent(const TagComponent&) = default;
-	explicit TagComponent(String tag): Tag(std::move(tag)) {}
+	explicit TagComponent(String tag)
+	        : Tag(std::move(tag))
+	{
+	}
 
 	String Tag;
 };
@@ -20,15 +23,18 @@ struct TransformComponent
 	TransformComponent()                          = default;
 	TransformComponent(const TransformComponent&) = default;
 
-	Vec2  Position {0.0f};
-	Vec2  Scale {1.0f};
+	vec2  Position {0.0f};
+	vec2  Scale {1.0f};
 	float Rotation {0.0f};
 };
 
 struct SpriteRendererComponent
 {
 	SpriteRendererComponent() = default;
-	explicit SpriteRendererComponent(TexturePtr& texture): Texture(texture) {}
+	explicit SpriteRendererComponent(TexturePtr& texture)
+	        : Texture(texture)
+	{
+	}
 	SpriteRendererComponent(const SpriteRendererComponent&) = default;
 
 	TexturePtr Texture;
@@ -49,7 +55,7 @@ struct CircleRendererComponent
 
 struct CameraComponent
 {
-	CameraComponent()                       = default;
+	CameraComponent() = default;
 	CameraComponent(float left, float right, float bottom, float top)
 	        : Camera {left, right, bottom, top}
 	{

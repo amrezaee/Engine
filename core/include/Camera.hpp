@@ -11,10 +11,10 @@ public:
 
 	void SetProjection(float left, float right, float bottom, float top);
 
-	void SetCamera(Vec2 position, float angle, float zoom, Vec2 offset);
+	void SetCamera(vec2 position, float angle, float zoom, vec2 offset);
 
-	Vec2 GetPosition() const;
-	void SetPosition(Vec2 position);
+	vec2 GetPosition() const;
+	void SetPosition(vec2 position);
 
 	float GetRotation() const;
 	void  SetRotation(float angle);
@@ -22,8 +22,8 @@ public:
 	float GetZoom() const;
 	void  SetZoom(float zoom);
 
-	Vec2 GetOffset() const;
-	void SetOffset(Vec2 offset);
+	vec2 GetOffset() const;
+	void SetOffset(vec2 offset);
 
 	const Transform& GetView() const;
 	const Transform& GetProjection() const;
@@ -36,9 +36,9 @@ private:
 	Transform mView;
 	Transform mViewProjection;
 
-	Vec2  Position {0.0f};
+	vec2  Position {0.0f};
 	float mAngle {0.0f};
 	float mZoom {1.0f};
-	Vec2  mCenterOffset {0.0f};
-	Vec2  mOffset {0.0f};
+	vec2  mCenterOffset {0.0f};
+	vec2  mOffset {0.0f};
 };

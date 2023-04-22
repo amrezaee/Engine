@@ -8,17 +8,20 @@ class TextureGL final: public Texture
 public:
 	TextureGL();
 	explicit TextureGL(const Path& path);
-	TextureGL(uword width, uword height, bool filter = false,
-	          WrapMode wrap = WrapMode::Repeat, Color border = Color::WHITE);
+	TextureGL(u32      width,
+	          u32      height,
+	          bool     filter = false,
+	          WrapMode wrap   = WrapMode::Repeat,
+	          Color    border = Color::WHITE);
 	~TextureGL() override;
 
-	void Bind(uword slot) const override;
+	void Bind(u32 slot) const override;
 
 	size_t GetSize() const override;
 
-	Vec2ui GetResolution() const override;
-	uword  GetWidth() const override;
-	uword  GetHeight() const override;
+	vec2ui GetResolution() const override;
+	u32    GetWidth() const override;
+	u32    GetHeight() const override;
 
 	bool IsFiltered() const override;
 	void SetFilter(bool enable) override;
@@ -28,15 +31,15 @@ public:
 
 	void SetData(const void* data, size_t size) override;
 
-	uword GetID() const override;
+	u32 GetID() const override;
 
 private:
-	uword    mID {0};
-	uword    mWidth {1};
-	uword    mHeight {1};
+	u32      mID {0};
+	u32      mWidth {1};
+	u32      mHeight {1};
 	bool     mFiltered {false};
 	WrapMode mWrapMode {WrapMode::Repeat};
 	Color    mBorder {Color::WHITE};
-	uword    mDataFormat {0};
-	uword    mInternalFormat {0};
+	u32      mDataFormat {0};
+	u32      mInternalFormat {0};
 };

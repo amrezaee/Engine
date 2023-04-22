@@ -5,12 +5,15 @@ UniquePtr<Application> CreateApp()
 	return MakeUnique<Sandbox>();
 }
 
-Sandbox::Sandbox(): Application("Sandbox", ENGINE_ROOT_PATH)
+Sandbox::Sandbox()
+        : Application("Sandbox", ENGINE_ROOT_PATH)
 {
 }
 
 void Sandbox::Initialize()
 {
+	mRenderDevice->SetClearColor(0xffffffff);
+
 	TexturePtr sprite = Texture::Create("assets/image.png");
 
 	mSceneManager.Add(MakeUnique<Scene>("Main"));
@@ -26,7 +29,7 @@ void Sandbox::Initialize()
 		player = scene->CreateEntity("player");
 		player.AddComponent<SpriteRendererComponent>(sprite);
 		auto& t = player.GetComponent<TransformComponent>();
-		t.Scale = 8.0f;
+		t.Scale = 4.0f;
 	}
 
 	{
@@ -74,14 +77,17 @@ void Sandbox::Update(double dt)
 {
 	mRenderDevice->Clear();
 
-	auto& t = player.GetComponent<TransformComponent>();
+	auto& t    = player.GetComponent<TransformComponent>();
 	t.Position += pos * dt;
 
 	time += dt;
 	if(time > 1.0f)
 	{
-		INFO("%u,  %u,  %.4f,  %.1f", mRenderer->GetFrameStats().DrawCalls,
-		     mRenderer->GetFrameStats().QuadCount, dt, 1.0f / dt);
+		INFO("%u,  %u,  %.4f,  %.1f",
+		     mRenderer->GetFrameStats().DrawCalls,
+		     mRenderer->GetFrameStats().QuadCount,
+		     dt,
+		     1.0f / dt);
 		time = 0.0f;
 	}
 }
@@ -144,12 +150,12 @@ bool Sandbox::MouseInput(MouseButton press, MouseButton release)
 	return true;
 }
 
-bool Sandbox::CursorInput(Vec2 position)
+bool Sandbox::CursorInput(vec2 position)
 {
 	return true;
 }
 
-bool Sandbox::ScrollInput(Vec2 offset)
+bool Sandbox::ScrollInput(vec2 offset)
 {
 	return true;
 }

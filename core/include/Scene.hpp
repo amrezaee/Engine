@@ -15,8 +15,14 @@ public:
 	~Scene();
 
 	void          SetApp(Application* app);
-	const String& GetName() const { return mName; }
-	RegistryType& GetEntities() { return mRegistry; }
+	const String& GetName() const
+	{
+		return mName;
+	}
+	RegistryType& GetEntities()
+	{
+		return mRegistry;
+	}
 
 	Entity CreateEntity(const String& name);
 	void   DestroyEntity(Entity& entity);
@@ -26,7 +32,7 @@ public:
 	void Update(double dt);
 	void FixedUpdate(double fdt);
 	void Render(double alpha);
-	void Resize(Vec2ui resolution);
+	void Resize(vec2ui resolution);
 
 private:
 	String       mName;

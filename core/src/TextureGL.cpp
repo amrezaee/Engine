@@ -2,22 +2,24 @@
 
 #include <Assert.hpp>
 
-TextureGL::TextureGL(): mDataFormat(GL_RGBA), mInternalFormat(GL_RGBA8)
+TextureGL::TextureGL()
+        : mDataFormat(GL_RGBA),
+          mInternalFormat(GL_RGBA8)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
 	glTextureStorage2D(mID, 1, mInternalFormat, (GLsizei)mWidth, (GLsizei)mHeight);
 	SetFilter(false);
 	SetWrapMode(WrapMode::Repeat);
-	byte white[4] {0xff, 0xff, 0xff, 0xff};
+	u8 white[4] {0xff, 0xff, 0xff, 0xff};
 	SetData(white, 4);
 }
 
 TextureGL::TextureGL(const Path& path)
 {
-	std::ifstream     in(path, std::ios::binary | std::ios::ate);
-	std::vector<byte> image;
-	int               w, h, c;
-	stbi_uc*          raw;
+	std::ifstream   in(path, std::ios::binary | std::ios::ate);
+	std::vector<u8> image;
+	int             w, h, c;
+	stbi_uc*        raw;
 
 	ASSERT(in, "Could not open file");
 
@@ -48,17 +50,25 @@ TextureGL::TextureGL(const Path& path)
 
 	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
 	glTextureStorage2D(mID, 1, mInternalFormat, (GLsizei)mWidth, (GLsizei)mHeight);
-	glTextureSubImage2D(mID, 0, 0, 0, (GLsizei)mWidth, (GLsizei)mHeight, mDataFormat,
-	                    GL_UNSIGNED_BYTE, raw);
+	glTextureSubImage2D(mID,
+	                    0,
+	                    0,
+	                    0,
+	                    (GLsizei)mWidth,
+	                    (GLsizei)mHeight,
+	                    mDataFormat,
+	                    GL_UNSIGNED_BYTE,
+	                    raw);
 	SetFilter(false);
 	SetWrapMode(WrapMode::Repeat);
 
 	stbi_image_free(raw);
 }
 
-TextureGL::TextureGL(uword width, uword height, bool filter, WrapMode wrap,
-                     Color border)
-        : mWidth(width), mHeight(height), mDataFormat(GL_RGBA),
+TextureGL::TextureGL(u32 width, u32 height, bool filter, WrapMode wrap, Color border)
+        : mWidth(width),
+          mHeight(height),
+          mDataFormat(GL_RGBA),
           mInternalFormat(GL_RGBA8)
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &mID);
@@ -72,28 +82,28 @@ TextureGL::~TextureGL()
 	glDeleteTextures(1, &mID);
 }
 
-void TextureGL::Bind(uword slot) const
+void TextureGL::Bind(u32 slot) const
 {
 	glBindTextureUnit(slot, mID);
 }
 
 size_t TextureGL::GetSize() const
 {
-	uword bpp = mDataFormat == GL_RGBA ? 4 : 3;
+	u32 bpp = mDataFormat == GL_RGBA ? 4 : 3;
 	return size_t(mWidth) * mHeight * bpp;
 }
 
-Vec2ui TextureGL::GetResolution() const
+vec2ui TextureGL::GetResolution() const
 {
-	return Vec2i {mWidth, mHeight};
+	return vec2i {mWidth, mHeight};
 }
 
-uword TextureGL::GetWidth() const
+u32 TextureGL::GetWidth() const
 {
 	return mWidth;
 }
 
-uword TextureGL::GetHeight() const
+u32 TextureGL::GetHeight() const
 {
 	return mHeight;
 }
@@ -161,11 +171,18 @@ void TextureGL::SetWrapMode(WrapMode wrap, Color border)
 void TextureGL::SetData(const void* data, size_t size)
 {
 	ASSERT(size == GetSize(), "Incorrect texture size");
-	glTextureSubImage2D(mID, 0, 0, 0, (GLsizei)mWidth, (GLsizei)mHeight, mDataFormat,
-	                    GL_UNSIGNED_BYTE, data);
+	glTextureSubImage2D(mID,
+	                    0,
+	                    0,
+	                    0,
+	                    (GLsizei)mWidth,
+	                    (GLsizei)mHeight,
+	                    mDataFormat,
+	                    GL_UNSIGNED_BYTE,
+	                    data);
 }
 
-uword TextureGL::GetID() const
+u32 TextureGL::GetID() const
 {
 	return mID;
 }

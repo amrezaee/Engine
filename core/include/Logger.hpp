@@ -28,9 +28,15 @@ public:
 		return a;
 	}
 
-	inline static const char* Argument(bool b) { return b ? "True" : "False"; }
+	inline static const char* Argument(bool b)
+	{
+		return b ? "True" : "False";
+	}
 
-	inline static const char* Argument(const String& s) { return s.c_str(); }
+	inline static const char* Argument(const String& s)
+	{
+		return s.c_str();
+	}
 
 private:
 	static char sBuffer[1024];
@@ -40,9 +46,15 @@ private:
 template<typename... Args>
 void Logger::Trace(const char* fmt, Args&&... args)
 {
-	std::snprintf(sFormatBuffer, sizeof(sFormatBuffer), "%s%s%s",
-	              "\033[38;2;191;191;191m", fmt, "\033[m\n");
-	std::snprintf(sBuffer, sizeof(sBuffer), sFormatBuffer,
+	std::snprintf(sFormatBuffer,
+	              sizeof(sFormatBuffer),
+	              "%s%s%s",
+	              "\033[38;2;191;191;191m",
+	              fmt,
+	              "\033[m\n");
+	std::snprintf(sBuffer,
+	              sizeof(sBuffer),
+	              sFormatBuffer,
 	              Argument(std::forward<Args>(args))...);
 	std::clog << sBuffer;
 }
@@ -50,9 +62,15 @@ void Logger::Trace(const char* fmt, Args&&... args)
 template<typename... Args>
 void Logger::Info(const char* fmt, Args&&... args)
 {
-	std::snprintf(sFormatBuffer, sizeof(sFormatBuffer), "%s%s%s",
-	              "\033[38;2;0;191;0m", fmt, "\033[m\n");
-	std::snprintf(sBuffer, sizeof(sBuffer), sFormatBuffer,
+	std::snprintf(sFormatBuffer,
+	              sizeof(sFormatBuffer),
+	              "%s%s%s",
+	              "\033[38;2;0;191;0m",
+	              fmt,
+	              "\033[m\n");
+	std::snprintf(sBuffer,
+	              sizeof(sBuffer),
+	              sFormatBuffer,
 	              Argument(std::forward<Args>(args))...);
 	std::clog << sBuffer;
 }
@@ -60,9 +78,15 @@ void Logger::Info(const char* fmt, Args&&... args)
 template<typename... Args>
 void Logger::Warn(const char* fmt, Args&&... args)
 {
-	std::snprintf(sFormatBuffer, sizeof(sFormatBuffer), "%s%s%s",
-	              "\033[38;2;191;191;0m", fmt, "\033[m\n");
-	std::snprintf(sBuffer, sizeof(sBuffer), sFormatBuffer,
+	std::snprintf(sFormatBuffer,
+	              sizeof(sFormatBuffer),
+	              "%s%s%s",
+	              "\033[38;2;191;191;0m",
+	              fmt,
+	              "\033[m\n");
+	std::snprintf(sBuffer,
+	              sizeof(sBuffer),
+	              sFormatBuffer,
 	              Argument(std::forward<Args>(args))...);
 	std::clog << sBuffer;
 }
@@ -70,9 +94,15 @@ void Logger::Warn(const char* fmt, Args&&... args)
 template<typename... Args>
 void Logger::Error(const char* fmt, Args&&... args)
 {
-	std::snprintf(sFormatBuffer, sizeof(sFormatBuffer), "%s%s%s",
-	              "\033[38;2;127;0;0m", fmt, "\033[m\n");
-	std::snprintf(sBuffer, sizeof(sBuffer), sFormatBuffer,
+	std::snprintf(sFormatBuffer,
+	              sizeof(sFormatBuffer),
+	              "%s%s%s",
+	              "\033[38;2;127;0;0m",
+	              fmt,
+	              "\033[m\n");
+	std::snprintf(sBuffer,
+	              sizeof(sBuffer),
+	              sFormatBuffer,
 	              Argument(std::forward<Args>(args))...);
 	std::cerr << sBuffer;
 }
@@ -80,9 +110,15 @@ void Logger::Error(const char* fmt, Args&&... args)
 template<typename... Args>
 void Logger::Fatal(const char* fmt, Args&&... args)
 {
-	std::snprintf(sFormatBuffer, sizeof(sFormatBuffer), "%s%s%s",
-	              "\033[38;2;255;0;0m", fmt, "\033[m\n");
-	std::snprintf(sBuffer, sizeof(sBuffer), sFormatBuffer,
+	std::snprintf(sFormatBuffer,
+	              sizeof(sFormatBuffer),
+	              "%s%s%s",
+	              "\033[38;2;255;0;0m",
+	              fmt,
+	              "\033[m\n");
+	std::snprintf(sBuffer,
+	              sizeof(sBuffer),
+	              sFormatBuffer,
 	              Argument(std::forward<Args>(args))...);
 	std::cerr << sBuffer;
 }

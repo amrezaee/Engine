@@ -2,7 +2,7 @@
 
 #include <Logger.hpp>
 
-uword WindowGLFW::sWindowCount = 0;
+u32 WindowGLFW::sWindowCount = 0;
 
 void CloseCallback(GLFWwindow* win)
 {
@@ -13,30 +13,30 @@ void CloseCallback(GLFWwindow* win)
 void SizeCallback(GLFWwindow* win, int width, int height)
 {
 	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-	w->SizeSignal(Vec2ui {width, height});
+	w->SizeSignal(vec2ui {width, height});
 }
 
 void FramebufferCallback(GLFWwindow* win, int width, int height)
 {
 	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-	w->FramebufferSignal(Vec2ui {width, height});
+	w->FramebufferSignal(vec2ui {width, height});
 
 	if(w->GetWindowMode() == WindowMode::Windowed)
 	{
-		w->mSettings.Resolution.x = (uword)width;
-		w->mSettings.Resolution.y = (uword)height;
+		w->mSettings.Resolution.x = (u32)width;
+		w->mSettings.Resolution.y = (u32)height;
 	}
 }
 
 void PositionCallback(GLFWwindow* win, int x, int y)
 {
 	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-	w->PositionSignal(Vec2ui {x, y});
+	w->PositionSignal(vec2ui {x, y});
 
 	if(w->GetWindowMode() == WindowMode::Windowed)
 	{
-		w->mSettings.Position.x = (uword)x;
-		w->mSettings.Position.y = (uword)y;
+		w->mSettings.Position.x = (u32)x;
+		w->mSettings.Position.y = (u32)y;
 	}
 }
 
@@ -71,13 +71,13 @@ void MouseCallback(GLFWwindow* win, int button, int action, int)
 void CursorCallback(GLFWwindow* win, double xpos, double ypos)
 {
 	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-	w->CursorSignal(Vec2 {xpos, ypos});
+	w->CursorSignal(vec2 {xpos, ypos});
 }
 
 void ScrollCallback(GLFWwindow* win, double xoffset, double yoffset)
 {
 	auto w = (WindowGLFW*)glfwGetWindowUserPointer(win);
-	w->ScrollSignal(Vec2 {xoffset, yoffset});
+	w->ScrollSignal(vec2 {xoffset, yoffset});
 }
 
 static void ErrorCallback(int code, const char* desc)
@@ -86,7 +86,8 @@ static void ErrorCallback(int code, const char* desc)
 }
 
 WindowGLFW::WindowGLFW(const WindowSettings& settings)
-        : Window(settings), mWindow(nullptr)
+        : Window(settings),
+          mWindow(nullptr)
 {
 	glfwSetErrorCallback(ErrorCallback);
 
@@ -109,8 +110,10 @@ WindowGLFW::WindowGLFW(const WindowSettings& settings)
 	glfwWindowHint(GLFW_FOCUSED, mSettings.Focused);
 
 	mWindow = glfwCreateWindow((int)mSettings.Resolution.x,
-	                           (int)mSettings.Resolution.y, mSettings.Title.c_str(),
-	                           nullptr, nullptr);
+	                           (int)mSettings.Resolution.y,
+	                           mSettings.Title.c_str(),
+	                           nullptr,
+	                           nullptr);
 
 	glfwMakeContextCurrent(mWindow);
 
@@ -163,45 +166,45 @@ void WindowGLFW::SetTitle(const String& title)
 	glfwSetWindowTitle(mWindow, title.c_str());
 }
 
-uword WindowGLFW::GetWidth() const
+u32 WindowGLFW::GetWidth() const
 {
 	return mSettings.Resolution.x;
 }
 
-uword WindowGLFW::GetHeight() const
+u32 WindowGLFW::GetHeight() const
 {
 	return mSettings.Resolution.y;
 }
 
-Vec2ui WindowGLFW::GetResolution() const
+vec2ui WindowGLFW::GetResolution() const
 {
 	return mSettings.Resolution;
 }
 
-void WindowGLFW::SetWidth(uword width)
+void WindowGLFW::SetWidth(u32 width)
 {
 	mSettings.Resolution.x = width;
 	glfwSetWindowSize(mWindow, int(width), int(mSettings.Resolution.y));
 }
 
-void WindowGLFW::SetHeight(uword height)
+void WindowGLFW::SetHeight(u32 height)
 {
 	mSettings.Resolution.y = height;
 	glfwSetWindowSize(mWindow, int(mSettings.Resolution.x), int(height));
 }
 
-void WindowGLFW::SetResolution(Vec2ui resolution)
+void WindowGLFW::SetResolution(vec2ui resolution)
 {
 	mSettings.Resolution = resolution;
 	glfwSetWindowSize(mWindow, int(resolution.x), int(resolution.y));
 }
 
-Vec2ui WindowGLFW::GetPosition() const
+vec2ui WindowGLFW::GetPosition() const
 {
 	return mSettings.Position;
 }
 
-void WindowGLFW::SetPosition(Vec2ui pos)
+void WindowGLFW::SetPosition(vec2ui pos)
 {
 	mSettings.Position = pos;
 	glfwSetWindowPos(mWindow, int(pos.x), int(pos.y));
@@ -229,24 +232,38 @@ void WindowGLFW::SetWindowMode(WindowMode mode)
 	{
 	case WindowMode::Windowed:
 	{
-		glfwSetWindowMonitor(mWindow, nullptr, (int)mSettings.Position.x,
-		                     (int)mSettings.Position.y, (int)mSettings.Resolution.x,
-		                     (int)mSettings.Resolution.y, GLFW_DONT_CARE);
+		glfwSetWindowMonitor(mWindow,
+		                     nullptr,
+		                     (int)mSettings.Position.x,
+		                     (int)mSettings.Position.y,
+		                     (int)mSettings.Resolution.x,
+		                     (int)mSettings.Resolution.y,
+		                     GLFW_DONT_CARE);
 	}
 	break;
 
 	case WindowMode::BorderlessFS:
 	{
 		const GLFWvidmode* vidmode = glfwGetVideoMode(monitor);
-		glfwSetWindowMonitor(mWindow, monitor, 0, 0, vidmode->width, vidmode->height,
+		glfwSetWindowMonitor(mWindow,
+		                     monitor,
+		                     0,
+		                     0,
+		                     vidmode->width,
+		                     vidmode->height,
 		                     vidmode->refreshRate);
 	}
 	break;
 
 	case WindowMode::ExclusiveFS:
 	{
-		glfwSetWindowMonitor(mWindow, monitor, 0, 0, (int)mSettings.Resolution.x,
-		                     (int)mSettings.Resolution.y, GLFW_DONT_CARE);
+		glfwSetWindowMonitor(mWindow,
+		                     monitor,
+		                     0,
+		                     0,
+		                     (int)mSettings.Resolution.x,
+		                     (int)mSettings.Resolution.y,
+		                     GLFW_DONT_CARE);
 	}
 	break;
 	}
@@ -263,12 +280,12 @@ void WindowGLFW::SetVSyncMode(VSyncMode mode)
 	glfwSwapInterval(int(mode));
 }
 
-uword WindowGLFW::GetMSAA() const
+u32 WindowGLFW::GetMSAA() const
 {
 	return mSettings.MSAA;
 }
 
-void WindowGLFW::SetMSAA(uword samples)
+void WindowGLFW::SetMSAA(u32 samples)
 {
 	if(samples != 0 && samples != 2 && samples != 4 && samples != 8 &&
 	   samples != 16 && samples != 32)

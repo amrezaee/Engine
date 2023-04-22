@@ -4,8 +4,10 @@
 
 #ifndef DISABLE_ASSERTION
 
-void OutputAssertionFailure(const char* expr, const char* msg, const char* file,
-                            const int line)
+void OutputAssertionFailure(const char* expr,
+                            const char* msg,
+                            const char* file,
+                            const int   line)
 {
 	if(*msg)  // with message
 	{
@@ -14,8 +16,10 @@ void OutputAssertionFailure(const char* expr, const char* msg, const char* file,
 	else  // without message
 	{
 		Path p(file);
-		FATAL("Assertion %s Failed at  %s:%s", expr,
-		      p.filename().generic_string().c_str(), line);
+		FATAL("Assertion %s Failed at  %s:%s",
+		      expr,
+		      p.filename().generic_string().c_str(),
+		      line);
 	}
 }
 

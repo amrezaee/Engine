@@ -34,8 +34,10 @@ extern void __cdecl __debugbreak(void);
 	#endif
 
 
-void OutputAssertionFailure(const char* expr, const char* msg, const char* file,
-                            const int line);
+void OutputAssertionFailure(const char* expr,
+                            const char* msg,
+                            const char* file,
+                            const int   line);
 
 	#define ASSERT_IMPL_(expr)                                             \
 		{                                                                  \

@@ -1,7 +1,9 @@
 #include <Camera.hpp>
 
 Camera::Camera(float left, float right, float bottom, float top)
-        : mProjection(left, right, bottom, top), mAngle(0.0f), mZoom(1.0f),
+        : mProjection(left, right, bottom, top),
+          mAngle(0.0f),
+          mZoom(1.0f),
           mCenterOffset((right - left) * 0.5f, (bottom - top) * 0.5f)
 {
 	Calculate();
@@ -17,7 +19,7 @@ void Camera::SetProjection(float left, float right, float bottom, float top)
 	Calculate();
 }
 
-void Camera::SetCamera(Vec2 position, float angle, float zoom, Vec2 offset)
+void Camera::SetCamera(vec2 position, float angle, float zoom, vec2 offset)
 {
 	Position = position;
 	mAngle   = angle;
@@ -26,12 +28,12 @@ void Camera::SetCamera(Vec2 position, float angle, float zoom, Vec2 offset)
 	Calculate();
 }
 
-Vec2 Camera::GetPosition() const
+vec2 Camera::GetPosition() const
 {
 	return Position;
 }
 
-void Camera::SetPosition(Vec2 position)
+void Camera::SetPosition(vec2 position)
 {
 	Position = position;
 	Calculate();
@@ -59,12 +61,12 @@ void Camera::SetZoom(float zoom)
 	Calculate();
 }
 
-Vec2 Camera::GetOffset() const
+vec2 Camera::GetOffset() const
 {
 	return mOffset;
 }
 
-void Camera::SetOffset(Vec2 offset)
+void Camera::SetOffset(vec2 offset)
 {
 	mOffset = offset;
 	Calculate();

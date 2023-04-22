@@ -60,7 +60,7 @@ public:
 	}
 
 	explicit operator HandleType() const;
-	explicit operator uword() const;
+	explicit operator u32() const;
 	explicit operator bool() const;
 
 	bool operator==(const Entity& rhs) const;

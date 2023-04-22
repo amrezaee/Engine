@@ -16,15 +16,24 @@ RenderDeviceGL::RenderDeviceGL()
 	ASSERT(mj == 4 && mi == 6, "OpenGL 4.6 required");
 
 #ifdef ENGINE_DEBUG_BUILD
-	void GLDebugOutput(GLenum, GLenum, GLuint, GLenum, GLsizei length, const char*,
+	void GLDebugOutput(GLenum,
+	                   GLenum,
+	                   GLuint,
+	                   GLenum,
+	                   GLsizei length,
+	                   const char*,
 	                   const void*);
 
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	glDebugMessageCallback(GLDebugOutput, nullptr);
 
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION,
-	                      0, nullptr, GL_FALSE);
+	glDebugMessageControl(GL_DONT_CARE,
+	                      GL_DONT_CARE,
+	                      GL_DEBUG_SEVERITY_NOTIFICATION,
+	                      0,
+	                      nullptr,
+	                      GL_FALSE);
 #endif  // ENGINE_DEBUG_BUILD
 
 	{
@@ -54,7 +63,8 @@ RenderDeviceGL::RenderDeviceGL()
 		     (const char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
 		INFO("Render Device: %s", mInfo.Name);
 		INFO("Render Device Vendor: %s", mInfo.Vendor);
-		INFO("Max Texture Size: %ux%u", mInfo.MaxTextureWidth,
+		INFO("Max Texture Size: %ux%u",
+		     mInfo.MaxTextureWidth,
 		     mInfo.MaxTextureHeight);
 		INFO("Number of Texture Units: %u", mInfo.NumTextureUnits);
 		INFO("Number of Samples: %u", mInfo.NumSamples);
@@ -112,7 +122,7 @@ bool RenderDeviceGL::IsBlendingEnable() const
 	return glIsEnabled(GL_BLEND) == GL_TRUE;
 }
 
-void RenderDeviceGL::UpdateViewport(uword x, uword y, uword width, uword height)
+void RenderDeviceGL::UpdateViewport(u32 x, u32 y, u32 width, u32 height)
 {
 	glViewport(GLint(x), GLint(y), GLsizei(width), GLsizei(height));
 }
@@ -122,14 +132,14 @@ void RenderDeviceGL::SetPointSize(float size)
 	glPointSize(size);
 }
 
-void RenderDeviceGL::DrawIndexed(const VertexArrayPtr& va, uword index_count)
+void RenderDeviceGL::DrawIndexed(const VertexArrayPtr& va, u32 index_count)
 {
-	uword count = index_count ? index_count : va->GetIndexBuffer()->GetCount();
+	u32 count = index_count ? index_count : va->GetIndexBuffer()->GetCount();
 	va->Bind();
 	glDrawElements(GL_TRIANGLES, (GLsizei)count, GL_UNSIGNED_INT, nullptr);
 }
 
-word RenderDeviceGL::BlendFuncMap(BlendFunc func)
+i32 RenderDeviceGL::BlendFuncMap(BlendFunc func)
 {
 	switch(func)
 	{
@@ -152,8 +162,13 @@ word RenderDeviceGL::BlendFuncMap(BlendFunc func)
 }
 
 #ifdef ENGINE_DEBUG_BUILD
-void GLDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
-                   GLsizei length, const char* message, const void* userparam)
+void GLDebugOutput(GLenum      source,
+                   GLenum      type,
+                   GLuint      id,
+                   GLenum      severity,
+                   GLsizei     length,
+                   const char* message,
+                   const void* userparam)
 {
 	(void)userparam;
 	(void)length;

@@ -31,18 +31,20 @@ enum class VertexType
 	Bool,
 };
 
-uword VertexTypeCount(VertexType type);
-uword VertexTypeSize(VertexType type);
+u32 VertexTypeCount(VertexType type);
+u32 VertexTypeSize(VertexType type);
 
 struct Vertex
 {
 	explicit Vertex(VertexType type, bool normalize = false)
-	        : Type(type), Offset(0), Normalize(normalize)
+	        : Type(type),
+	          Offset(0),
+	          Normalize(normalize)
 	{
 	}
 
 	VertexType Type;
-	uword      Offset;
+	u32        Offset;
 	bool       Normalize;
 };
 
@@ -51,15 +53,16 @@ class VertexBuffer
 public:
 	virtual ~VertexBuffer() = default;
 
-	static VertexBufferPtr Create(std::initializer_list<Vertex> layout, uword count,
-	                              uword stride);
+	static VertexBufferPtr Create(std::initializer_list<Vertex> layout,
+	                              u32                           count,
+	                              u32                           stride);
 
-	virtual const Vector<Vertex>& GetLayout() const               = 0;
-	virtual void  SetLayout(std::initializer_list<Vertex> layout) = 0;
-	virtual uword GetCount() const                                = 0;
-	virtual void  SetData(const void* data, uword count)          = 0;
-	virtual uword GetStride() const                               = 0;
-	virtual uword GetID() const                                   = 0;
+	virtual const Vector<Vertex>& GetLayout() const              = 0;
+	virtual void SetLayout(std::initializer_list<Vertex> layout) = 0;
+	virtual u32  GetCount() const                                = 0;
+	virtual void SetData(const void* data, u32 count)            = 0;
+	virtual u32  GetStride() const                               = 0;
+	virtual u32  GetID() const                                   = 0;
 };
 
 class IndexBuffer
@@ -67,11 +70,11 @@ class IndexBuffer
 public:
 	virtual ~IndexBuffer() = default;
 
-	static IndexBufferPtr Create(const uword* data, uword count);
+	static IndexBufferPtr Create(const u32* data, u32 count);
 
-	virtual uword GetCount() const                        = 0;
-	virtual void  SetData(const uword* data, uword count) = 0;
-	virtual uword GetID() const                           = 0;
+	virtual u32  GetCount() const                    = 0;
+	virtual void SetData(const u32* data, u32 count) = 0;
+	virtual u32  GetID() const                       = 0;
 };
 
 class VertexArray
@@ -84,9 +87,9 @@ public:
 	virtual void AttachIndexBuffer(const IndexBufferPtr& ib)   = 0;
 	virtual void AttachVertexBuffer(const VertexBufferPtr& vb) = 0;
 
-	virtual uword           GetVertexBufferCount() const   = 0;
-	virtual VertexBufferPtr GetVertexBuffer(uword i) const = 0;
-	virtual IndexBufferPtr  GetIndexBuffer() const         = 0;
+	virtual u32             GetVertexBufferCount() const = 0;
+	virtual VertexBufferPtr GetVertexBuffer(u32 i) const = 0;
+	virtual IndexBufferPtr  GetIndexBuffer() const       = 0;
 
 	virtual void Bind() const   = 0;
 	virtual void Unbind() const = 0;

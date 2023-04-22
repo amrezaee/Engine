@@ -24,8 +24,8 @@ TexturePtr Texture::Create(const Path& path)
 	return nullptr;
 }
 
-TexturePtr Texture::Create(uword width, uword height, bool filter, WrapMode wrap,
-                           Color border)
+TexturePtr Texture::Create(
+        u32 width, u32 height, bool filter, WrapMode wrap, Color border)
 {
 	switch(RenderDevice::GetAPI())
 	{

@@ -3,7 +3,8 @@
 #include <Assert.hpp>
 #include <Logger.hpp>
 
-ShaderGL::ShaderGL(const Path& shaderfile): mProgramID(0)
+ShaderGL::ShaderGL(const Path& shaderfile)
+        : mProgramID(0)
 {
 	String source;
 	String vsource;
@@ -77,11 +78,11 @@ void ShaderGL::SetTransform(const String& name, const Transform& transform) cons
 	auto it = mUniformLocations.find(name);
 	ASSERT(it != mUniformLocations.cend());
 
-	glProgramUniformMatrix3x2fv(mProgramID, it->second, 1, GL_TRUE,
-	                            transform.GetPtr());
+	glProgramUniformMatrix3x2fv(
+	        mProgramID, it->second, 1, GL_TRUE, transform.GetPtr());
 }
 
-uword ShaderGL::GetID() const
+u32 ShaderGL::GetID() const
 {
 	return mProgramID;
 }
@@ -178,11 +179,11 @@ void ShaderGL::Postprocess()
 	glGetProgramInterfaceiv(mProgramID, GL_UNIFORM, GL_ACTIVE_RESOURCES, &count);
 	const GLenum properties[3] = {GL_BLOCK_INDEX, GL_NAME_LENGTH, GL_LOCATION};
 
-	for(uword i = 0; i < uword(count); ++i)
+	for(u32 i = 0; i < u32(count); ++i)
 	{
 		GLint values[3];
-		glGetProgramResourceiv(mProgramID, GL_UNIFORM, i, 3, properties, 3, nullptr,
-		                       values);
+		glGetProgramResourceiv(
+		        mProgramID, GL_UNIFORM, i, 3, properties, 3, nullptr, values);
 
 		// Skip any uniforms that are in a block.
 		if(values[0] != -1)
@@ -191,8 +192,8 @@ void ShaderGL::Postprocess()
 		String name;
 		name.resize(size_t(values[1]) - 1);  // resize to retrieved size minus 1
 		// because we don't consider null termination
-		glGetProgramResourceName(mProgramID, GL_UNIFORM, i, (GLsizei)values[1],
-		                         nullptr, &name[0]);
+		glGetProgramResourceName(
+		        mProgramID, GL_UNIFORM, i, (GLsizei)values[1], nullptr, &name[0]);
 		mUniformLocations[name] = values[2];
 	}
 }

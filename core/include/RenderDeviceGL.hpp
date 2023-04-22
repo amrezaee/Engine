@@ -14,12 +14,12 @@ public:
 	void SetBlendFunc(BlendFunc src, BlendFunc dst, Color color) override;
 	bool IsBlendingEnable() const override;
 
-	void UpdateViewport(uword x, uword y, uword width, uword height) override;
+	void UpdateViewport(u32 x, u32 y, u32 width, u32 height) override;
 
 	void SetPointSize(float size) override;
 
-	void DrawIndexed(const VertexArrayPtr& va, uword index_count) override;
+	void DrawIndexed(const VertexArrayPtr& va, u32 index_count) override;
 
 private:
-	static word BlendFuncMap(BlendFunc func);
+	static i32 BlendFuncMap(BlendFunc func);
 };

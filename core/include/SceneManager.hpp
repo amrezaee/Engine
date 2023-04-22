@@ -15,7 +15,10 @@ public:
 	void   Add(UniquePtr<Scene> scene);
 	void   Remove(UniquePtr<Scene> scene);
 	bool   Switch(const String& name);
-	Scene* GetCurrent() { return mCurrent; }
+	Scene* GetCurrent()
+	{
+		return mCurrent;
+	}
 
 private:
 	Application*           mApp;

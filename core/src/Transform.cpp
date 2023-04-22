@@ -1,6 +1,6 @@
 #include <Transform.hpp>
 
-Vec2 Transform::operator*(Vec2 v) const
+vec2 Transform::operator*(vec2 v) const
 {
 	return {m[0] * v.x + m[1] * v.y + m[2], m[3] * v.x + m[4] * v.y + m[5]};
 }
@@ -52,10 +52,10 @@ Transform& Transform::Shear(float x, float y)
 {
 	float a = m[0];
 	float d = m[3];
-	m[0] += m[1] * y;
-	m[1] += a * x;
-	m[3] += m[4] * y;
-	m[4] += d * x;
+	m[0]    += m[1] * y;
+	m[1]    += a * x;
+	m[3]    += m[4] * y;
+	m[4]    += d * x;
 	return *this;
 }
 

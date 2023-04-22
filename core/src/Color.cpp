@@ -48,19 +48,19 @@ const Color Color::TURQUOISE {0x30d5c8ff};
 const Color Color::WHITE_SMOKE {0xf5f5f5ff};
 const Color Color::YELLOW_GREEN {0x9acd32ff};
 
-void Color::Set(byte r, byte g, byte b, byte a)
+void Color::Set(u8 r, u8 g, u8 b, u8 a)
 {
-	mColor = static_cast<uword>(a << 24u) | static_cast<uword>(b << 16u) |
-	         static_cast<uword>(g << 8u) | static_cast<uword>(r);
+	mColor = static_cast<u32>(a << 24u) | static_cast<u32>(b << 16u) |
+	         static_cast<u32>(g << 8u) | static_cast<u32>(r);
 }
 
 void Color::Set(float r, float g, float b, float a)
 {
-	mColor = static_cast<byte>(a * 255u) | static_cast<byte>(b * 255u) |
-	         static_cast<byte>(g * 255u) | static_cast<byte>(r * 255u);
+	mColor = static_cast<u8>(a * 255u) | static_cast<u8>(b * 255u) |
+	         static_cast<u8>(g * 255u) | static_cast<u8>(r * 255u);
 }
 
-void Color::Set(byte r, byte g, byte b)
+void Color::Set(u8 r, u8 g, u8 b)
 {
 	Set(r, g, b, 255);
 }
@@ -70,47 +70,47 @@ void Color::Set(float r, float g, float b)
 	Set(r, g, b, 1.0f);
 }
 
-void Color::SetRed(byte r)
+void Color::SetRed(u8 r)
 {
-	mColor = (mColor & 0xffffff00) | static_cast<uword>(r);
+	mColor = (mColor & 0xffffff00) | static_cast<u32>(r);
 }
 
-void Color::SetGreen(byte g)
+void Color::SetGreen(u8 g)
 {
-	mColor = (mColor & 0xffff00ff) | (static_cast<uword>(g) << 8u);
+	mColor = (mColor & 0xffff00ff) | (static_cast<u32>(g) << 8u);
 }
 
-void Color::SetBlue(byte b)
+void Color::SetBlue(u8 b)
 {
-	mColor = (mColor & 0xff00ffff) | (static_cast<uword>(b) << 16u);
+	mColor = (mColor & 0xff00ffff) | (static_cast<u32>(b) << 16u);
 }
 
-void Color::SetAlpha(byte a)
+void Color::SetAlpha(u8 a)
 {
-	mColor = (mColor & 0x00ffffff) | (static_cast<uword>(a) << 24u);
+	mColor = (mColor & 0x00ffffff) | (static_cast<u32>(a) << 24u);
 }
 
 void Color::SetRed(float r)
 {
-	SetRed(static_cast<byte>(r * 255));
+	SetRed(static_cast<u8>(r * 255));
 }
 
 void Color::SetGreen(float g)
 {
-	SetGreen(static_cast<byte>(g * 255));
+	SetGreen(static_cast<u8>(g * 255));
 }
 
 void Color::SetBlue(float b)
 {
-	SetBlue(static_cast<byte>(b * 255));
+	SetBlue(static_cast<u8>(b * 255));
 }
 
 void Color::SetAlpha(float a)
 {
-	SetAlpha(static_cast<byte>(a * 255));
+	SetAlpha(static_cast<u8>(a * 255));
 }
 
-void Color::SetPacked(uword pack)
+void Color::SetPacked(u32 pack)
 {
 	mColor = ((pack >> 24) & 0xff) | ((pack << 8) & 0xff0000) |
 	         ((pack >> 8) & 0xff00) | ((pack << 24) & 0xff000000);

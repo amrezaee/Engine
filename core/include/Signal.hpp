@@ -10,8 +10,15 @@ class Signal
 public:
 	using SlotType = Delegate<bool(Args...)>;
 
-	void Clear() { mSlots.clear(); }
-	bool Empty() const { return mSlots.empty(); }
+	void Clear()
+	{
+		mSlots.clear();
+	}
+	
+	bool Empty() const
+	{
+		return mSlots.empty();
+	}
 
 	template<typename... UArgs>
 	void Connect(UArgs... args)

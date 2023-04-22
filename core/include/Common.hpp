@@ -33,7 +33,7 @@
 #include <GLFW/glfw3.h>
 
 #include <stb_image.h>
-//clang-format on
+// clang-format on
 
 template<typename T>
 using SharedPtr = std::shared_ptr<T>;
@@ -42,15 +42,13 @@ template<typename T>
 using UniquePtr = std::unique_ptr<T>;
 
 template<typename T, typename... Args>
-[[nodiscard]]
-constexpr SharedPtr<T> MakeShared(Args&&... args)
+[[nodiscard]] constexpr SharedPtr<T> MakeShared(Args&&... args)
 {
 	return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
 template<typename T, typename... Args>
-[[nodiscard]]
-constexpr UniquePtr<T> MakeUnique(Args&&... args)
+[[nodiscard]] constexpr UniquePtr<T> MakeUnique(Args&&... args)
 {
 	return std::make_unique<T>(std::forward<Args>(args)...);
 }
@@ -70,17 +68,17 @@ using Path        = std::filesystem::path;
 
 namespace fs = std::filesystem;
 
-using udword = uint64_t;
-using uword  = uint32_t;
-using uhalf  = uint16_t;
-using byte   = uint8_t;
-using uchar  = unsigned char;
+using u64   = uint64_t;
+using u32   = uint32_t;
+using u16   = uint16_t;
+using u8    = uint8_t;
+using usize = size_t;
 
-using dword = int64_t;
-using word  = int32_t;
-using half  = int16_t;
-
-using real = double;
+using i64   = int64_t;
+using i32   = int32_t;
+using i16   = int16_t;
+using i8    = int8_t;
+using isize = long long;
 
 struct Version
 {
@@ -94,14 +92,8 @@ struct Version
 		return r;
 	}
 
-	uword major {0};
-	uword minor {0};
-	uword release {0};
-	uword build {0};
+	u32 major {0};
+	u32 minor {0};
+	u32 release {0};
+	u32 build {0};
 };
-
-template<typename T, size_t size>
-constexpr size_t ArraySize(T (&)[size])
-{
-	return size;
-}

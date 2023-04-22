@@ -11,15 +11,15 @@ public:
 	const String& GetTitle() const override;
 	void          SetTitle(const String& title) override;
 
-	uword  GetWidth() const override;
-	uword  GetHeight() const override;
-	Vec2ui GetResolution() const override;
-	void   SetWidth(uword width) override;
-	void   SetHeight(uword height) override;
-	void   SetResolution(Vec2ui resolution) override;
+	u32    GetWidth() const override;
+	u32    GetHeight() const override;
+	vec2ui GetResolution() const override;
+	void   SetWidth(u32 width) override;
+	void   SetHeight(u32 height) override;
+	void   SetResolution(vec2ui resolution) override;
 
-	Vec2ui GetPosition() const override;
-	void   SetPosition(Vec2ui pos) override;
+	vec2ui GetPosition() const override;
+	void   SetPosition(vec2ui pos) override;
 
 	WindowMode GetWindowMode() const override;
 	bool       IsFullscreen() const override;
@@ -28,8 +28,8 @@ public:
 	VSyncMode GetVSyncMode() const override;
 	void      SetVSyncMode(VSyncMode mode) override;
 
-	uword GetMSAA() const override;
-	void  SetMSAA(uword samples) override;
+	u32  GetMSAA() const override;
+	void SetMSAA(u32 samples) override;
 
 	bool IsSRGB() const override;
 	void SetSRGB(bool srgb) override;
@@ -56,15 +56,15 @@ public:
 	friend void FramebufferCallback(GLFWwindow* win, int width, int height);
 	friend void PositionCallback(GLFWwindow* win, int x, int y);
 	friend void FocusCallback(GLFWwindow* win, int state);
-	friend void KeyCallback(GLFWwindow* win, int key, int scancode, int action,
-	                        int mods);
+	friend void KeyCallback(
+	        GLFWwindow* win, int key, int scancode, int action, int mods);
 	friend void MouseCallback(GLFWwindow* win, int button, int action, int mods);
 	friend void CursorCallback(GLFWwindow* win, double xpos, double ypos);
 	friend void ScrollCallback(GLFWwindow* win, double xoffset, double yoffset);
 
 private:
-	GLFWwindow*  mWindow;
-	static uword sWindowCount;
+	GLFWwindow* mWindow;
+	static u32  sWindowCount;
 };
 
 void CloseCallback(GLFWwindow* win);

@@ -5,7 +5,8 @@
 #include <RenderDevice.hpp>
 
 VertexBufferPtr VertexBuffer::Create(std::initializer_list<Vertex> layout,
-                                     uword count, uword stride)
+                                     u32                           count,
+                                     u32                           stride)
 {
 	switch(RenderDevice::GetAPI())
 	{
@@ -15,7 +16,7 @@ VertexBufferPtr VertexBuffer::Create(std::initializer_list<Vertex> layout,
 	return nullptr;
 }
 
-IndexBufferPtr IndexBuffer::Create(const uword* data, uword count)
+IndexBufferPtr IndexBuffer::Create(const u32* data, u32 count)
 {
 	switch(RenderDevice::GetAPI())
 	{
@@ -35,7 +36,7 @@ VertexArrayPtr VertexArray::Create()
 	return nullptr;
 }
 
-uword VertexTypeSize(VertexType type)
+u32 VertexTypeSize(VertexType type)
 {
 	switch(type)
 	{
@@ -72,7 +73,7 @@ uword VertexTypeSize(VertexType type)
 	}
 }
 
-uword VertexTypeCount(VertexType type)
+u32 VertexTypeCount(VertexType type)
 {
 	switch(type)
 	{

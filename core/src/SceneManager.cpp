@@ -3,7 +3,9 @@
 #include <Logger.hpp>
 #include <Scene.hpp>
 
-SceneManager::SceneManager(Application* app): mApp {app}, mCurrent {nullptr}
+SceneManager::SceneManager(Application* app)
+        : mApp {app},
+          mCurrent {nullptr}
 {
 }
 
@@ -37,7 +39,8 @@ void SceneManager::Remove(UniquePtr<Scene> scene)
 
 bool SceneManager::Switch(const String& name)
 {
-	return std::any_of(mScenes.cbegin(), mScenes.cend(),
+	return std::any_of(mScenes.cbegin(),
+	                   mScenes.cend(),
 	                   [this, &name](auto& s) -> bool
 	                   {
 		                   if(s->GetName() == name)

@@ -2,20 +2,20 @@
 
 #include <Common.hpp>
 
-constexpr real CPI      = 3.1415926535;
-constexpr real CPI_180  = CPI / 180.0;
-constexpr real C180_PI  = 180.0 / CPI;
-constexpr real CPI_SQRD = CPI * CPI;
-constexpr real CPI_HALF = CPI * 0.5;
+constexpr double CPI      = 3.1415926535;
+constexpr double CPI_180  = CPI / 180.0;
+constexpr double C180_PI  = 180.0 / CPI;
+constexpr double CPI_SQRD = CPI * CPI;
+constexpr double CPI_HALF = CPI * 0.5;
 
-constexpr real Deg2Rad(real deg)
+constexpr double Deg2Rad(double degree)
 {
-	return deg * CPI_180;
+	return degree * CPI_180;
 }
 
-constexpr real Rad2Deg(real rad)
+constexpr double Rad2Deg(double radian)
 {
-	return rad * C180_PI;
+	return radian * C180_PI;
 }
 
 // clang-format off

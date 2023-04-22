@@ -2,7 +2,9 @@
 
 #include <Components.hpp>
 
-Entity::Entity(HandleType handle, Scene* scene): mHandle(handle), mScene(scene)
+Entity::Entity(HandleType handle, Scene* scene)
+        : mHandle(handle),
+          mScene(scene)
 {
 }
 
@@ -16,9 +18,9 @@ Entity::operator HandleType() const
 	return mHandle;
 }
 
-Entity::operator uword() const
+Entity::operator u32() const
 {
-	return uword(mHandle);
+	return u32(mHandle);
 }
 
 Entity::operator bool() const

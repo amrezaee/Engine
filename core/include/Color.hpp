@@ -6,7 +6,7 @@
 struct Color
 {
 private:
-	uword mColor {0u};
+	u32 mColor {0u};
 
 public:
 	constexpr Color()              = default;
@@ -15,71 +15,93 @@ public:
 	Color& operator=(const Color&) = default;
 	Color& operator=(Color&&)      = default;
 
-	explicit constexpr Color(uword color)
+	constexpr Color(u32 color)
 	        : mColor(((color >> 24) & 0xff) | ((color << 8) & 0xff0000) |
 	                 ((color >> 8) & 0xff00) | ((color << 24) & 0xff000000))
 	{
 	}
 
-	constexpr Color(byte r, byte g, byte b, byte a)
-	        : mColor(static_cast<uword>(a << 24u) | static_cast<uword>(b << 16u) |
-	                 static_cast<uword>(g << 8u) | static_cast<uword>(r))
+	constexpr Color(u8 r, u8 g, u8 b, u8 a)
+	        : mColor(static_cast<u32>(a << 24u) | static_cast<u32>(b << 16u) |
+	                 static_cast<u32>(g << 8u) | static_cast<u32>(r))
 	{
 	}
 
 	constexpr Color(float r, float g, float b, float a)
-	        : Color(static_cast<byte>(a * 255u), static_cast<byte>(b * 255u),
-	                static_cast<byte>(g * 255u), static_cast<byte>(r * 255u))
+	        : Color(static_cast<u8>(a * 255u),
+	                static_cast<u8>(b * 255u),
+	                static_cast<u8>(g * 255u),
+	                static_cast<u8>(r * 255u))
 	{
 	}
 
-	constexpr Color(byte r, byte g, byte b): Color(r, g, b, 255) {}
+	constexpr Color(u8 r, u8 g, u8 b)
+	        : Color(r, g, b, 255)
+	{
+	}
 
-	constexpr Color(float r, float g, float b): Color(r, g, b, 1.0f) {}
+	constexpr Color(float r, float g, float b)
+	        : Color(r, g, b, 1.0f)
+	{
+	}
 
-	constexpr Color(Color color, byte alpha)
-	        : mColor((static_cast<uword>(alpha) << 24) | color.mColor)
+	constexpr Color(Color color, u8 alpha)
+	        : mColor((static_cast<u32>(alpha) << 24) | color.mColor)
 	{
 	}
 
 	constexpr Color(Color color, float alpha)
-	        : Color(color, static_cast<byte>(alpha * 255u))
+	        : Color(color, static_cast<u8>(alpha * 255u))
 	{
 	}
 
-	void Set(byte r, byte g, byte b, byte a);
-
+	void Set(u8 r, u8 g, u8 b, u8 a);
 	void Set(float r, float g, float b, float a);
-
-	void Set(byte r, byte g, byte b);
-
+	void Set(u8 r, u8 g, u8 b);
 	void Set(float r, float g, float b);
 
-	void GetColors(float* out) const;
+	void         GetColors(float* out) const;
+	constexpr u8 GetRed() const
+	{
+		return static_cast<u8>(mColor);
+	}
 
-	constexpr byte GetRed() const { return static_cast<byte>(mColor); }
+	constexpr u8 GetGreen() const
+	{
+		return static_cast<u8>(mColor >> 8u);
+	}
 
-	constexpr byte GetGreen() const { return static_cast<byte>(mColor >> 8u); }
+	constexpr u8 GetBlue() const
+	{
+		return static_cast<u8>(mColor >> 16u);
+	}
 
-	constexpr byte GetBlue() const { return static_cast<byte>(mColor >> 16u); }
+	constexpr u8 GetAlpha() const
+	{
+		return static_cast<u8>(mColor >> 24u);
+	}
 
-	constexpr byte GetAlpha() const { return static_cast<byte>(mColor >> 24u); }
-
-	void SetRed(byte r);
-	void SetGreen(byte g);
-	void SetBlue(byte b);
-	void SetAlpha(byte a);
+	void SetRed(u8 r);
+	void SetGreen(u8 g);
+	void SetBlue(u8 b);
+	void SetAlpha(u8 a);
 
 	void SetRed(float r);
 	void SetGreen(float g);
 	void SetBlue(float b);
 	void SetAlpha(float a);
 
-	void            SetPacked(uword pack);
-	constexpr uword GetPacked() const { return mColor; }
+	void          SetPacked(u32 pack);
+	constexpr u32 GetPacked() const
+	{
+		return mColor;
+	}
 
 	bool operator==(Color rhs) const;
-	bool operator!=(Color rhs) const { return !operator==(rhs); }
+	bool operator!=(Color rhs) const
+	{
+		return !operator==(rhs);
+	}
 
 public:
 	static const Color BLANK;

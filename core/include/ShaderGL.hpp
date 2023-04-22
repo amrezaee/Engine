@@ -18,7 +18,7 @@ public:
 	void SetColor(const String& name, Color color) const override;
 	void SetTransform(const String& name, const Transform& transform) const override;
 
-	uword GetID() const override;
+	u32 GetID() const override;
 
 private:
 	static void ReadFile(const Path& shaderfile, String& source);
@@ -29,6 +29,6 @@ private:
 	static GLenum ShaderTypeMap(ShaderType type);
 
 private:
-	uword                  mProgramID;
+	u32                    mProgramID;
 	HashMap<String, GLint> mUniformLocations;
 };
