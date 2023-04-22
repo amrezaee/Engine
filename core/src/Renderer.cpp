@@ -2,17 +2,24 @@
 
 #include <Logger.hpp>
 
-Renderer::Renderer(RenderDevicePtr& device, uword max_quads)
-        : mDevice(*device), mMaxQuads(max_quads), mMaxVertices(mMaxQuads * 4),
-          mMaxIndices(mMaxQuads * 6), mTextureIndex(0), mStats {},
-          mQuadVertices(mMaxVertices), mQuadCount(0), mCircleVertices(mMaxVertices),
-          mCircleCount(0)
+Renderer::Renderer(RenderDevicePtr& device, u32 max_quads)
+        : mDevice {*device},
+          mColor {Color::WHITE},
+          mStats {},
+          mMaxQuads {max_quads},
+          mMaxVertices {mMaxQuads * 4},
+          mMaxIndices {mMaxQuads * 6},
+          mTextureIndex {},
+          mQuadVertices {mMaxVertices},
+          mQuadCount {},
+          mCircleVertices {mMaxVertices},
+          mCircleCount {}
 {
 	TRACE("Renderer initializing...");
 
 	{  // Create index buffer and upload to GPU
-		Vector<uword> indices(mMaxIndices);
-		for(uword offset = 0, i = 0; i < mMaxIndices; i += 6, offset += 4)
+		Vector<u32> indices(mMaxIndices);
+		for(u32 offset = 0, i = 0; i < mMaxIndices; i += 6, offset += 4)
 		{
 			indices[i]     = offset;
 			indices[i + 1] = offset + 1;
@@ -26,30 +33,31 @@ Renderer::Renderer(RenderDevicePtr& device, uword max_quads)
 		mIB = IndexBuffer::Create(indices.data(), mMaxIndices);
 	}
 
-	// Quad initialization
-	mQuadVB = VertexBuffer::Create(
-	        {Vertex {VertexType::Float2}, Vertex {VertexType::Float2},
-	         Vertex {VertexType::UByte4, true}, Vertex {VertexType::Float}},
-	        mMaxVertices, sizeof(QuadVertex));
+	mQuadVB = VertexBuffer::Create({Vertex {VertexType::Float2},
+	                                Vertex {VertexType::Float2},
+	                                Vertex {VertexType::UByte4, true},
+	                                Vertex {VertexType::Float}},
+	                               mMaxVertices,
+	                               sizeof(QuadVertex));
 
 	mQuadVA = VertexArray::Create();
 	mQuadVA->AttachIndexBuffer(mIB);
 	mQuadVA->AttachVertexBuffer(mQuadVB);
 	mQuadShader = Shader::Create("shaders/QuadShader.glsl");
 
-	// Circle initialization
-	mCircleVB = VertexBuffer::Create(
-	        {Vertex {VertexType::Float2}, Vertex {VertexType::Float2},
-	         Vertex {VertexType::UByte4, true}, Vertex {VertexType::Float},
-	         Vertex {VertexType::Float}},
-	        mMaxVertices, sizeof(CircleVertex));
+	mCircleVB = VertexBuffer::Create({Vertex {VertexType::Float2},
+	                                  Vertex {VertexType::Float2},
+	                                  Vertex {VertexType::UByte4, true},
+	                                  Vertex {VertexType::Float},
+	                                  Vertex {VertexType::Float}},
+	                                 mMaxVertices,
+	                                 sizeof(CircleVertex));
 
 	mCircleVA = VertexArray::Create();
 	mCircleVA->AttachIndexBuffer(mIB);
 	mCircleVA->AttachVertexBuffer(mCircleVB);
 	mCircleShader = Shader::Create("shaders/CircleShader.glsl");
 
-	// Textures initialization
 	mWhiteTexture = Texture::Create();
 	mTextures.resize(mDevice.GetInfo().NumTextureUnits);
 	mTextures[mTextureIndex++] = mWhiteTexture;
@@ -64,16 +72,13 @@ Renderer::~Renderer()
 	TRACE("Renderer destroyed");
 }
 
-const FrameStats& Renderer::GetFrameStats()
+void Renderer::DrawBegin(const Transform& view_projection)
 {
-	return mStats;
-}
+	mViewProjection = view_projection;
 
-void Renderer::DrawBegin(Camera& camera)
-{
-	mViewProjection = camera.GetViewProjection();
-
-	BatchBegin();
+	mQuadCount    = 0;
+	mCircleCount  = 0;
+	mTextureIndex = 1;
 
 	mStats.DrawCalls = 0;
 	mStats.QuadCount = 0;
@@ -81,29 +86,26 @@ void Renderer::DrawBegin(Camera& camera)
 
 void Renderer::DrawEnd()
 {
-	BatchEnd();
+	Flush();
 }
 
-void Renderer::BatchBegin()
-{
-	mQuadCount   = 0;
-	mCircleCount = 0;
-
-	mTextureIndex = 1;
-}
-
-void Renderer::BatchEnd()
+void Renderer::Flush()
 {
 	// flush quads
 	if(mQuadCount != 0)
 	{
-		for(uword i = 0; i < mTextureIndex; ++i) { mTextures[i]->Bind(i); }
+		for(u32 i = 0; i < mTextureIndex; ++i)
+		{
+			mTextures[i]->Bind(i);
+		}
 
 		mQuadVB->SetData(mQuadVertices.data(), mQuadCount * 4);
 		mQuadShader->Bind();
 		mQuadShader->SetTransform("uViewProjection", mViewProjection);
 		mDevice.DrawIndexed(mQuadVA, mQuadCount * 6);
 		++mStats.DrawCalls;
+		mQuadCount    = 0;
+		mTextureIndex = 1;
 	}
 
 	// flush circles
@@ -114,133 +116,159 @@ void Renderer::BatchEnd()
 		mCircleShader->SetTransform("uViewProjection", mViewProjection);
 		mDevice.DrawIndexed(mCircleVA, mCircleCount * 6);
 		++mStats.DrawCalls;
+		mCircleCount = 0;
 	}
 }
 
-void Renderer::DrawQuad(Transform& model, const TexturePtr& texture,
-                        Color tint_color, const Vec2 tex_coords[])
+void Renderer::DrawQuad(const TexturePtr& texture,
+                        const Transform&  model,
+                        const vec2*       uv)
 {
 	if(mQuadCount >= mMaxQuads)
 	{
-		BatchEnd();
-		BatchBegin();
+		Flush();
 	}
 
-	float texture_index = 0.0f;
-	for(uword i = 1; i < mTextureIndex; ++i)
+	u32 index = 0;
+	while(index < mTextureIndex)
 	{
-		if(*texture == *mTextures[i])
+		if(*texture == *mTextures[index++])
 		{
-			texture_index = static_cast<float>(i);
-			break;
+			break;  // texture does found!
 		}
 	}
-
-	if(texture_index == 0.0f)
+	// texture does not found!
+	if(index == mTextureIndex)
 	{
-		if(mTextureIndex > mDevice.GetInfo().NumTextureUnits - 1)
+		// texture slots are full. so, Flush!
+		if(mTextureIndex == mDevice.GetInfo().NumTextureUnits)
 		{
-			BatchEnd();
-			BatchBegin();
+			Flush();
 		}
-
-		texture_index = static_cast<float>(mTextureIndex);
-
+		// now add new texture.
+		index                      = mTextureIndex;
 		mTextures[mTextureIndex++] = texture;
 	}
 
-	uword i = mQuadCount * 4;
+	u32 i = mQuadCount * 4;
 
 	mQuadVertices[i].Position = model * mQuadPositions[0];
-	mQuadVertices[i].UV       = tex_coords[0];
-	mQuadVertices[i].Color    = tint_color;
-	mQuadVertices[i++].TexID  = texture_index;
+	mQuadVertices[i].UV       = uv[0];
+	mQuadVertices[i].Color    = mColor;
+	mQuadVertices[i++].TexID  = static_cast<float>(index);
 
 	mQuadVertices[i].Position = model * mQuadPositions[1];
-	mQuadVertices[i].UV       = tex_coords[1];
-	mQuadVertices[i].Color    = tint_color;
-	mQuadVertices[i++].TexID  = texture_index;
+	mQuadVertices[i].UV       = uv[1];
+	mQuadVertices[i].Color    = mColor;
+	mQuadVertices[i++].TexID  = static_cast<float>(index);
 
 	mQuadVertices[i].Position = model * mQuadPositions[2];
-	mQuadVertices[i].UV       = tex_coords[2];
-	mQuadVertices[i].Color    = tint_color;
-	mQuadVertices[i++].TexID  = texture_index;
+	mQuadVertices[i].UV       = uv[2];
+	mQuadVertices[i].Color    = mColor;
+	mQuadVertices[i++].TexID  = static_cast<float>(index);
 
 	mQuadVertices[i].Position = model * mQuadPositions[3];
-	mQuadVertices[i].UV       = tex_coords[3];
-	mQuadVertices[i].Color    = tint_color;
-	mQuadVertices[i].TexID    = texture_index;
+	mQuadVertices[i].UV       = uv[3];
+	mQuadVertices[i].Color    = mColor;
+	mQuadVertices[i].TexID    = static_cast<float>(index);
 
 	++mQuadCount;
 	++mStats.QuadCount;
 }
 
-void Renderer::DrawQuad(Vec2 pos, Vec2 size, const TexturePtr& texture,
-                        Color tint_color, const Vec2 tex_coords[])
+void Renderer::DrawQuad(const TexturePtr& texture, vec2 position, vec2 size)
 {
 	Transform model;
-	model.Translate(pos).Scale(size);
-	DrawQuad(model, texture, tint_color, tex_coords);
+	model.Translate(position).Scale(size);
+	DrawQuad(texture, model, mTextureUV);
 }
 
-void Renderer::DrawQuad(Vec2 pos, Vec2 size, Color color)
+void Renderer::DrawQuad(vec2 position, vec2 size)
 {
 	Transform model;
-	model.Translate(pos).Scale(size);
-	DrawQuad(model, mWhiteTexture, color);
+	model.Translate(position).Scale(size);
+	DrawQuad(mWhiteTexture, model, mTextureUV);
 }
 
-void Renderer::DrawRotatedQuad(Vec2 pos, Vec2 size, float angle,
-                               const TexturePtr& texture, Color tint_color,
-                               const Vec2 tex_coords[])
+void Renderer::DrawRotatedQuad(const TexturePtr& texture,
+                               vec2              position,
+                               vec2              size,
+                               float             rotation,
+                               vec2              origin)
 {
 	Transform model;
-	model.Translate(pos).Rotate(angle).Scale(size);
-	DrawQuad(model, texture, tint_color, tex_coords);
+	model.Translate(position)
+	        .Translate(origin)
+	        .Rotate(rotation)
+	        .Translate(-origin)
+	        .Scale(size);
+	DrawQuad(texture, model, mTextureUV);
 }
 
-void Renderer::DrawRotatedQuad(Vec2 pos, Vec2 size, float angle, Color color)
+void Renderer::DrawRotatedQuad(const TexturePtr& texture,
+                               vec2              position,
+                               vec2              size,
+                               float             rotation)
 {
 	Transform model;
-	model.Translate(pos).Rotate(angle).Scale(size);
-	DrawQuad(model, mWhiteTexture, color);
+	model.Translate(position).Rotate(rotation).Scale(size);
+	DrawQuad(texture, model, mTextureUV);
 }
 
-void Renderer::DrawCircle(Vec2 pos, float radius, Color color, float thickness,
+void Renderer::DrawRotatedQuad(vec2 position, vec2 size, float rotation, vec2 origin)
+{
+	Transform model;
+	model.Translate(position)
+	        .Translate(origin)
+	        .Rotate(rotation)
+	        .Translate(-origin)
+	        .Scale(size);
+	DrawQuad(mWhiteTexture, model, mTextureUV);
+}
+
+void Renderer::DrawRotatedQuad(vec2 position, vec2 size, float rotation)
+{
+	Transform model;
+	model.Translate(position).Rotate(rotation).Scale(size);
+	DrawQuad(mWhiteTexture, model, mTextureUV);
+}
+
+void Renderer::DrawCircle(vec2  position,
+                          float radius,
+                          float thickness,
                           float smoothness)
 {
 	if(mCircleCount >= mMaxQuads)
 	{
-		BatchEnd();
-		BatchBegin();
+		Flush();
 	}
 
 	Transform model;
-	model.Translate(pos).Scale(radius);
+	model.Translate(position).Scale(radius);
 
-	uword i = mCircleCount * 4;
+	u32 i = mCircleCount * 4;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[0];
 	mCircleVertices[i].LocalPosition = mCirclePositions[0];
-	mCircleVertices[i].Color         = color;
+	mCircleVertices[i].Color         = mColor;
 	mCircleVertices[i].Thickness     = thickness;
 	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[1];
 	mCircleVertices[i].LocalPosition = mCirclePositions[1];
-	mCircleVertices[i].Color         = color;
+	mCircleVertices[i].Color         = mColor;
 	mCircleVertices[i].Thickness     = thickness;
 	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[2];
 	mCircleVertices[i].LocalPosition = mCirclePositions[2];
-	mCircleVertices[i].Color         = color;
+	mCircleVertices[i].Color         = mColor;
 	mCircleVertices[i].Thickness     = thickness;
 	mCircleVertices[i++].Smoothness  = smoothness;
 
 	mCircleVertices[i].WorldPosition = model * mQuadPositions[3];
 	mCircleVertices[i].LocalPosition = mCirclePositions[3];
-	mCircleVertices[i].Color         = color;
+	mCircleVertices[i].Color         = mColor;
 	mCircleVertices[i].Thickness     = thickness;
 	mCircleVertices[i].Smoothness    = smoothness;
 

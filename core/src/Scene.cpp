@@ -5,7 +5,9 @@
 #include <Entity.hpp>
 
 
-Scene::Scene(String name): mName(std::move(name)), mApp(nullptr)
+Scene::Scene(String name)
+        : mName(std::move(name)),
+          mApp(nullptr)
 {
 }
 
@@ -42,8 +44,8 @@ void Scene::DestroyAllEntities()
 void Scene::Initialize()
 {
 	Entity e = CreateEntity("Camera");
-	e.AddComponent<CameraComponent>(0.0f, mApp->GetWindow().GetWidth(),
-	                                mApp->GetWindow().GetHeight(), 0.0f);
+	e.AddComponent<CameraComponent>(
+	        0.0f, mApp->GetWindow().GetWidth(), mApp->GetWindow().GetHeight(), 0.0f);
 }
 
 void Scene::Update(double dt)
@@ -66,7 +68,7 @@ void Scene::Render(double alpha)
 	        camera_view.get<TransformComponent, CameraComponent>(
 	                *camera_view.begin());
 
-	r.DrawBegin(camera.Camera);
+	r.DrawBegin(camera.Camera.GetViewProjection());
 
 	// Draw sprites
 	{
@@ -77,12 +79,13 @@ void Scene::Render(double alpha)
 			auto [transform, sprite] =
 			        group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-			Vec2 size = transform.Scale * sprite.Texture->GetResolution();
+			vec2 size = transform.Scale * sprite.Texture->GetResolution();
 			size.x *= sprite.FlipX ? -1.0f : 1.0f;
 			size.y *= sprite.FlipY ? -1.0f : 1.0f;
 
-			r.DrawRotatedQuad(transform.Position, size, transform.Rotation,
-			                  sprite.Texture, sprite.Color);
+			r.SetColor(sprite.Color);
+			r.DrawRotatedQuad(
+			        sprite.Texture, transform.Position, size, transform.Rotation);
 		}
 	}
 
@@ -94,18 +97,21 @@ void Scene::Render(double alpha)
 			auto [transform, circle] =
 			        view.get<TransformComponent, CircleRendererComponent>(entity);
 
-			r.DrawCircle(transform.Position, transform.Scale.x * 32.0f, circle.Color,
-			             circle.Thickness, circle.Smoothness);
+			r.SetColor(circle.Color);
+			r.DrawCircle(transform.Position,
+			             transform.Scale.x * 32.0f,
+			             circle.Thickness,
+			             circle.Smoothness);
 		}
 	}
 
 	r.DrawEnd();
 }
 
-void Scene::Resize(Vec2ui resolution)
+void Scene::Resize(vec2ui resolution)
 {
 	auto  view            = mRegistry.view<CameraComponent>();
 	auto& cameraComponent = view.get<CameraComponent>(*view.begin());
-	cameraComponent.Camera.SetProjection(0.0f, (float)resolution.x,
-	                                     (float)resolution.y, 0.0f);
+	cameraComponent.Camera.SetProjection(
+	        0.0f, (float)resolution.x, (float)resolution.y, 0.0f);
 }
